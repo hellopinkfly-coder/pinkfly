@@ -1,23 +1,217 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Pink Fly — Design Tokens
+   Typography: Space Mono for ALL text. Hierarchy comes from size + weight.
+   Pink (#D8037D) is an ACCENT only. It is preserved as the primary highlight
+   in both light and dark themes.
+   ========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand accent (shared) */
+  --pf-accent: #d8037d;
+  --pf-accent-hover: #b80268;
+  --pf-accent-soft: #fbe6f2;
+
+  /* Surfaces — LIGHT */
+  --pf-bg: #fdf9f7;
+  --pf-surface: #ffffff;
+  --pf-surface-muted: #f7f1ee;
+
+  /* Text — LIGHT */
+  --pf-heading: #2e2a28;
+  --pf-text: #545454;
+  --pf-muted: #8a8480;
+
+  /* Lines & elevation — LIGHT */
+  --pf-border: rgba(84, 84, 84, 0.12);
+  --pf-border-strong: rgba(84, 84, 84, 0.2);
+  --pf-shadow-sm: 0 4px 16px rgba(84, 84, 84, 0.05);
+  --pf-shadow-md: 0 8px 30px rgba(84, 84, 84, 0.07);
+  --pf-shadow-lg: 0 24px 60px rgba(84, 84, 84, 0.09);
+
+  /* Glass + decorative blobs — LIGHT */
+  --pf-glass-bg: rgba(255, 255, 255, 0.7);
+  --pf-glass-border: rgba(255, 255, 255, 0.6);
+  --pf-blob-1: #fbe6f2;
+  --pf-blob-2: #f7e0d6;
+  --pf-blob-opacity: 0.5;
+
+  /* Radii */
+  --pf-radius-lg: 16px;
+  --pf-radius-xl: 24px;
+  --pf-radius-2xl: 32px;
+
+  /* Motion */
+  --pf-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* --------------------------------------------------------------- DARK -- */
+:root[data-theme="dark"] {
+  /* Accent — brighten hover so it reads on charcoal; base pink preserved */
+  --pf-accent: #ec2a97;
+  --pf-accent-hover: #ff5cb1;
+  --pf-accent-soft: rgba(216, 3, 125, 0.18);
+
+  /* Surfaces — warm charcoal / deep neutrals */
+  --pf-bg: #14110f;
+  --pf-surface: #1e1a17;
+  --pf-surface-muted: #272220;
+
+  /* Text */
+  --pf-heading: #f6f1ed;
+  --pf-text: #c2bab3;
+  --pf-muted: #8c847c;
+
+  /* Lines & elevation */
+  --pf-border: rgba(255, 255, 255, 0.09);
+  --pf-border-strong: rgba(255, 255, 255, 0.16);
+  --pf-shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --pf-shadow-md: 0 10px 34px rgba(0, 0, 0, 0.4);
+  --pf-shadow-lg: 0 28px 64px rgba(0, 0, 0, 0.5);
+
+  /* Glass + blobs */
+  --pf-glass-bg: rgba(30, 26, 23, 0.62);
+  --pf-glass-border: rgba(255, 255, 255, 0.08);
+  --pf-blob-1: rgba(216, 3, 125, 0.5);
+  --pf-blob-2: rgba(120, 40, 90, 0.45);
+  --pf-blob-opacity: 0.35;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-accent: var(--pf-accent);
+  --color-accent-hover: var(--pf-accent-hover);
+  --color-accent-soft: var(--pf-accent-soft);
+
+  --color-background: var(--pf-bg);
+  --color-surface: var(--pf-surface);
+  --color-surface-muted: var(--pf-surface-muted);
+
+  --color-heading: var(--pf-heading);
+  --color-body: var(--pf-text);
+  --color-muted: var(--pf-muted);
+
+  --color-border: var(--pf-border);
+  --color-border-strong: var(--pf-border-strong);
+
+  --radius-lg: var(--pf-radius-lg);
+  --radius-xl: var(--pf-radius-xl);
+  --radius-2xl: var(--pf-radius-2xl);
+
+  --shadow-soft-sm: var(--pf-shadow-sm);
+  --shadow-soft-md: var(--pf-shadow-md);
+  --shadow-soft-lg: var(--pf-shadow-lg);
+
+  /* Space Mono is the single typeface — injected by next/font in layout.tsx */
+  --font-display: var(--font-space-mono), ui-monospace, monospace;
+  --font-body: var(--font-space-mono), ui-monospace, monospace;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+* {
+  border-color: var(--pf-border);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--pf-bg);
+  color: var(--pf-text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.4s var(--pf-ease), color 0.4s var(--pf-ease);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--pf-heading);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--pf-accent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--pf-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+.pf-eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pf-accent);
+}
+
+.pf-display {
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  line-height: 1.05;
+}
+
+.pf-h2 {
+  font-size: clamp(1.85rem, 3.6vw, 2.9rem);
+}
+
+.pf-link {
+  color: var(--pf-accent);
+  text-decoration: none;
+  transition: color 0.2s var(--pf-ease);
+}
+.pf-link:hover {
+  color: var(--pf-accent-hover);
+}
+
+/* Soft floating gradient blobs — themed via tokens */
+.pf-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(72px);
+  opacity: var(--pf-blob-opacity);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Glassmorphism surface — used sparingly (navbar, hero card) */
+.pf-glass {
+  background: var(--pf-glass-bg);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--pf-glass-border);
+}
+
+/* ==========================================================================
+   Accessibility — respect reduced motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

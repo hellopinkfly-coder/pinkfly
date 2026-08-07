@@ -1,8 +1,11 @@
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 /**
- * Join conditional class names into a single string.
- * Lightweight, dependency-free. Swap for `clsx` + `tailwind-merge`
- * if you later need class de-duplication/merging.
+ * Merge conditional class names with Tailwind conflict resolution.
+ * `clsx` handles conditionals; `tailwind-merge` de-dupes conflicting
+ * utilities (e.g. `px-2 px-4` → `px-4`) so component overrides work.
  */
-export function cn(...classes: Array<string | false | null | undefined>): string {
-  return classes.filter(Boolean).join(" ");
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
 }

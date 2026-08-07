@@ -1,10 +1,25 @@
+import { Hero } from "@/features/hero/Hero";
+import { Mission } from "@/features/mission/Mission";
+import { Community } from "@/features/community/Community";
+import { WhyPinkFly } from "@/features/why-pinkfly/WhyPinkFly";
+import { Newsletter } from "@/features/newsletter/Newsletter";
+import { FinalCTA } from "@/features/final-cta/FinalCTA";
+
+// NOTE: <Impact /> and <FounderStories /> are intentionally hidden for the MVP.
+// They remain fully built, reusable components and will be reintroduced in a
+// future version — do not delete them.
+// import { Impact } from "@/features/impact/Impact";
+// import { FounderStories } from "@/features/founder-stories/FounderStories";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8">
-      <h1 className="text-3xl font-bold">Welcome to Pinkfly</h1>
-      <p className="mt-2 text-sm opacity-70">
-        Edit <code className="font-mono">src/app/page.tsx</code> to get started.
-      </p>
-    </main>
+    <>
+      <Hero />
+      <Mission />
+      <Community />
+      <WhyPinkFly />
+      <FinalCTA />
+      <Newsletter />
+    </>
   );
 }
