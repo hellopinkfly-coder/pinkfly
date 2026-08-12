@@ -2,30 +2,57 @@ import { community } from "@/config/content";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
-import { Card } from "@/components/ui/card";
+import { ImageFrame } from "@/components/shared/ImageFrame";
 import { staggerContainer, fadeUp } from "@/components/motion/variants";
+import { cn } from "@/lib/utils";
 
+/**
+ * "How we gather" — four ways the community meets.
+ *
+ * Real photography rather than infographics, each in a different organic
+ * frame, with the alternating vertical offset giving the row an editorial,
+ * asymmetric rhythm on wide screens.
+ */
 export function Community() {
   return (
     <Section id="community" className="bg-[var(--pf-surface)]">
-      <SectionHeading eyebrow={community.eyebrow} title={community.headline} />
+      <SectionHeading
+        eyebrow={community.eyebrow}
+        title={community.headline}
+        intro={community.intro}
+      />
 
       <Reveal
         as="ul"
         variants={staggerContainer}
-        className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        className="mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4"
       >
-        {community.offerings.map(({ icon: Icon, title, description }) => (
-          <Reveal as="li" key={title} variants={fadeUp}>
-            <Card className="group h-full hover:-translate-y-1 hover:border-[var(--pf-accent)]/30 hover:shadow-[var(--pf-shadow-md)]">
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)] transition-transform duration-300 group-hover:scale-110">
-                <Icon size={22} />
-              </span>
-              <h3 className="mt-5 text-xl">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--pf-text)]">
-                {description}
-              </p>
-            </Card>
+        {community.cards.map((card, i) => (
+          <Reveal
+            as="li"
+            key={card.title}
+            variants={fadeUp}
+            className={cn(
+              "group flex flex-col",
+              // Staggered baseline — only on the widest layout.
+              i % 2 === 1 && "lg:mt-14"
+            )}
+          >
+            <ImageFrame
+              src={card.image.src}
+              alt={card.image.alt}
+              label={card.image.label ?? card.title}
+              shape={card.shape}
+              aspect="aspect-[4/5]"
+              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 23vw"
+              className="shadow-[var(--pf-shadow-md)] transition-shadow duration-500 group-hover:shadow-[var(--pf-shadow-lg)]"
+            />
+            <h3 className="mt-6 text-lg transition-colors duration-300 group-hover:text-[var(--pf-accent)]">
+              {card.title}
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--pf-text)]">
+              {card.description}
+            </p>
           </Reveal>
         ))}
       </Reveal>

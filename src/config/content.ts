@@ -1,212 +1,300 @@
 /**
- * Content-as-data. All copy, stats, pillars, and stories live here so
- * messaging can change without touching components — and so this can later
- * be swapped for a CMS with no component changes.
+ * Content-as-data.
+ *
+ * All marketing copy lives here so messaging can change without touching a
+ * single component — and so this module can be swapped for a CMS/CRM feed
+ * later with no change to the presentation layer. Region-specific copy lives
+ * in `src/config/regions.ts`; anything here is shared by every region.
  */
-import {
-  Compass,
-  Users,
-  Sparkles,
-  TrendingUp,
-  Target,
-  HeartHandshake,
-  Calendar,
-  GraduationCap,
-  Network,
-  Mic,
-  type LucideIcon,
-} from "lucide-react";
+import { communityImages, aboutImages, type StockImage } from "@/config/images";
+import type { FrameShape } from "@/components/shared/ImageFrame";
 
-/* ---------------------------------------------------------------- Hero -- */
+/* ------------------------------------------------------------------ Hero -- */
 export const hero = {
-  eyebrow: "A Noboru World initiative",
-  headline: "You were never meant to build alone.",
-  subhead:
-    "Pink Fly is India's community for ambitious women entrepreneurs — a place to launch, scale, and conquer with the mentorship, network, and belief you deserve.",
-  primaryCta: { label: "Join the community", href: "/#join" },
-  secondaryCta: { label: "Learn more", href: "/about" },
+  /** The hero image itself links through to the About page (per wireframe). */
+  imageHref: "/about",
+  primaryCta: { label: "Join the community", href: "/join" },
+  secondaryCta: { label: "Explore events", href: "/events" },
+  /** Milliseconds between carousel slides. */
+  interval: 1500,
 };
 
-/* ------------------------------------------------------------- Mission -- */
+/* --------------------------------------------------- Why Pink Fly exists -- */
 export const mission = {
   eyebrow: "Why Pink Fly exists",
-  headline: "We're building the room every woman founder wishes she'd walked into sooner.",
-  body: "Ambition shouldn't be lonely. Too many women build brilliant businesses in isolation — without mentors who get it, peers who cheer, or a network that opens doors. Pink Fly exists to change that: a long-term ecosystem where women turn dreams into companies, and companies into legacies.",
-  pillars: [
-    {
-      icon: Compass,
-      title: "Our vision",
-      description:
-        "A generation of women founders who never have to choose between ambition and support.",
-    },
-    {
-      icon: Users,
-      title: "Our community",
-      description:
-        "Founders, mentors, and operators who show up for each other — online and in the room.",
-    },
-    {
-      icon: TrendingUp,
-      title: "Business growth",
-      description:
-        "Strategy, accountability, and real playbooks to help you move from idea to scale.",
-    },
-    {
-      icon: Sparkles,
-      title: "Dreams, realized",
-      description:
-        "We help you do the thing you've been quietly planning for years — for real, this time.",
-    },
-  ] satisfies { icon: LucideIcon; title: string; description: string }[],
+  headline:
+    "We're building the room every woman founder wishes she'd walked into sooner.",
+  body: [
+    "Ambition shouldn't be lonely. Too many women build brilliant businesses in isolation — without mentors who understand the work, peers who cheer the small wins, or a network that quietly opens doors.",
+    "Pink Fly exists to change that. It is a long-term ecosystem where women turn ideas into companies, and companies into legacies — with mentorship, education and a community that shows up.",
+  ],
+  cta: { label: "Join the community", href: "/join" },
 };
 
-/* -------------------------------------------------------------- Impact -- */
+/* ---------------------------------------------------------------- Impact -- */
 export const impact = {
   eyebrow: "Our impact",
   headline: "A movement, measured.",
-  subhead:
-    "Placeholder figures — swap for verified numbers before launch.",
+  note: "Placeholder figures — replace with verified numbers before launch.",
   stats: [
-    { value: 5000, suffix: "+", label: "Community members" },
-    { value: 1200, suffix: "+", label: "Women supported" },
-    { value: 340, suffix: "+", label: "Businesses launched" },
-    { value: 90, suffix: "+", label: "Workshops hosted" },
+    { value: 1000, suffix: "+", label: "Community members" },
+    { value: 600, suffix: "+", label: "Women who bootstrapped an idea into a business" },
+    { value: 100, suffix: "+", label: "Founders who went on to raise funding" },
+    { value: 10, suffix: "+", label: "Businesses scaled with Pink Fly support" },
   ],
 };
 
-/* ----------------------------------------------------------- Community -- */
+/* ------------------------------------------------------------- Community -- */
+export type CommunityCard = {
+  title: string;
+  description: string;
+  image: StockImage;
+  /** Frame treatment — drives the organic image shapes. */
+  shape: FrameShape;
+};
+
 export const community = {
   eyebrow: "The community",
-  headline: "Everything you need, and the people to do it with.",
-  offerings: [
+  headline: "How we gather.",
+  intro:
+    "Four ways the community meets — online, in person, and everywhere in between.",
+  cards: [
     {
-      icon: Network,
-      title: "Networking",
+      title: "Meetups & launches",
       description:
-        "Meaningful introductions to founders, investors, and partners who move your business forward.",
+        "Real rooms, real conversations — and the launch parties that follow.",
+      image: communityImages.meetups,
+      shape: "arch",
     },
     {
-      icon: HeartHandshake,
-      title: "Mentorship",
+      title: "Online meets",
       description:
-        "Guidance from women who've built, scaled, and exited — matched to where you are now.",
+        "Small circles that keep you moving, wherever you're building from.",
+      image: communityImages.onlineMeets,
+      shape: "blob",
     },
     {
-      icon: Calendar,
-      title: "Events",
+      title: "Webinars",
       description:
-        "Curated gatherings, from intimate roundtables to city-wide founder summits.",
+        "No-fluff sessions on the exact skills a founder needs next.",
+      image: communityImages.webinars,
+      shape: "leaf",
     },
     {
-      icon: GraduationCap,
-      title: "Masterclasses",
+      title: "Coffee chats",
       description:
-        "Practical, no-fluff sessions on the exact skills a founder needs to grow.",
+        "One-to-one introductions with the mentors and peers who get it.",
+      image: communityImages.coffeeChats,
+      shape: "rect",
     },
-    {
-      icon: Mic,
-      title: "Founder meetups",
-      description:
-        "Real rooms, real conversations — the peers who become your board of directors.",
-    },
-    {
-      icon: Sparkles,
-      title: "Accountability",
-      description:
-        "Small circles that keep you moving when motivation alone runs out.",
-    },
-  ] satisfies { icon: LucideIcon; title: string; description: string }[],
+  ] satisfies CommunityCard[],
 };
 
-/* --------------------------------------------------------- Why Pink Fly -- */
-export const whyPinkFly = {
-  eyebrow: "Why Pink Fly",
-  headline: "Six ways we help you win.",
-  reasons: [
-    {
-      icon: Target,
-      title: "Business Strategy",
-      description: "Clarity on what to build, what to skip, and what to do next.",
-    },
-    {
-      icon: HeartHandshake,
-      title: "Mentorship",
-      description: "One-to-one and group guidance from women who've done it.",
-    },
-    {
-      icon: Network,
-      title: "Networking",
-      description: "The relationships that quietly change the trajectory of a business.",
-    },
-    {
-      icon: TrendingUp,
-      title: "Growth Support",
-      description: "Hands-on help across marketing, product, hiring, and funding.",
-    },
-    {
-      icon: Sparkles,
-      title: "Accountability",
-      description: "Structure and rhythm so progress becomes inevitable.",
-    },
-    {
-      icon: Users,
-      title: "Community",
-      description: "A place to belong — where your wins are celebrated and your dips are held.",
-    },
-  ] satisfies { icon: LucideIcon; title: string; description: string }[],
-};
-
-/* ------------------------------------------------------ Founder Stories -- */
-export const founderStories = {
+/* ----------------------------------------------------------- Testimonials -- */
+/** Hidden behind `flags.testimonials` — built, not yet live. */
+export const testimonials = {
   eyebrow: "Founder stories",
   headline: "She found her people. Then she found her stride.",
-  subhead: "Placeholder testimonials — replace with real founders and photos before launch.",
-  stories: [
+  note: "Placeholder testimonials — replace with real founders before launch.",
+  items: [
     {
       quote:
         "Before Pink Fly I was building in a vacuum. Now I have mentors on speed dial and a room full of women who genuinely want me to win.",
-      name: "Ananya Rao",
+      name: "Placeholder Name",
       role: "Founder",
-      company: "Studio Marigold",
+      company: "Placeholder Company",
     },
     {
       quote:
-        "The accountability circle got my brand from a side project to real revenue in six months. I stopped waiting for permission.",
-      name: "Priya Menon",
+        "The accountability circle took my brand from a side project to real revenue in six months. I stopped waiting for permission.",
+      name: "Placeholder Name",
       role: "Founder & CEO",
-      company: "Loom & Co.",
+      company: "Placeholder Company",
     },
     {
       quote:
-        "One introduction here led to my first stockist, then my first investor. This community opens doors I didn't know existed.",
-      name: "Fatima Sheikh",
+        "One introduction led to my first stockist, then my first investor. This community opens doors I didn't know existed.",
+      name: "Placeholder Name",
       role: "Co-founder",
-      company: "Nourish Labs",
-    },
-    {
-      quote:
-        "I finally felt understood — as a founder and as a woman. That belonging is the thing no course ever gave me.",
-      name: "Kavya Iyer",
-      role: "Founder",
-      company: "The Daily Press",
+      company: "Placeholder Company",
     },
   ],
 };
 
-/* ---------------------------------------------------------- Newsletter -- */
+/* ------------------------------------------------------------- Final CTA -- */
+export const finalCta = {
+  eyebrow: "Your seat is waiting",
+  headline: "This is where you find your people.",
+  body: "Join the women building the businesses — and the lives — they actually want. Membership is free, and the room is already warm.",
+  cta: { label: "Join the community", href: "/join" },
+};
+
+/* ------------------------------------------------------------ Newsletter -- */
 export const newsletter = {
-  eyebrow: "Stay close",
   headline: "Get the Pink Fly letter.",
   subhead:
-    "Founder stories, playbooks, and event invites — a few times a month, never noise.",
+    "Founder stories, playbooks and event invites — a few times a month, never noise.",
   placeholder: "you@yourbrand.com",
   cta: "Subscribe",
 };
 
-/* ------------------------------------------------------------ Final CTA -- */
-export const finalCta = {
-  eyebrow: "Your seat is waiting",
-  headline: "This is where you find your people.",
-  body: "Join thousands of ambitious women building the businesses — and the lives — they actually want.",
-  cta: { label: "Join the community", href: "/#join" },
+/* ------------------------------------------------------------ About page -- */
+export const about = {
+  hero: {
+    eyebrow: "About Pink Fly",
+    title: "A community built for the long climb.",
+    intro:
+      "Pink Fly is where ambitious women find the mentorship, network and belief that make building a business survivable — and then successful.",
+    image: aboutImages.banner,
+  },
+  founder: {
+    eyebrow: "Founder story",
+    name: "Anjan Prasad",
+    role: "Founder, Pink Fly",
+    image: aboutImages.founder,
+    body: [
+      "Pink Fly began with a simple observation: the women building the most interesting businesses were almost always doing it alone. They had the ambition and the idea. What they didn't have was a room.",
+      "So we built one. What started as a handful of founders comparing notes has grown into an ecosystem of meetups, masterclasses, mentorship and introductions — the infrastructure that ambition needs to survive its first few years.",
+      "Placeholder biography — replace with the founder's own words before launch.",
+    ],
+  },
+  guidelines: {
+    eyebrow: "Community guidelines",
+    headline: "How we show up for each other.",
+    intro:
+      "A community works because of what its members agree to. These are ours.",
+    image: aboutImages.guidelines,
+    items: [
+      {
+        title: "Generosity first",
+        description:
+          "Share the introduction, the template, the hard-won lesson. The room compounds when everyone gives before they ask.",
+      },
+      {
+        title: "Confidentiality holds",
+        description:
+          "What's said in a circle stays in the circle. Revenue numbers, hard seasons and half-formed ideas are all safe here.",
+      },
+      {
+        title: "No pitching, no poaching",
+        description:
+          "This is a community, not a lead list. Build the relationship first — business follows on its own.",
+      },
+      {
+        title: "Respect the range",
+        description:
+          "Day-one founders and second-time CEOs share the same room. Every stage is a legitimate stage.",
+      },
+      {
+        title: "Show up honestly",
+        description:
+          "Progress updates beat highlight reels. The dips are the part other founders actually learn from.",
+      },
+      {
+        title: "Zero tolerance for harm",
+        description:
+          "Harassment, discrimination and bad-faith behaviour end a membership. No exceptions, no warnings needed.",
+      },
+    ],
+  },
+  contact: {
+    eyebrow: "Contact us",
+    headline: "Talk to the Pink Fly team.",
+    intro:
+      "Partnerships, press, speaking or just a question about membership — we read everything.",
+  },
+};
+
+/* ---------------------------------------------------- Join Community page -- */
+export const join = {
+  hero: {
+    eyebrow: "Join the community",
+    title: "Your seat is waiting.",
+    intro:
+      "Membership is free. Bring your ambition, your questions and whatever you're building right now.",
+  },
+  whyJoin: {
+    eyebrow: "Why join us",
+    headline: "What membership actually gives you.",
+    benefits: [
+      {
+        title: "Networking",
+        description:
+          "Introductions to founders, operators and investors who move your business forward.",
+      },
+      {
+        title: "Mentorship",
+        description:
+          "Guidance from women who have built, scaled and exited — matched to where you are now.",
+      },
+      {
+        title: "Events",
+        description:
+          "Curated gatherings, from intimate roundtables to city-wide founder summits.",
+      },
+      {
+        title: "Masterclasses",
+        description:
+          "Practical, no-fluff sessions on the exact skills a founder needs to grow.",
+      },
+      {
+        title: "Knowledge Base",
+        description:
+          "Playbooks, business news and policy updates, written for founders in a hurry.",
+      },
+      {
+        title: "Accountability",
+        description:
+          "Small circles that keep you moving when motivation alone runs out.",
+      },
+    ],
+  },
+  /**
+   * Long-form, CMS-managed block. `body` is an array of paragraphs so a CMS
+   * can supply rich content later without a component change. Until the CMS
+   * is connected, this placeholder copy renders in its place.
+   */
+  editorial: {
+    key: "join-community-editorial",
+    eyebrow: "From the team",
+    headline: "What to expect in your first month.",
+    body: [
+      "Placeholder content — this block is designed to be managed through the CMS/CRM. Everything below will be replaced by editor-authored content once the integration is live.",
+      "Most members start by introducing themselves in the community channel, joining the next online meet, and booking a coffee chat with someone a stage ahead of them. There is no obligation to attend everything — the community works just as well at a slow pace.",
+      "You'll get the Pink Fly letter every few weeks with upcoming events, member wins and playbooks worth your time.",
+    ],
+  },
+  cta: {
+    headline: "Ready when you are.",
+    body: "Fill in the short form and the team will be in touch with your welcome pack.",
+    label: "Join now",
+  },
+  faqs: [
+    {
+      q: "Who can join Pink Fly?",
+      a: "Any woman building, or seriously planning, a business. There is no revenue threshold and no stage requirement.",
+    },
+    {
+      q: "Does membership cost anything?",
+      a: "Community membership is free. Some ticketed events and intensive programmes are paid — pricing is always shown up front.",
+    },
+    {
+      q: "What happens after I submit the form?",
+      a: "Your response goes to the Pink Fly team, who will send a welcome pack with the community links and the next set of events in your region.",
+    },
+    {
+      q: "Can I join from outside the listed regions?",
+      a: "Yes. The global community is open worldwide — pick 'Global' in the region selector to see everything on offer.",
+    },
+  ],
+};
+
+/* ------------------------------------------------------- Knowledge Base -- */
+export const knowledgeBase = {
+  hero: {
+    eyebrow: "Knowledge Base",
+    title: "Everything worth knowing, written for founders in a hurry.",
+    intro:
+      "Playbooks from the community, the business news that matters, and the policy changes that affect how you build.",
+  },
 };

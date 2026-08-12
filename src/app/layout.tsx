@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Mono } from "next/font/google";
 import { siteConfig } from "@/config/site";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import "./globals.css";
 
 const spaceMono = Space_Mono({
@@ -24,41 +23,29 @@ const themeInitScript = `
 }catch(e){}})();
 `;
 
+/**
+ * Root metadata. Per-page titles, descriptions, canonicals and hreflang are
+ * supplied by `buildMetadata` in each route — this only sets the defaults.
+ */
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: `${siteConfig.name} — ${siteConfig.tagline}`,
-    template: `%s — ${siteConfig.name}`,
+    template: `%s`,
   },
   description: siteConfig.description,
   keywords: [
     "women entrepreneurs",
-    "women founders India",
+    "women founders",
     "founder community",
     "mentorship",
     "women in business",
     "Pink Fly",
     "Noboru World",
   ],
-  authors: [{ name: "Noboru World" }],
-  creator: "Noboru World",
-  openGraph: {
-    type: "website",
-    locale: "en_IN",
-    url: siteConfig.url,
-    siteName: siteConfig.name,
-    title: `${siteConfig.name} — ${siteConfig.tagline}`,
-    description: siteConfig.description,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${siteConfig.name} — ${siteConfig.tagline}`,
-    description: siteConfig.description,
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  authors: [{ name: siteConfig.parent }],
+  creator: siteConfig.parent,
+  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
@@ -72,9 +59,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={spaceMono.variable} suppressHydrationWarning>
       <head>
@@ -87,9 +72,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <Navbar />
-        <main id="main">{children}</main>
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );
