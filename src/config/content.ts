@@ -19,6 +19,26 @@ export const hero = {
   interval: 1500,
 };
 
+/* --------------------------------------------------------------- Trust -- */
+/**
+ * Credibility strip. Built and reusable, but NOT part of the homepage flow —
+ * the approved wireframe does not include it. Kept so it can be dropped onto
+ * a page later; see <Trust>.
+ */
+export const trust = {
+  statement:
+    "Trusted by founders, mentors and partner organisations across the Pink Fly network.",
+  /** Placeholder names — replace with real logo assets before use. */
+  logos: [
+    "Partner name TBC",
+    "Partner name TBC",
+    "Partner name TBC",
+    "Partner name TBC",
+    "Partner name TBC",
+    "Partner name TBC",
+  ],
+};
+
 /* --------------------------------------------------- Why Pink Fly exists -- */
 export const mission = {
   eyebrow: "Why Pink Fly exists",
@@ -297,4 +317,21 @@ export const knowledgeBase = {
     intro:
       "Playbooks from the community, the business news that matters, and the policy changes that affect how you build.",
   },
+};
+
+/* ------------------------------------------------------ Value spotlight -- */
+/**
+ * Built and reusable, but NOT part of the homepage flow — the approved
+ * wireframe does not include it. See <ValueSpotlight>.
+ */
+export const valueSpotlight = {
+  eyebrow: "More than a network",
+  headline: "Momentum you can feel, month after month.",
+  body: "Membership isn't a directory you forget about. It's a rhythm — a mentor in your corner, a circle that checks in, and rooms full of women who've already solved the thing you're stuck on.",
+  points: [
+    "Matched mentorship, not a random inbox introduction.",
+    "Small accountability circles that meet all year.",
+    "Members-only masterclasses, playbooks and templates.",
+  ],
+  cta: { label: "See what's inside", href: "/join" },
 };

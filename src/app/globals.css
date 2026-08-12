@@ -312,6 +312,54 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--pf-heading);
 }
 
+
+/* --------------------------------------------------------------------------
+   Horizontal logo rail — two identical tracks scrolling for a seamless loop.
+   Used by <Trust>, which is built but not part of the wireframe homepage flow.
+   -------------------------------------------------------------------------- */
+.pf-marquee {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  gap: 3rem;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.pf-marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 3rem;
+  padding-right: 3rem;
+  animation: pf-marquee-scroll 36s linear infinite;
+}
+
+.pf-marquee:hover .pf-marquee__track {
+  animation-play-state: paused;
+}
+
+.pf-marquee__item {
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--pf-muted);
+  opacity: 0.85;
+  transition: color 0.25s var(--pf-ease), opacity 0.25s var(--pf-ease);
+}
+
+.pf-marquee__item:hover {
+  color: var(--pf-heading);
+  opacity: 1;
+}
+
+@keyframes pf-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
 /* ==========================================================================
    Accessibility — respect reduced motion
    ========================================================================== */
@@ -326,5 +374,29 @@ h1, h2, h3, h4, h5, h6 {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* The logo rail would otherwise settle on its end frame (empty). Freeze it
+     in place and let the user scroll the overflow instead. */
+  .pf-marquee {
+    overflow-x: auto;
+  }
+  .pf-marquee__track {
+    animation: none !important;
+  }
+  .pf-marquee__track[aria-hidden="true"] {
+    display: none;
+  }
+
+  /* The logo rail would otherwise settle on its end frame (empty). Freeze it
+     in place and let the user scroll the overflow instead. */
+  .pf-marquee {
+    overflow-x: auto;
+  }
+  .pf-marquee__track {
+    animation: none !important;
+  }
+  .pf-marquee__track[aria-hidden="true"] {
+    display: none;
   }
 }

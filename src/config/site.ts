@@ -14,6 +14,9 @@ export const siteConfig = {
   parent: "Noboru World",
   parentUrl: "https://noboruworld.com",
   contactEmail: "hello@pinkfly.community",
+  /** Placeholder contact block — confirm before launch. */
+  address: ["Noboru World", "Bengaluru, Karnataka", "India"],
+  phone: "+91 00000 00000",
   socials: {
     instagram: "https://www.instagram.com/pinkfly_official/",
     youtube: "https://www.youtube.com/@PinkFly-official",
@@ -65,10 +68,19 @@ export const footerNav = {
     links: [
       { label: "About Us", href: "/about" },
       { label: "Contact Us", href: "/about#contact" },
-      { label: "Community Guidelines", href: "/about#community-guidelines" },
-      { label: "Privacy Policy", href: "/privacy" },
+      {
+        label: "Community Guidelines",
+        href: "/policies/community-guidelines",
+      },
+      { label: "Privacy Policy", href: "/policies/privacy" },
     ],
   },
 } as const;
+
+/** Legal pages, linked from the footer's bottom bar. */
+export const policyNav = [
+  { label: "Terms & Conditions", href: "/policies/terms" },
+  { label: "Refund Policy", href: "/policies/refund" },
+] as const;
 
 export type SiteConfig = typeof siteConfig;

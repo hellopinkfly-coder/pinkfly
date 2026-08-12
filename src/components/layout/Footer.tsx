@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { siteConfig, footerNav } from "@/config/site";
+import { siteConfig, footerNav, policyNav } from "@/config/site";
 import {
   InstagramIcon,
   LinkedinIcon,
@@ -114,9 +114,21 @@ export function Footer({ region }: { region: Region }) {
         </div>
 
         <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-[var(--pf-border)] pt-8 text-xs text-[var(--pf-muted)] sm:flex-row sm:items-center">
-          <p>
-            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
-          </p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <p>
+              © {new Date().getFullYear()} {siteConfig.name}. All rights
+              reserved.
+            </p>
+            {policyNav.map((item) => (
+              <Link
+                key={item.href}
+                href={regionPath(region, item.href)}
+                className="transition-colors hover:text-[var(--pf-accent)]"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
           <p>
             Powered by{" "}
             <a

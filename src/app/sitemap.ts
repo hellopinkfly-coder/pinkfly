@@ -17,7 +17,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/join",
     "/events",
     "/knowledge-base",
-    "/privacy",
+    "/policies/terms",
+    "/policies/refund",
+    "/policies/privacy",
+    "/policies/community-guidelines",
   ];
 
   const eventPaths = events.map((event) => `/events/${event.slug}`);

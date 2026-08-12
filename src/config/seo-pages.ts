@@ -23,9 +23,4 @@ export const pageSeo = {
     description:
       "Founder playbooks, the business news that matters, and the policy changes that affect how you build.",
   },
-  privacy: {
-    title: "Privacy Policy",
-    description:
-      "How Pink Fly collects, uses and protects the personal information of its community members.",
-  },
 } as const;
