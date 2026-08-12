@@ -16,9 +16,9 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 /**
  * Full-screen homepage hero carousel.
  *
- * Editorial rather than promotional: one photograph fills the fold, the copy
- * sits over a graded scrim, and each slide carries its own headline so the
- * carousel tells a short story as it advances.
+ * Editorial rather than promotional: one photograph fills the fold and the
+ * copy over it is deliberately sparse — an eyebrow, one short headline per
+ * slide, and two buttons. Nothing else competes with the photography.
  *
  * Motion is deliberately restrained — a slow cross-fade plus a barely
  * perceptible Ken Burns drift. Nothing slides, bounces or flies in.
@@ -84,12 +84,14 @@ export function Hero({ region }: { region: Region }) {
       ref={rootRef}
       aria-roledescription="carousel"
       aria-label="Pink Fly"
-      // Offset by the header's height so the slideshow starts cleanly beneath
-      // the navbar instead of running under it, while the fold still ends at
-      // the bottom of the viewport.
+      // Offset by the header's height so the slideshow starts beneath the
+      // navbar rather than running under it, with a 5px breathing gap. The
+      // height sheds the same offset so the fold still ends exactly at the
+      // bottom of the viewport.
       className={cn(
         "relative isolate w-full overflow-hidden bg-[#141014]",
-        "mt-[100px] h-[calc(100svh-100px)] sm:mt-[110px] sm:h-[calc(100svh-110px)]",
+        // 78px is the header's resting height; +5px is the requested gap.
+        "mt-[83px] h-[calc(100svh-83px)]",
         "min-h-[520px]"
       )}
       onMouseEnter={() => setPaused(true)}
@@ -116,7 +118,6 @@ export function Hero({ region }: { region: Region }) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
           className="absolute inset-0"
-          aria-hidden={false}
           role="group"
           aria-roledescription="slide"
           aria-label={`${index + 1} of ${count}`}
@@ -160,62 +161,64 @@ export function Hero({ region }: { region: Region }) {
         }}
       />
 
-      {/* Copy */}
-      <Container className="relative z-[2] flex h-full max-w-6xl flex-col justify-end pb-28 sm:pb-32 lg:justify-center lg:pb-0">
-        <div className="max-w-2xl">
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
-            className="inline-flex items-center gap-2.5 text-[0.7rem] font-bold uppercase tracking-[0.28em] text-white/85"
-          >
-            <span aria-hidden className="h-px w-8 bg-[var(--pf-accent)]" />
-            {region.copy.heroEyebrow}
-          </motion.span>
+      {/*
+        Copy and controls share one flex column rather than the controls being
+        absolutely positioned over the copy. The copy area grows and centres
+        itself in whatever space is left, so the two can never overlap however
+        tall the headline runs or however short the viewport is.
+      */}
+      <Container className="relative z-[2] flex h-full max-w-6xl flex-col">
+        <div className="flex min-h-0 flex-1 flex-col justify-center py-8">
+          <div className="max-w-2xl">
+            <motion.span
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
+              className="inline-flex items-center gap-2.5 text-[0.7rem] font-bold uppercase tracking-[0.28em] text-white/85"
+            >
+              <span aria-hidden className="h-px w-8 bg-[var(--pf-accent)]" />
+              {region.copy.heroEyebrow}
+            </motion.span>
 
-          {/* Headline and subhead change with the slide. */}
-          <AnimatePresence mode="wait">
+            {/* Headline and subhead change with the slide. */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.45, ease: EASE }}
+              >
+                <h1 className="pf-display mt-5 max-w-xl text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
+                  {index === 0 ? region.copy.heroHeadline : slide.headline}
+                </h1>
+              </motion.div>
+            </AnimatePresence>
+
             <motion.div
-              key={index}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.45, ease: EASE }}
+              transition={{ duration: 0.8, ease: EASE, delay: 0.35 }}
+              className="mt-8 flex flex-wrap gap-3"
             >
-              <h1 className="pf-display mt-6 text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
-                {index === 0 ? region.copy.heroHeadline : slide.headline}
-              </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-                {index === 0 ? region.copy.heroSubhead : slide.subhead}
-              </p>
+              <Button href={regionPath(region, hero.primaryCta.href)} size="lg">
+                {hero.primaryCta.label}
+                <ArrowRight size={18} />
+              </Button>
+              <Button
+                href={regionPath(region, hero.secondaryCta.href)}
+                size="lg"
+                className="border border-white/35 bg-white/10 text-white backdrop-blur-md hover:border-white/60 hover:bg-white/20"
+              >
+                {hero.secondaryCta.label}
+              </Button>
             </motion.div>
-          </AnimatePresence>
-
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE, delay: 0.35 }}
-            className="mt-9 flex flex-wrap gap-3"
-          >
-            <Button href={regionPath(region, hero.primaryCta.href)} size="lg">
-              {hero.primaryCta.label}
-              <ArrowRight size={18} />
-            </Button>
-            <Button
-              href={regionPath(region, hero.secondaryCta.href)}
-              size="lg"
-              className="border border-white/35 bg-white/10 text-white backdrop-blur-md hover:border-white/60 hover:bg-white/20"
-            >
-              {hero.secondaryCta.label}
-            </Button>
-          </motion.div>
+          </div>
         </div>
-      </Container>
 
-      {/* Controls */}
-      <Container className="pointer-events-none absolute inset-x-0 bottom-8 z-[3] max-w-6xl sm:bottom-10">
-        <div className="pointer-events-auto flex items-end justify-between gap-6">
-          {/* Progress bars — each fills over one interval. */}
+        {/* Controls sit in normal flow at the foot of the column. */}
+        <div className="flex shrink-0 items-end justify-between gap-6 pb-8 sm:pb-10">
+          {/* Progress bars — the active one fills over a single interval. */}
           <ul className="flex flex-1 gap-2.5 sm:max-w-sm">
             {heroSlides.map((s, i) => (
               <li key={s.src} className="flex-1">
@@ -224,9 +227,9 @@ export function Hero({ region }: { region: Region }) {
                   onClick={() => select(i)}
                   aria-label={`Go to slide ${i + 1}: ${s.label ?? s.alt}`}
                   aria-current={i === index}
-                  className="group relative block h-9 w-full"
+                  className="group relative block h-6 w-full"
                 >
-                  <span className="absolute inset-x-0 top-4 h-[3px] overflow-hidden rounded-full bg-white/25 transition-colors duration-300 group-hover:bg-white/40">
+                  <span className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full bg-white/25 transition-colors duration-300 group-hover:bg-white/40">
                     <motion.span
                       className="block h-full rounded-full bg-white"
                       initial={{ width: "0%" }}
@@ -245,8 +248,7 @@ export function Hero({ region }: { region: Region }) {
           </ul>
 
           <div className="flex items-center gap-4">
-            {/* Slide caption — the corner label treatment used site-wide.
-                Only the caption animates; the counter is static so it never
+            {/* Only the caption animates; the counter stays put so it never
                 flickers as slides change. */}
             <AnimatePresence mode="wait">
               <motion.span
@@ -268,14 +270,8 @@ export function Hero({ region }: { region: Region }) {
             </span>
 
             <div className="flex gap-2">
-              <ArrowButton
-                direction="left"
-                onClick={() => select(index - 1)}
-              />
-              <ArrowButton
-                direction="right"
-                onClick={() => select(index + 1)}
-              />
+              <ArrowButton direction="left" onClick={() => select(index - 1)} />
+              <ArrowButton direction="right" onClick={() => select(index + 1)} />
             </div>
           </div>
         </div>
