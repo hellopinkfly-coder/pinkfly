@@ -22,11 +22,14 @@ function navVariantFor(rest: string): NavVariant {
 }
 
 /**
- * Routes that open on a dark, full-bleed image. The header floats over them
- * with light type until the visitor scrolls.
+ * Routes that open on a dark, full-bleed image sitting directly beneath the
+ * header. The bar floats over them with light type until the visitor scrolls.
+ *
+ * The homepage is deliberately NOT in this list: its carousel is inset below
+ * the header, so the bar sits on the page background and keeps dark type.
  */
 function opensOnDarkHero(rest: string): boolean {
-  return rest === "/" || rest === "/events";
+  return rest === "/events";
 }
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
