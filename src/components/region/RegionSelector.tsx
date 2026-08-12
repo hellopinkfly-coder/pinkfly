@@ -16,6 +16,8 @@ type RegionSelectorProps = {
   className?: string;
   /** Full-width list styling for the mobile menu. */
   variant?: "menu" | "inline";
+  /** Render light, for use over a dark full-bleed hero. */
+  onDark?: boolean;
 };
 
 /**
@@ -30,6 +32,7 @@ export function RegionSelector({
   rest,
   className,
   variant = "menu",
+  onDark = false,
 }: RegionSelectorProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -90,7 +93,12 @@ export function RegionSelector({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Region: ${current.name}. Change region`}
-        className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[var(--pf-border-strong)] px-3.5 text-sm text-[var(--pf-heading)] transition-all duration-200 hover:border-[var(--pf-accent)] hover:text-[var(--pf-accent)]"
+        className={cn(
+          "inline-flex h-10 items-center gap-1.5 rounded-full border px-3.5 text-sm transition-all duration-200",
+          onDark
+            ? "border-white/35 text-white hover:border-white/70"
+            : "border-[var(--pf-border-strong)] text-[var(--pf-heading)] hover:border-[var(--pf-accent)] hover:text-[var(--pf-accent)]"
+        )}
       >
         <Globe size={15} aria-hidden />
         <span className="hidden sm:inline">{current.shortName}</span>

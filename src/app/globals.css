@@ -109,45 +109,53 @@
 
 /* ==========================================================================
    Base
+
+   Declared inside `@layer base` on purpose. Unlayered rules win over layered
+   ones in the cascade, so an unlayered `h1 { color }` would beat a Tailwind
+   utility like `text-white` no matter how specific the utility is — which
+   silently breaks headings set over dark imagery. Keeping base styles in the
+   base layer lets utilities override them, as they should.
    ========================================================================== */
 
-* {
-  border-color: var(--pf-border);
-}
+@layer base {
+  * {
+    border-color: var(--pf-border);
+  }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-}
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
 
-body {
-  background: var(--pf-bg);
-  color: var(--pf-text);
-  font-family: var(--font-body);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  transition: background-color 0.4s var(--pf-ease), color 0.4s var(--pf-ease);
-}
+  body {
+    background: var(--pf-bg);
+    color: var(--pf-text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background-color 0.4s var(--pf-ease), color 0.4s var(--pf-ease);
+  }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  color: var(--pf-heading);
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  font-weight: 700;
-  text-wrap: balance;
-}
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--pf-heading);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    text-wrap: balance;
+  }
 
-::selection {
-  background: var(--pf-accent);
-  color: #fff;
-}
+  ::selection {
+    background: var(--pf-accent);
+    color: #fff;
+  }
 
-:focus-visible {
-  outline: 2px solid var(--pf-accent);
-  outline-offset: 3px;
-  border-radius: 4px;
+  :focus-visible {
+    outline: 2px solid var(--pf-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
 }
 
 /* ==========================================================================

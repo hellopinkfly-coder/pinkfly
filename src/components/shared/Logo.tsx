@@ -17,6 +17,8 @@ type LogoProps = {
   size?: "sm" | "md" | "lg";
   /** Where the logo links to — region-aware callers pass a prefixed path. */
   href?: string;
+  /** Render light, for use over a dark full-bleed hero. */
+  onDark?: boolean;
 };
 
 const sizes = {
@@ -25,21 +27,34 @@ const sizes = {
   lg: "text-2xl",
 } as const;
 
-export function LogoMark({ className, size = "sm" }: Omit<LogoProps, "href">) {
+export function LogoMark({
+  className,
+  size = "sm",
+  onDark = false,
+}: Omit<LogoProps, "href">) {
   return (
     <span
       className={cn(
-        "font-[family-name:var(--font-display)] font-bold tracking-tight text-[var(--pf-heading)]",
+        "font-[family-name:var(--font-display)] font-bold tracking-tight transition-colors duration-300",
+        onDark ? "text-white" : "text-[var(--pf-heading)]",
         sizes[size],
         className
       )}
     >
-      Pink<span className="text-[var(--pf-accent)]">Fly</span>
+      Pink
+      <span className={onDark ? "text-white/70" : "text-[var(--pf-accent)]"}>
+        Fly
+      </span>
     </span>
   );
 }
 
-export function Logo({ className, size = "sm", href = "/" }: LogoProps) {
+export function Logo({
+  className,
+  size = "sm",
+  href = "/",
+  onDark = false,
+}: LogoProps) {
   return (
     <Link
       href={href}
@@ -49,7 +64,7 @@ export function Logo({ className, size = "sm", href = "/" }: LogoProps) {
         className
       )}
     >
-      <LogoMark size={size} />
+      <LogoMark size={size} onDark={onDark} />
     </Link>
   );
 }
