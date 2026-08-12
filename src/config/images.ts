@@ -1,77 +1,115 @@
 /**
- * Stock image placeholders.
+ * Stock image placeholders — women only.
  *
- * Every entry is a contextual, temporary reference image served from
- * Unsplash. They are grouped by where they are used so a real photoshoot can
- * be dropped in one place. Replace the `src` values (and only those) when
- * final photography arrives — the layouts read `alt` and `label` from here
- * too, so the captions stay correct.
+ * Every image on this site depicts women: founders, mentors, speakers and
+ * community members. That is a hard rule for Pink Fly, so it is enforced here,
+ * in the one place images are declared, rather than left to each component.
+ *
+ * ⚠️ VERIFY BEFORE LAUNCH — these are Unsplash IDs chosen for subject and
+ * composition. Open the page once and eyeball every frame: a stock photo that
+ * does not match the brief is far more damaging on this site than on most.
+ * Replace `src` values here and every usage updates.
  */
 
 export type StockImage = {
   src: string;
   alt: string;
-  /** Optional caption rendered in the bottom-right corner of the frame. */
+  /** Optional caption rendered in the corner of the frame. */
   label?: string;
 };
 
-const u = (id: string, w = 1400) =>
-  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
+const u = (id: string, w = 1600) =>
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=85`;
 
-/** Homepage hero carousel — rotates every 1.5s. */
-export const heroCarousel: StockImage[] = [
+/**
+ * Full-screen homepage hero carousel.
+ *
+ * Each slide carries its own line of copy so the carousel tells a short story
+ * as it advances rather than repeating one headline over four photographs.
+ * `focal` sets object-position so faces stay in frame as the crop changes
+ * across breakpoints.
+ */
+export type HeroSlide = StockImage & {
+  /** Short headline shown over this slide. */
+  headline: string;
+  /** Supporting line beneath the headline. */
+  subhead: string;
+  /** CSS object-position keeping the subject in frame. */
+  focal: string;
+};
+
+export const heroSlides: HeroSlide[] = [
   {
-    src: u("1573497019940-1c28c88b4f3e"),
-    alt: "A woman entrepreneur presenting to her team",
+    src: u("1573497019940-1c28c88b4f3e", 2400),
+    alt: "A woman entrepreneur presenting to her team in a bright office",
     label: "Founders",
+    headline: "You were never meant to build alone.",
+    subhead:
+      "A community for ambitious women entrepreneurs — the mentorship, network and belief you deserve.",
+    focal: "50% 35%",
   },
   {
-    src: u("1521737604893-d14cc237f11d"),
-    alt: "Women collaborating around a table at a community meetup",
-    label: "Meetups",
+    src: u("1600880292203-757bb62b4baf", 2400),
+    alt: "Two women in conversation across a desk",
+    label: "Mentorship",
+    headline: "Guidance from women who have already done it.",
+    subhead:
+      "Matched mentorship from founders who have built, scaled and exited — not a random introduction.",
+    focal: "50% 40%",
   },
   {
-    src: u("1544717305-2782549b5136"),
-    alt: "A founder working on her business plan",
-    label: "Building",
+    src: u("1594744803329-e58b31de8bf5", 2400),
+    alt: "Women gathered in conversation at a community event",
+    label: "Community",
+    headline: "Rooms full of women who get it.",
+    subhead:
+      "Meetups, coffee chats and launch nights — the peers who become your board of directors.",
+    focal: "50% 40%",
   },
   {
-    src: u("1556761175-b413da4baf72"),
-    alt: "A group of women in conversation at a networking event",
-    label: "Networking",
+    src: u("1551836022-d5d88e9218df", 2400),
+    alt: "A woman speaking to an audience at a Pink Fly event",
+    label: "Masterclasses",
+    headline: "Practical, no-fluff, and taught by practitioners.",
+    subhead:
+      "The exact skills a founder needs next — pricing, hiring, funding, growth.",
+    focal: "50% 35%",
   },
 ];
+
+/** Milliseconds each hero slide holds before advancing. */
+export const HERO_INTERVAL = 2000;
 
 /** Homepage "How we gather" cards. */
 export const communityImages: Record<string, StockImage> = {
   meetups: {
-    src: u("1511578314322-379afb476865", 1000),
-    alt: "Women gathered at a community launch event",
+    src: u("1543269865-cbf427effbad", 1200),
+    alt: "Women gathered around a table at a Pink Fly meetup",
     label: "Meetups & launches",
   },
   onlineMeets: {
-    src: u("1584036561566-baf8f5f1b144", 1000),
+    src: u("1573164713988-8665fc963095", 1200),
     alt: "A woman on a video call with her founder circle",
     label: "Online meets",
   },
   webinars: {
-    src: u("1591115765373-5207764f72e7", 1000),
-    alt: "A speaker addressing an audience at a webinar recording",
+    src: u("1573497620053-ea5300f94f21", 1200),
+    alt: "A woman presenting a session to an online audience",
     label: "Webinars",
   },
   coffeeChats: {
-    src: u("1521737711867-e3b97375f902", 1000),
-    alt: "Two founders in conversation over coffee",
+    src: u("1552581234-26160f608093", 1200),
+    alt: "Two women founders in conversation over coffee",
     label: "Coffee chats",
   },
   networking: {
-    src: u("1556761175-4b46a572b786", 1000),
+    src: u("1580894732444-8ecded7900cd", 1200),
     alt: "Women networking at a professional event",
     label: "Networking",
   },
   mentorship: {
-    src: u("1573496359142-b8d87734a5a2", 1000),
-    alt: "A mentor advising a younger founder",
+    src: u("1573496359142-b8d87734a5a2", 1200),
+    alt: "A mentor advising a younger woman founder",
     label: "Mentorship",
   },
 };
@@ -79,18 +117,18 @@ export const communityImages: Record<string, StockImage> = {
 /** About page. */
 export const aboutImages = {
   banner: {
-    src: u("1600880292203-757bb62b4baf", 1800),
+    src: u("1521737604893-d14cc237f11d", 2000),
     alt: "Women entrepreneurs collaborating in a bright workspace",
     label: "The Pink Fly community",
   } satisfies StockImage,
   founder: {
-    src: u("1507003211169-0a1dd7228f2d", 1000),
+    src: u("1573497491208-6b1acb260507", 1200),
     alt: "Portrait placeholder for the Pink Fly founder",
     label: "Founder",
   } satisfies StockImage,
   guidelines: {
-    src: u("1522071820081-009f0129c71c", 1200),
-    alt: "A team working together in a supportive environment",
+    src: u("1517048676732-d65bc937f952", 1400),
+    alt: "Women working together in a supportive environment",
     label: "How we show up",
   } satisfies StockImage,
 };
@@ -98,7 +136,7 @@ export const aboutImages = {
 /** Join Community page. */
 export const joinImages = {
   banner: {
-    src: u("1517048676732-d65bc937f952", 1800),
+    src: u("1594744803329-e58b31de8bf5", 2000),
     alt: "Women entrepreneurs meeting around a table",
     label: "Join the community",
   } satisfies StockImage,
@@ -107,24 +145,24 @@ export const joinImages = {
 /** Events. */
 export const eventImages = {
   banner: {
-    src: u("1540575467063-178a50c2df87", 1800),
-    alt: "An audience at a professional community event",
+    src: u("1551836022-d5d88e9218df", 2400),
+    alt: "A woman addressing an audience at a Pink Fly event",
     label: "Pink Fly events",
   } satisfies StockImage,
   fallback: {
-    src: u("1475721027785-f74eccf877e2", 1000),
-    alt: "A Pink Fly community event",
+    src: u("1543269865-cbf427effbad", 1200),
+    alt: "Women at a Pink Fly community event",
   } satisfies StockImage,
 };
 
 /** Knowledge Base editorial imagery. */
 export const knowledgeImages = {
   banner: {
-    src: u("1499750310107-5fef28a66643", 1800),
-    alt: "An editorial desk with notes and a laptop",
+    src: u("1544717297-fa95b6ee9643", 2000),
+    alt: "A woman reading and taking notes at her desk",
     label: "Knowledge Base",
   } satisfies StockImage,
 };
 
-/** Generic square placeholder for team members with no photo yet. */
-export const teamPlaceholder = u("1573496359142-b8d87734a5a2", 800);
+/** Neutral portrait for team members and speakers with no photo yet. */
+export const teamPlaceholder = u("1573496359142-b8d87734a5a2", 900);

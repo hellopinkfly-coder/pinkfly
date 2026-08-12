@@ -1,160 +1,307 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { hero } from "@/config/content";
-import { heroCarousel } from "@/config/images";
+import { heroSlides, HERO_INTERVAL } from "@/config/images";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
-import { GradientBackdrop } from "@/components/shared/GradientBackdrop";
-import { EASE, fadeUp, staggerContainer } from "@/components/motion/variants";
 import { regionPath, type Region } from "@/lib/region";
 import { cn } from "@/lib/utils";
 
+const EASE = [0.16, 1, 0.3, 1] as const;
+
 /**
- * Homepage hero.
+ * Full-screen homepage hero carousel.
  *
- * The image is a carousel that advances automatically every 1.5s with a soft
- * cross-fade — no slide-in, no motion that competes with the copy. The whole
- * frame links through to the About page, as the wireframe specifies.
+ * Editorial rather than promotional: one photograph fills the fold, the copy
+ * sits over a graded scrim, and each slide carries its own headline so the
+ * carousel tells a short story as it advances.
+ *
+ * Motion is deliberately restrained — a slow cross-fade plus a barely
+ * perceptible Ken Burns drift. Nothing slides, bounces or flies in.
+ *
+ * Behaviour:
+ * - advances every 2s, pauses on hover/focus and when the tab is hidden
+ * - arrow keys and swipe move between slides; manual control stops the timer
+ * - `prefers-reduced-motion` holds slide one and drops the drift entirely
  */
 export function Hero({ region }: { region: Region }) {
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [userControlled, setUserControlled] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const rootRef = useRef<HTMLElement>(null);
+  const touchStartX = useRef<number | null>(null);
+
+  const count = heroSlides.length;
+  const goTo = useCallback((next: number) => {
+    setIndex((next + heroSlides.length) % heroSlides.length);
+  }, []);
+
+  const advance = useCallback(() => goTo(index + 1), [goTo, index]);
+
+  // Auto-advance. Stops for reduced motion, hover/focus, a hidden tab, or
+  // once the visitor has taken manual control.
+  useEffect(() => {
+    if (reduceMotion || paused || userControlled) return;
+    const id = setInterval(advance, HERO_INTERVAL);
+    return () => clearInterval(id);
+  }, [advance, paused, reduceMotion, userControlled]);
+
+  useEffect(() => {
+    const onVisibility = () => setPaused(document.hidden);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, []);
+
+  // Arrow-key navigation while the hero has focus within.
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      if (!el?.contains(document.activeElement)) return;
+      e.preventDefault();
+      setUserControlled(true);
+      goTo(e.key === "ArrowRight" ? index + 1 : index - 1);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [goTo, index]);
+
+  function select(next: number) {
+    setUserControlled(true);
+    goTo(next);
+  }
+
+  const slide = heroSlides[index];
+
   return (
-    <section className="relative overflow-hidden pt-32 pb-16 sm:pt-40 sm:pb-24">
-      <GradientBackdrop />
-      <Container>
-        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+    <section
+      ref={rootRef}
+      aria-roledescription="carousel"
+      aria-label="Pink Fly"
+      className="relative isolate h-[100svh] min-h-[560px] w-full overflow-hidden bg-[#141014]"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+      onTouchStart={(e) => {
+        touchStartX.current = e.touches[0].clientX;
+      }}
+      onTouchEnd={(e) => {
+        const start = touchStartX.current;
+        if (start === null) return;
+        const delta = e.changedTouches[0].clientX - start;
+        if (Math.abs(delta) > 48) select(delta < 0 ? index + 1 : index - 1);
+        touchStartX.current = null;
+      }}
+    >
+      {/* Slides */}
+      <AnimatePresence initial={false}>
+        <motion.div
+          key={index}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.1, ease: "easeInOut" }}
+          className="absolute inset-0"
+          aria-hidden={false}
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`${index + 1} of ${count}`}
+        >
           <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col items-start gap-6"
+            className="absolute inset-0"
+            initial={reduceMotion ? false : { scale: 1.06 }}
+            animate={reduceMotion ? undefined : { scale: 1 }}
+            transition={{ duration: HERO_INTERVAL / 1000 + 6, ease: "linear" }}
           >
-            <motion.span variants={fadeUp} className="pf-eyebrow">
-              {region.copy.heroEyebrow}
-            </motion.span>
-
-            <motion.h1
-              variants={fadeUp}
-              className="pf-display max-w-2xl text-[var(--pf-heading)]"
-            >
-              {region.copy.heroHeadline}
-            </motion.h1>
-
-            <motion.p
-              variants={fadeUp}
-              className="max-w-xl text-lg leading-relaxed text-[var(--pf-text)]"
-            >
-              {region.copy.heroSubhead}
-            </motion.p>
-
-            <motion.div variants={fadeUp} className="mt-2 flex flex-wrap gap-3">
-              <Button href={regionPath(region, hero.primaryCta.href)} size="lg">
-                {hero.primaryCta.label}
-                <ArrowRight size={18} />
-              </Button>
-              <Button
-                href={regionPath(region, hero.secondaryCta.href)}
-                variant="secondary"
-                size="lg"
-              >
-                {hero.secondaryCta.label}
-              </Button>
-            </motion.div>
+            <Image
+              src={slide.src}
+              alt={slide.alt}
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              quality={85}
+              style={{ objectPosition: slide.focal }}
+              className="object-cover"
+            />
           </motion.div>
+        </motion.div>
+      </AnimatePresence>
 
-          <HeroCarousel href={regionPath(region, hero.imageHref)} />
+      {/* Grading: a dark base for legibility, warmed with a whisper of brand
+          pink so the fold reads as Pink Fly rather than generic stock. */}
+      <span
+        aria-hidden
+        className="absolute inset-0 z-[1] bg-gradient-to-r from-black/80 via-black/55 to-black/25"
+      />
+      <span
+        aria-hidden
+        className="absolute inset-0 z-[1] bg-gradient-to-t from-black/75 via-transparent to-black/40"
+      />
+      <span
+        aria-hidden
+        className="absolute inset-0 z-[1] mix-blend-soft-light"
+        style={{
+          background:
+            "radial-gradient(120% 80% at 15% 90%, rgba(216,3,125,0.55), transparent 60%)",
+        }}
+      />
+
+      {/* Copy */}
+      <Container className="relative z-[2] flex h-full max-w-6xl flex-col justify-end pb-28 sm:pb-32 lg:justify-center lg:pb-0">
+        <div className="max-w-2xl">
+          <motion.span
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
+            className="inline-flex items-center gap-2.5 text-[0.7rem] font-bold uppercase tracking-[0.28em] text-white/85"
+          >
+            <span aria-hidden className="h-px w-8 bg-[var(--pf-accent)]" />
+            {region.copy.heroEyebrow}
+          </motion.span>
+
+          {/* Headline and subhead change with the slide. */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.6, ease: EASE }}
+            >
+              <h1 className="pf-display mt-6 text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
+                {index === 0 ? region.copy.heroHeadline : slide.headline}
+              </h1>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
+                {index === 0 ? region.copy.heroSubhead : slide.subhead}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.35 }}
+            className="mt-9 flex flex-wrap gap-3"
+          >
+            <Button href={regionPath(region, hero.primaryCta.href)} size="lg">
+              {hero.primaryCta.label}
+              <ArrowRight size={18} />
+            </Button>
+            <Button
+              href={regionPath(region, hero.secondaryCta.href)}
+              size="lg"
+              className="border border-white/35 bg-white/10 text-white backdrop-blur-md hover:border-white/60 hover:bg-white/20"
+            >
+              {hero.secondaryCta.label}
+            </Button>
+          </motion.div>
         </div>
       </Container>
+
+      {/* Controls */}
+      <Container className="pointer-events-none absolute inset-x-0 bottom-8 z-[3] max-w-6xl sm:bottom-10">
+        <div className="pointer-events-auto flex items-end justify-between gap-6">
+          {/* Progress bars — each fills over one interval. */}
+          <ul className="flex flex-1 gap-2.5 sm:max-w-sm">
+            {heroSlides.map((s, i) => (
+              <li key={s.src} className="flex-1">
+                <button
+                  type="button"
+                  onClick={() => select(i)}
+                  aria-label={`Go to slide ${i + 1}: ${s.label ?? s.alt}`}
+                  aria-current={i === index}
+                  className="group relative block h-9 w-full"
+                >
+                  <span className="absolute inset-x-0 top-4 h-[3px] overflow-hidden rounded-full bg-white/25 transition-colors duration-300 group-hover:bg-white/40">
+                    <motion.span
+                      className="block h-full rounded-full bg-white"
+                      initial={{ width: "0%" }}
+                      animate={{ width: i <= index ? "100%" : "0%" }}
+                      transition={
+                        i === index && !reduceMotion && !paused && !userControlled
+                          ? { duration: HERO_INTERVAL / 1000, ease: "linear" }
+                          : { duration: 0.3, ease: EASE }
+                      }
+                    />
+                  </span>
+                  <span className="sr-only">{s.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex items-center gap-4">
+            {/* Slide caption — the corner label treatment used site-wide.
+                Only the caption animates; the counter is static so it never
+                flickers as slides change. */}
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={slide.label}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.35, ease: EASE }}
+                className="hidden text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/75 sm:block"
+              >
+                {slide.label}
+              </motion.span>
+            </AnimatePresence>
+
+            <span className="text-[0.68rem] font-bold tabular-nums tracking-[0.16em] text-white/55">
+              {String(index + 1).padStart(2, "0")}
+              <span className="mx-1 text-white/30">/</span>
+              {String(count).padStart(2, "0")}
+            </span>
+
+            <div className="flex gap-2">
+              <ArrowButton
+                direction="left"
+                onClick={() => select(index - 1)}
+              />
+              <ArrowButton
+                direction="right"
+                onClick={() => select(index + 1)}
+              />
+            </div>
+          </div>
+        </div>
+      </Container>
+
+      {/* Live region so screen readers hear the slide change. */}
+      <span className="sr-only" aria-live="polite">
+        Slide {index + 1} of {count}: {slide.label}
+      </span>
     </section>
   );
 }
 
-function HeroCarousel({ href }: { href: string }) {
-  const [index, setIndex] = useState(0);
-  const reduceMotion = useReducedMotion();
-
-  useEffect(() => {
-    // Respect reduced-motion by holding on the first frame.
-    if (reduceMotion) return;
-    const id = setInterval(
-      () => setIndex((i) => (i + 1) % heroCarousel.length),
-      hero.interval
-    );
-    return () => clearInterval(id);
-  }, [reduceMotion]);
-
-  const active = heroCarousel[index];
-
+function ArrowButton({
+  direction,
+  onClick,
+}: {
+  direction: "left" | "right";
+  onClick: () => void;
+}) {
+  const Icon = direction === "left" ? ChevronLeft : ChevronRight;
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.96 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.9, ease: EASE, delay: 0.15 }}
-      className="relative"
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={direction === "left" ? "Previous slide" : "Next slide"}
+      className={cn(
+        "inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md",
+        "transition-all duration-300 ease-[var(--pf-ease)] hover:border-white/60 hover:bg-white/20",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+      )}
     >
-      <Link
-        href={href}
-        aria-label="Read the Pink Fly story"
-        className="group block focus-visible:outline-none"
-      >
-        <div className="pf-shape pf-shape-arch relative aspect-[4/5] w-full border border-[var(--pf-border)] bg-[var(--pf-surface-muted)] shadow-[var(--pf-shadow-lg)] sm:aspect-[5/6] lg:aspect-[4/5]">
-          <AnimatePresence mode="sync">
-            <motion.div
-              key={index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.7, ease: "easeInOut" }}
-              className="absolute inset-0"
-            >
-              <Image
-                src={active.src}
-                alt={active.alt}
-                fill
-                priority={index === 0}
-                sizes="(max-width: 1024px) 92vw, 44vw"
-                className="object-cover transition-transform duration-[1.2s] ease-[var(--pf-ease)] group-hover:scale-[1.03]"
-              />
-            </motion.div>
-          </AnimatePresence>
-
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-2/5 bg-gradient-to-t from-black/50 to-transparent"
-          />
-
-          {/* Corner label — matches the image-card treatment used site-wide. */}
-          {active.label && <span className="pf-image-label">{active.label}</span>}
-
-          <span className="absolute left-4 top-4 z-[2] inline-flex items-center gap-1.5 rounded-full bg-white/85 px-3.5 py-1.5 text-xs font-bold text-[var(--pf-accent)] opacity-0 shadow-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 sm:translate-y-1">
-            Our story
-            <ArrowUpRight size={14} />
-          </span>
-        </div>
-      </Link>
-
-      {/* Progress dots — also let a visitor take manual control. */}
-      <div className="mt-5 flex justify-center gap-2">
-        {heroCarousel.map((slide, i) => (
-          <button
-            key={slide.src}
-            type="button"
-            onClick={() => setIndex(i)}
-            aria-label={`Show image ${i + 1}: ${slide.alt}`}
-            aria-current={i === index}
-            className={cn(
-              "h-1.5 rounded-full transition-all duration-500 ease-[var(--pf-ease)]",
-              i === index
-                ? "w-8 bg-[var(--pf-accent)]"
-                : "w-1.5 bg-[var(--pf-border-strong)] hover:bg-[var(--pf-accent)]/50"
-            )}
-          />
-        ))}
-      </div>
-    </motion.div>
+      <Icon size={18} />
+    </button>
   );
 }

@@ -28,9 +28,19 @@ type NavbarProps = {
    *   (the Events page has no standard header per the wireframe).
    */
   variant?: NavVariant;
+  /**
+   * True when the page opens on a dark, full-bleed hero. The bar then floats
+   * transparent with light type until the visitor scrolls past the fold.
+   */
+  overHero?: boolean;
 };
 
-export function Navbar({ region, rest, variant = "default" }: NavbarProps) {
+export function Navbar({
+  region,
+  rest,
+  variant = "default",
+  overHero = false,
+}: NavbarProps) {
   const [open, setOpen] = useState(false);
   const scrolled = useScrolled();
   const pathname = usePathname();
@@ -54,7 +64,9 @@ export function Navbar({ region, rest, variant = "default" }: NavbarProps) {
 
   const joinHref = regionPath(region, "/join");
   const ctaLabel = variant === "knowledge" ? "Join Our Community" : "Join Community";
-  const overlay = variant === "minimal";
+  // Light type only while genuinely over the image — the glass bar takes over
+  // the moment the visitor scrolls.
+  const onDark = overHero && !scrolled && !open;
 
   return (
     <header
@@ -70,12 +82,10 @@ export function Navbar({ region, rest, variant = "default" }: NavbarProps) {
             "flex items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all duration-300 ease-[var(--pf-ease)] sm:px-6",
             scrolled || open
               ? "pf-glass shadow-[var(--pf-shadow-sm)]"
-              : overlay
-                ? "pf-glass border-white/20 shadow-[var(--pf-shadow-sm)]"
-                : "border border-transparent"
+              : "border border-transparent"
           )}
         >
-          <Logo href={regionPath(region, "/")} />
+          <Logo href={regionPath(region, "/")} onDark={onDark} />
 
           {items.length > 0 && (
             <ul className="hidden items-center gap-7 lg:flex">
@@ -90,9 +100,11 @@ export function Navbar({ region, rest, variant = "default" }: NavbarProps) {
                       className={cn(
                         "relative text-sm transition-colors duration-200 hover:text-[var(--pf-accent)]",
                         "after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-[var(--pf-accent)] after:transition-all after:duration-300 hover:after:w-full",
-                        active
-                          ? "text-[var(--pf-accent)] after:w-full"
-                          : "text-[var(--pf-text)]"
+                        onDark
+                          ? "text-white/90 hover:text-white after:bg-white"
+                          : active
+                            ? "text-[var(--pf-accent)] after:w-full"
+                            : "text-[var(--pf-text)]"
                       )}
                     >
                       {item.label}
@@ -104,8 +116,8 @@ export function Navbar({ region, rest, variant = "default" }: NavbarProps) {
           )}
 
           <div className="hidden items-center gap-2.5 lg:flex">
-            <RegionSelector current={region} rest={rest} />
-            <ThemeToggle />
+            <RegionSelector current={region} rest={rest} onDark={onDark} />
+            <ThemeToggle onDark={onDark} />
             <Button href={joinHref} size="sm">
               {ctaLabel}
             </Button>
@@ -113,10 +125,13 @@ export function Navbar({ region, rest, variant = "default" }: NavbarProps) {
 
           {/* Mobile controls */}
           <div className="flex items-center gap-1.5 lg:hidden">
-            <RegionSelector current={region} rest={rest} />
+            <RegionSelector current={region} rest={rest} onDark={onDark} />
             <button
               type="button"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--pf-heading)]"
+              className={cn(
+                "inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors",
+                onDark ? "text-white" : "text-[var(--pf-heading)]"
+              )}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}

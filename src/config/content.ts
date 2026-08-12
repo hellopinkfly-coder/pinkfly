@@ -11,12 +11,8 @@ import type { FrameShape } from "@/components/shared/ImageFrame";
 
 /* ------------------------------------------------------------------ Hero -- */
 export const hero = {
-  /** The hero image itself links through to the About page (per wireframe). */
-  imageHref: "/about",
   primaryCta: { label: "Join the community", href: "/join" },
   secondaryCta: { label: "Explore events", href: "/events" },
-  /** Milliseconds between carousel slides. */
-  interval: 1500,
 };
 
 /* --------------------------------------------------------------- Trust -- */

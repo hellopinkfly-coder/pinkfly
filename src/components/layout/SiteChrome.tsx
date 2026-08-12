@@ -21,13 +21,26 @@ function navVariantFor(rest: string): NavVariant {
   return "default";
 }
 
+/**
+ * Routes that open on a dark, full-bleed image. The header floats over them
+ * with light type until the visitor scrolls.
+ */
+function opensOnDarkHero(rest: string): boolean {
+  return rest === "/" || rest === "/events";
+}
+
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || "/";
   const { region, rest } = parsePathname(pathname);
 
   return (
     <>
-      <Navbar region={region} rest={rest} variant={navVariantFor(rest)} />
+      <Navbar
+        region={region}
+        rest={rest}
+        variant={navVariantFor(rest)}
+        overHero={opensOnDarkHero(rest)}
+      />
       <main id="main">{children}</main>
       <Footer region={region} />
     </>
