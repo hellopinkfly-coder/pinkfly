@@ -25,6 +25,24 @@ export const hero = {
     "Pink Fly is India's community for ambitious women entrepreneurs — a place to launch, scale, and conquer with the mentorship, network, and belief you deserve.",
   primaryCta: { label: "Join the community", href: "/#join" },
   secondaryCta: { label: "Learn more", href: "/about" },
+  /** Caption sitting beneath the hero visual. */
+  mediaCaption:
+    "Founders from across India — building in public, together.",
+};
+
+/* --------------------------------------------------------------- Trust -- */
+export const trust = {
+  statement:
+    "Trusted by founders, mentors, and partner organisations across India.",
+  /** Replace each name with a real logo asset in /public/images before launch. */
+  logos: [
+    "Noboru World",
+    "SheLeads India",
+    "Startup Collective",
+    "Founders Guild",
+    "WomenX",
+    "The Growth Room",
+  ],
 };
 
 /* ------------------------------------------------------------- Mission -- */
@@ -201,6 +219,19 @@ export const newsletter = {
     "Founder stories, playbooks, and event invites — a few times a month, never noise.",
   placeholder: "you@yourbrand.com",
   cta: "Subscribe",
+};
+
+/* ------------------------------------------------------ Value spotlight -- */
+export const valueSpotlight = {
+  eyebrow: "More than a network",
+  headline: "Momentum you can feel, month after month.",
+  body: "Membership isn't a directory you forget about. It's a rhythm — a mentor in your corner, a circle that checks in, and rooms full of women who've already solved the thing you're stuck on.",
+  points: [
+    "Matched mentorship, not a random inbox introduction.",
+    "Small accountability circles that meet all year.",
+    "Members-only masterclasses, playbooks, and templates.",
+  ],
+  cta: { label: "See what's inside", href: "/community" },
 };
 
 /* ------------------------------------------------------------ Final CTA -- */

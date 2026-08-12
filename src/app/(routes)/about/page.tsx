@@ -84,7 +84,7 @@ export default function AboutPage() {
         </Reveal>
       </Section>
 
-      <Section>
+      <Section id="mission">
         <SectionHeading
           eyebrow={mission.eyebrow}
           title="What drives everything we do."

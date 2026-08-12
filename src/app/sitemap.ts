@@ -9,6 +9,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/events",
     "/knowledge-base",
     "/contact",
+    "/policies/terms",
+    "/policies/refund",
+    "/policies/privacy",
+    "/policies/community-guidelines",
   ];
   const now = new Date();
 

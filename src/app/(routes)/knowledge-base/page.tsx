@@ -61,7 +61,7 @@ export default function KnowledgeBasePage() {
         intro="A growing library of practical, no-fluff playbooks — written for women building real businesses."
       />
 
-      <Section>
+      <Section id="faqs">
         <SectionHeading eyebrow="Browse by topic" title="Where do you want to grow?" />
         <Reveal
           as="ul"
