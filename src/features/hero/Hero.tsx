@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { hero } from "@/config/content";
 import { heroSlides, HERO_INTERVAL } from "@/config/images";
 import { Container } from "@/components/layout/Container";
@@ -25,17 +25,30 @@ const EASE = [0.16, 1, 0.3, 1] as const;
  *
  * Behaviour:
  * - cycles continuously, advancing every 2s and wrapping past the last slide
- * - pauses on hover/focus and when the tab is hidden, then resumes
  * - arrow keys and swipe move between slides; the timer restarts from the
  *   chosen slide rather than stopping, so the loop never dies
  * - `prefers-reduced-motion` holds slide one and drops the drift entirely
+ *
+ * Hover does NOT pause it. The hero fills the whole fold, so hovering the
+ * image is simply where a desktop visitor's cursor rests — pausing on that
+ * meant the carousel almost never advanced. Hover-based pausing is also
+ * prone to sticking, because a re-render under the cursor can swallow the
+ * mouseleave and strand the timer. Instead there is an explicit pause button
+ * (which also satisfies WCAG 2.2.2), plus automatic holds for keyboard focus
+ * and a backgrounded tab — all of which are unambiguous, event-free state.
  */
 export function Hero({ region }: { region: Region }) {
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  // Independent reasons to hold the timer, tracked separately so one
+  // clearing does not cancel another.
+  const [userPaused, setUserPaused] = useState(false);
+  const [focusWithin, setFocusWithin] = useState(false);
+  const [tabHidden, setTabHidden] = useState(false);
   const reduceMotion = useReducedMotion();
   const rootRef = useRef<HTMLElement>(null);
   const touchStartX = useRef<number | null>(null);
+
+  const paused = userPaused || focusWithin || tabHidden;
 
   const count = heroSlides.length;
   const goTo = useCallback((next: number) => {
@@ -54,7 +67,7 @@ export function Hero({ region }: { region: Region }) {
   }, [advance, paused, reduceMotion]);
 
   useEffect(() => {
-    const onVisibility = () => setPaused(document.hidden);
+    const onVisibility = () => setTabHidden(document.hidden);
     document.addEventListener("visibilitychange", onVisibility);
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
@@ -94,10 +107,16 @@ export function Hero({ region }: { region: Region }) {
         "mt-[83px] h-[calc(100svh-83px)]",
         "min-h-[520px]"
       )}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
+      // NOTE: deliberately no hover handlers — see the note above.
+      onFocusCapture={(e) => {
+        // Keyboard focus only. A mouse click also focuses the button it hit,
+        // and pausing on that would leave the carousel stopped until the
+        // visitor happened to click somewhere else. `:focus-visible` is
+        // exactly the "focused via keyboard" signal we want.
+        const el = e.target as HTMLElement;
+        if (el.matches?.(":focus-visible")) setFocusWithin(true);
+      }}
+      onBlurCapture={() => setFocusWithin(false)}
       onTouchStart={(e) => {
         touchStartX.current = e.touches[0].clientX;
       }}
@@ -270,8 +289,26 @@ export function Hero({ region }: { region: Region }) {
             </span>
 
             <div className="flex gap-2">
-              <ArrowButton direction="left" onClick={() => select(index - 1)} />
-              <ArrowButton direction="right" onClick={() => select(index + 1)} />
+              {/* Explicit control, so auto-advancing motion can always be
+                  stopped (WCAG 2.2.2) without relying on hover. */}
+              <ControlButton
+                label={userPaused ? "Play slideshow" : "Pause slideshow"}
+                onClick={() => setUserPaused((v) => !v)}
+              >
+                {userPaused ? <Play size={16} /> : <Pause size={16} />}
+              </ControlButton>
+              <ControlButton
+                label="Previous slide"
+                onClick={() => select(index - 1)}
+              >
+                <ChevronLeft size={18} />
+              </ControlButton>
+              <ControlButton
+                label="Next slide"
+                onClick={() => select(index + 1)}
+              >
+                <ChevronRight size={18} />
+              </ControlButton>
             </div>
           </div>
         </div>
@@ -285,26 +322,28 @@ export function Hero({ region }: { region: Region }) {
   );
 }
 
-function ArrowButton({
-  direction,
+function ControlButton({
+  label,
   onClick,
+  children,
 }: {
-  direction: "left" | "right";
+  label: string;
   onClick: () => void;
+  children: React.ReactNode;
 }) {
-  const Icon = direction === "left" ? ChevronLeft : ChevronRight;
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={direction === "left" ? "Previous slide" : "Next slide"}
+      aria-label={label}
+      title={label}
       className={cn(
         "inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md",
         "transition-all duration-300 ease-[var(--pf-ease)] hover:border-white/60 hover:bg-white/20",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
       )}
     >
-      <Icon size={18} />
+      {children}
     </button>
   );
 }
