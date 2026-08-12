@@ -24,14 +24,15 @@ const EASE = [0.16, 1, 0.3, 1] as const;
  * perceptible Ken Burns drift. Nothing slides, bounces or flies in.
  *
  * Behaviour:
- * - advances every 2s, pauses on hover/focus and when the tab is hidden
- * - arrow keys and swipe move between slides; manual control stops the timer
+ * - cycles continuously, advancing every 2s and wrapping past the last slide
+ * - pauses on hover/focus and when the tab is hidden, then resumes
+ * - arrow keys and swipe move between slides; the timer restarts from the
+ *   chosen slide rather than stopping, so the loop never dies
  * - `prefers-reduced-motion` holds slide one and drops the drift entirely
  */
 export function Hero({ region }: { region: Region }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [userControlled, setUserControlled] = useState(false);
   const reduceMotion = useReducedMotion();
   const rootRef = useRef<HTMLElement>(null);
   const touchStartX = useRef<number | null>(null);
@@ -43,13 +44,14 @@ export function Hero({ region }: { region: Region }) {
 
   const advance = useCallback(() => goTo(index + 1), [goTo, index]);
 
-  // Auto-advance. Stops for reduced motion, hover/focus, a hidden tab, or
-  // once the visitor has taken manual control.
+  // Auto-advance, forever. `advance` changes identity with `index`, so this
+  // effect re-runs on every slide change and the timer restarts from the
+  // current slide — including after a manual click, swipe or arrow key.
   useEffect(() => {
-    if (reduceMotion || paused || userControlled) return;
+    if (reduceMotion || paused) return;
     const id = setInterval(advance, HERO_INTERVAL);
     return () => clearInterval(id);
-  }, [advance, paused, reduceMotion, userControlled]);
+  }, [advance, paused, reduceMotion]);
 
   useEffect(() => {
     const onVisibility = () => setPaused(document.hidden);
@@ -65,7 +67,6 @@ export function Hero({ region }: { region: Region }) {
       if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
       if (!el?.contains(document.activeElement)) return;
       e.preventDefault();
-      setUserControlled(true);
       goTo(e.key === "ArrowRight" ? index + 1 : index - 1);
     }
     window.addEventListener("keydown", onKey);
@@ -73,7 +74,6 @@ export function Hero({ region }: { region: Region }) {
   }, [goTo, index]);
 
   function select(next: number) {
-    setUserControlled(true);
     goTo(next);
   }
 
@@ -84,7 +84,14 @@ export function Hero({ region }: { region: Region }) {
       ref={rootRef}
       aria-roledescription="carousel"
       aria-label="Pink Fly"
-      className="relative isolate h-[100svh] min-h-[560px] w-full overflow-hidden bg-[#141014]"
+      // Offset by the header's height so the slideshow starts cleanly beneath
+      // the navbar instead of running under it, while the fold still ends at
+      // the bottom of the viewport.
+      className={cn(
+        "relative isolate w-full overflow-hidden bg-[#141014]",
+        "mt-[100px] h-[calc(100svh-100px)] sm:mt-[110px] sm:h-[calc(100svh-110px)]",
+        "min-h-[520px]"
+      )}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -107,7 +114,7 @@ export function Hero({ region }: { region: Region }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1.1, ease: "easeInOut" }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
           className="absolute inset-0"
           aria-hidden={false}
           role="group"
@@ -173,7 +180,7 @@ export function Hero({ region }: { region: Region }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.6, ease: EASE }}
+              transition={{ duration: 0.45, ease: EASE }}
             >
               <h1 className="pf-display mt-6 text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
                 {index === 0 ? region.copy.heroHeadline : slide.headline}
@@ -225,7 +232,7 @@ export function Hero({ region }: { region: Region }) {
                       initial={{ width: "0%" }}
                       animate={{ width: i <= index ? "100%" : "0%" }}
                       transition={
-                        i === index && !reduceMotion && !paused && !userControlled
+                        i === index && !reduceMotion && !paused
                           ? { duration: HERO_INTERVAL / 1000, ease: "linear" }
                           : { duration: 0.3, ease: EASE }
                       }
