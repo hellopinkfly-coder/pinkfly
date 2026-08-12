@@ -24,16 +24,17 @@ const u = (id: string, w = 1600) =>
 /**
  * Full-screen homepage hero carousel.
  *
- * Each slide carries its own line of copy so the carousel tells a short story
- * as it advances rather than repeating one headline over four photographs.
+ * Each slide carries one short line so the carousel tells a story as it
+ * advances rather than repeating a single headline over four photographs.
  * `focal` sets object-position so faces stay in frame as the crop changes
  * across breakpoints.
  */
 export type HeroSlide = StockImage & {
-  /** Short headline shown over this slide. */
+  /**
+   * Short headline shown over this slide. Keep it to a handful of words —
+   * the fold is deliberately sparse, and long lines undo that.
+   */
   headline: string;
-  /** Supporting line beneath the headline. */
-  subhead: string;
   /** CSS object-position keeping the subject in frame. */
   focal: string;
 };
@@ -44,17 +45,13 @@ export const heroSlides: HeroSlide[] = [
     alt: "A woman entrepreneur presenting to her team in a bright office",
     label: "Founders",
     headline: "You were never meant to build alone.",
-    subhead:
-      "A community for ambitious women entrepreneurs — the mentorship, network and belief you deserve.",
     focal: "50% 35%",
   },
   {
     src: u("1600880292203-757bb62b4baf", 2400),
     alt: "Two women in conversation across a desk",
     label: "Mentorship",
-    headline: "Guidance from women who have already done it.",
-    subhead:
-      "Matched mentorship from founders who have built, scaled and exited — not a random introduction.",
+    headline: "Mentors who have already done it.",
     focal: "50% 40%",
   },
   {
@@ -62,17 +59,13 @@ export const heroSlides: HeroSlide[] = [
     alt: "Women gathered in conversation at a community event",
     label: "Community",
     headline: "Rooms full of women who get it.",
-    subhead:
-      "Meetups, coffee chats and launch nights — the peers who become your board of directors.",
     focal: "50% 40%",
   },
   {
     src: u("1551836022-d5d88e9218df", 2400),
     alt: "A woman speaking to an audience at a Pink Fly event",
     label: "Masterclasses",
-    headline: "Practical, no-fluff, and taught by practitioners.",
-    subhead:
-      "The exact skills a founder needs next — pricing, hiring, funding, growth.",
+    headline: "Skills you can use on Monday.",
     focal: "50% 35%",
   },
 ];

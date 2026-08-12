@@ -40,8 +40,8 @@ export type Region = {
   /** Region-specific copy overrides. */
   copy: {
     heroEyebrow: string;
+    /** Kept short — the hero fold is deliberately sparse. */
     heroHeadline: string;
-    heroSubhead: string;
     joinIntro: string;
     eventsIntro: string;
   };
@@ -74,8 +74,6 @@ const GLOBAL: Region = {
   copy: {
     heroEyebrow: "The Pink Fly community",
     heroHeadline: "You were never meant to build alone.",
-    heroSubhead:
-      "A community for ambitious women entrepreneurs — a place to launch, scale and conquer with the mentorship, network and belief you deserve.",
     joinIntro:
       "Join women founders across the world who are building businesses, and each other, at the same time.",
     eventsIntro:
@@ -107,8 +105,6 @@ const INDIA: Region = {
   copy: {
     heroEyebrow: "Pink Fly India",
     heroHeadline: "India's women founders, in one room.",
-    heroSubhead:
-      "From first idea to first crore — meet the mentors, peers and rooms that move an Indian business forward.",
     joinIntro:
       "Join founders building across India — from metro startup hubs to tier-2 cities.",
     eventsIntro: "Pink Fly gatherings hosted across India.",
@@ -139,8 +135,6 @@ const DUBAI: Region = {
   copy: {
     heroEyebrow: "Pink Fly Dubai",
     heroHeadline: "Build your business where the world meets.",
-    heroSubhead:
-      "A founder community for the women scaling businesses across the UAE and the wider Gulf.",
     joinIntro:
       "Join women founders and operators building across the UAE.",
     eventsIntro: "Pink Fly gatherings hosted across the UAE.",
@@ -171,8 +165,6 @@ const USA: Region = {
   copy: {
     heroEyebrow: "Pink Fly USA",
     heroHeadline: "Ambition, with people behind it.",
-    heroSubhead:
-      "A founder community for women building companies across the United States — mentorship, rooms and momentum.",
     joinIntro: "Join women founders building across the United States.",
     eventsIntro: "Pink Fly gatherings hosted across the United States.",
   },
