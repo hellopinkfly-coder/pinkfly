@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { siteConfig, footerNav } from "@/config/site";
 import {
   InstagramIcon,
@@ -15,16 +16,33 @@ const socialLinks = [
   { icon: YoutubeIcon, href: siteConfig.socials.youtube, label: "YouTube" },
 ];
 
+const linkGroups = [footerNav.join, footerNav.about, footerNav.policies];
+
 function isExternal(href: string) {
   return /^https?:\/\//.test(href);
+}
+
+function FooterLink({ href, label }: { href: string; label: string }) {
+  const className =
+    "text-sm text-[var(--pf-text)] transition-colors hover:text-[var(--pf-accent)]";
+
+  return isExternal(href) ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+      {label}
+    </a>
+  ) : (
+    <Link href={href} className={className}>
+      {label}
+    </Link>
+  );
 }
 
 export function Footer() {
   return (
     <footer className="mt-16 border-t border-[var(--pf-border)] bg-[var(--pf-surface)]">
       <Container className="py-16">
-        <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
-          {/* Brand */}
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr]">
+          {/* Brand — description, socials, contact */}
           <div className="max-w-sm">
             <Link
               href="/"
@@ -36,6 +54,7 @@ export function Footer() {
               India&apos;s most trusted community for ambitious women
               entrepreneurs. A flagship initiative by {siteConfig.parent}.
             </p>
+
             <div className="mt-6 flex gap-3">
               {socialLinks.map(({ icon: Icon, href, label }) => (
                 <a
@@ -50,66 +69,64 @@ export function Footer() {
                 </a>
               ))}
             </div>
+
+            <address className="mt-6 space-y-2.5 text-sm not-italic text-[var(--pf-text)]">
+              <p className="flex items-start gap-2.5">
+                <MapPin
+                  size={16}
+                  className="mt-0.5 shrink-0 text-[var(--pf-accent)]"
+                />
+                <span>{siteConfig.address.join(", ")}</span>
+              </p>
+              <p className="flex items-center gap-2.5">
+                <Mail size={16} className="shrink-0 text-[var(--pf-accent)]" />
+                <a
+                  href={`mailto:${siteConfig.contactEmail}`}
+                  className="transition-colors hover:text-[var(--pf-accent)]"
+                >
+                  {siteConfig.contactEmail}
+                </a>
+              </p>
+              <p className="flex items-center gap-2.5">
+                <Phone size={16} className="shrink-0 text-[var(--pf-accent)]" />
+                <a
+                  href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
+                  className="transition-colors hover:text-[var(--pf-accent)]"
+                >
+                  {siteConfig.phone}
+                </a>
+              </p>
+            </address>
           </div>
 
-          {/* Explore */}
-          <div>
-            <h3 className="font-[family-name:var(--font-display)] text-sm font-bold uppercase tracking-wider text-[var(--pf-heading)]">
-              Explore
-            </h3>
-            <ul className="mt-4 space-y-3">
-              {footerNav.explore.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-[var(--pf-text)] transition-colors hover:text-[var(--pf-accent)]"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Connect */}
-          <div>
-            <h3 className="font-[family-name:var(--font-display)] text-sm font-bold uppercase tracking-wider text-[var(--pf-heading)]">
-              Connect
-            </h3>
-            <ul className="mt-4 space-y-3">
-              {footerNav.connect.map((item) =>
-                isExternal(item.href) ? (
+          {/* Link groups — Join / About / Policies */}
+          {linkGroups.map((group) => (
+            <div key={group.title}>
+              <h3 className="font-[family-name:var(--font-display)] text-sm font-bold uppercase tracking-wider text-[var(--pf-heading)]">
+                {group.title}
+              </h3>
+              <ul className="mt-4 space-y-3">
+                {group.links.map((item) => (
                   <li key={item.href}>
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-[var(--pf-text)] transition-colors hover:text-[var(--pf-accent)]"
-                    >
-                      {item.label}
-                    </a>
+                    <FooterLink href={item.href} label={item.label} />
                   </li>
-                ) : (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-[var(--pf-text)] transition-colors hover:text-[var(--pf-accent)]"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                )
-              )}
-            </ul>
-          </div>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
+        {/* Bottom strip */}
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-[var(--pf-border)] pt-8 text-xs text-[var(--pf-muted)] sm:flex-row">
           <p>
-            © {new Date().getFullYear()} {siteConfig.name}. A {siteConfig.parent}{" "}
-            initiative.
+            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
-          <p>Made with intention, for women who build.</p>
+          <p>
+            Powered by{" "}
+            <span className="font-bold text-[var(--pf-heading)]">
+              {siteConfig.parent}
+            </span>
+          </p>
         </div>
       </Container>
     </footer>

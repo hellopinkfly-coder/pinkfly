@@ -84,6 +84,11 @@ export function Hero() {
                 </p>
               </motion.div>
             </div>
+
+            {/* Caption beneath the visual */}
+            <p className="mt-4 text-center text-xs leading-relaxed text-[var(--pf-muted)]">
+              {hero.mediaCaption}
+            </p>
           </motion.div>
         </div>
       </Container>
