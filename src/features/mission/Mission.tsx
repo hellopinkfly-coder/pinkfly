@@ -1,37 +1,41 @@
+import { ArrowRight } from "lucide-react";
 import { mission } from "@/config/content";
 import { Section } from "@/components/layout/Section";
-import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
-import { Card } from "@/components/ui/card";
-import { staggerContainer, fadeUp } from "@/components/motion/variants";
+import { Button } from "@/components/ui/button";
+import { regionPath, type Region } from "@/lib/region";
 
-export function Mission() {
+/**
+ * "Why Pink Fly exists".
+ *
+ * The text block is left-aligned but the block itself is centred in the
+ * section and held to a comfortable measure, so the copy never stretches the
+ * full width of a large screen.
+ */
+export function Mission({ region }: { region: Region }) {
   return (
-    <Section id="mission">
-      <SectionHeading
-        eyebrow={mission.eyebrow}
-        title={mission.headline}
-        intro={mission.body}
-      />
+    <Section id="why-pink-fly-exists" className="bg-[var(--pf-surface)]">
+      <Reveal className="mx-auto max-w-3xl text-left">
+        <span className="pf-eyebrow">{mission.eyebrow}</span>
+        <h2 className="pf-h2 mt-4">{mission.headline}</h2>
 
-      <Reveal
-        as="ul"
-        variants={staggerContainer}
-        className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
-      >
-        {mission.pillars.map(({ icon: Icon, title, description }) => (
-          <Reveal as="li" key={title} variants={fadeUp}>
-            <Card className="h-full">
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)]">
-                <Icon size={22} />
-              </span>
-              <h3 className="mt-5 text-xl">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--pf-text)]">
-                {description}
-              </p>
-            </Card>
-          </Reveal>
-        ))}
+        <div className="mt-7 flex flex-col gap-5">
+          {mission.body.map((paragraph) => (
+            <p
+              key={paragraph.slice(0, 32)}
+              className="text-base leading-[1.85] text-[var(--pf-text)] sm:text-lg"
+            >
+              {paragraph}
+            </p>
+          ))}
+        </div>
+
+        <div className="mt-9">
+          <Button href={regionPath(region, mission.cta.href)} size="lg">
+            {mission.cta.label}
+            <ArrowRight size={18} />
+          </Button>
+        </div>
       </Reveal>
     </Section>
   );

@@ -199,26 +199,131 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid var(--pf-glass-border);
 }
 
-/* Horizontal logo rail — two identical tracks scrolling for a seamless loop */
+/* --------------------------------------------------------------------------
+   Organic image shapes
+   Images are deliberately not all rectangles. Each modifier below reshapes a
+   frame while leaving its aspect ratio and object-fit untouched, so the same
+   <ImageFrame> component can render an arch, a leaf, a blob or a pill.
+   -------------------------------------------------------------------------- */
+
+.pf-shape {
+  overflow: hidden;
+  transition: border-radius 0.6s var(--pf-ease);
+}
+
+.pf-shape-rect {
+  border-radius: var(--pf-radius-xl);
+}
+
+/* Rounded at the top, squared at the base — an editorial arch. */
+.pf-shape-arch {
+  border-radius: 999px 999px var(--pf-radius-xl) var(--pf-radius-xl);
+}
+
+/* Soft asymmetric blob that eases toward a different silhouette on hover.
+   Kept well under 50% so faces are not cropped away by the curve. */
+.pf-shape-blob {
+  border-radius: 42% 30% 34% 38% / 30% 26% 34% 30%;
+}
+.group:hover .pf-shape-blob {
+  border-radius: 30% 42% 38% 34% / 26% 30% 30% 34%;
+}
+
+/* Two opposite corners pulled round — a leaf. */
+.pf-shape-leaf {
+  border-radius: 40% var(--pf-radius-lg) 40% var(--pf-radius-lg);
+}
+.group:hover .pf-shape-leaf {
+  border-radius: var(--pf-radius-lg) 40% var(--pf-radius-lg) 40%;
+}
+
+.pf-shape-pill {
+  border-radius: 999px;
+}
+
+/* Caption chip that sits over an image, bottom-right by default. */
+.pf-image-label {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  transform: none;
+  z-index: 2;
+  max-width: calc(100% - 1.5rem);
+  padding: 0.375rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Shapes with a rounded bottom-right corner would clip the chip, so those
+   centre it along the bottom edge instead. */
+.pf-image-label-centered {
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 3rem);
+}
+
+/* --------------------------------------------------------------------------
+   Horizontal rails
+   -------------------------------------------------------------------------- */
+
+.pf-rail {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* Bleed to the viewport edge on small screens so cards don't look clipped. */
+  padding-bottom: 0.5rem;
+}
+.pf-rail::-webkit-scrollbar {
+  display: none;
+}
+.pf-rail > * {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+
+/* Long-form article body rhythm. */
+.pf-prose p {
+  margin-bottom: 1.35em;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+}
+.pf-prose p:last-child {
+  margin-bottom: 0;
+}
+.pf-prose p:first-of-type {
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: var(--pf-heading);
+}
+
+
+/* --------------------------------------------------------------------------
+   Horizontal logo rail — two identical tracks scrolling for a seamless loop.
+   Used by <Trust>, which is built but not part of the wireframe homepage flow.
+   -------------------------------------------------------------------------- */
 .pf-marquee {
   position: relative;
   display: flex;
   overflow: hidden;
   gap: 3rem;
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    #000 8%,
-    #000 92%,
-    transparent
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    #000 8%,
-    #000 92%,
-    transparent
-  );
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
 }
 
 .pf-marquee__track {
@@ -251,12 +356,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes pf-marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
 }
 
 /* ==========================================================================
@@ -273,6 +374,18 @@ h1, h2, h3, h4, h5, h6 {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* The logo rail would otherwise settle on its end frame (empty). Freeze it
+     in place and let the user scroll the overflow instead. */
+  .pf-marquee {
+    overflow-x: auto;
+  }
+  .pf-marquee__track {
+    animation: none !important;
+  }
+  .pf-marquee__track[aria-hidden="true"] {
+    display: none;
   }
 
   /* The logo rail would otherwise settle on its end frame (empty). Freeze it

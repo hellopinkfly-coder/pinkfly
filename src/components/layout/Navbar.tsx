@@ -1,21 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { mainNav } from "@/config/site";
+import { mainNav, knowledgeBaseNav } from "@/config/site";
 import { useScrolled } from "@/hooks/useScrollDirection";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/shared/Logo";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
+import { RegionSelector } from "@/components/region/RegionSelector";
+import { regionPath, type Region } from "@/lib/region";
 import { Container } from "./Container";
 import { cn } from "@/lib/utils";
 
-export function Navbar() {
+export type NavVariant = "default" | "knowledge" | "minimal";
+
+type NavbarProps = {
+  region: Region;
+  /** Path inside the region, used to keep the page when switching region. */
+  rest: string;
+  /**
+   * `default` — the standard site header.
+   * `knowledge` — the Knowledge Base's own category navigation.
+   * `minimal` — logo, region and CTA only, laid over a full-bleed hero
+   *   (the Events page has no standard header per the wireframe).
+   */
+  variant?: NavVariant;
+};
+
+export function Navbar({ region, rest, variant = "default" }: NavbarProps) {
   const [open, setOpen] = useState(false);
   const scrolled = useScrolled();
   const pathname = usePathname();
+
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => setOpen(false), [pathname]);
+
+  const items =
+    variant === "knowledge"
+      ? knowledgeBaseNav.map((i) => ({ ...i, href: withRegion(i.href) }))
+      : variant === "minimal"
+        ? []
+        : mainNav.map((i) => ({ ...i, href: withRegion(i.href) }));
+
+  function withRegion(href: string) {
+    // In-page anchors on the current page stay as-is.
+    if (href.startsWith("#")) return href;
+    const [path, hash] = href.split("#");
+    return regionPath(region, path) + (hash ? `#${hash}` : "");
+  }
+
+  const joinHref = regionPath(region, "/join");
+  const ctaLabel = variant === "knowledge" ? "Join Our Community" : "Join Community";
+  const overlay = variant === "minimal";
 
   return (
     <header
@@ -26,54 +65,55 @@ export function Navbar() {
     >
       <Container>
         <nav
-          className={cn(
-            "flex items-center justify-between rounded-full px-4 py-2.5 transition-all duration-300 ease-[var(--pf-ease)] sm:px-6",
-            scrolled
-              ? "pf-glass shadow-[var(--pf-shadow-sm)]"
-              : "border border-transparent"
-          )}
           aria-label="Primary"
+          className={cn(
+            "flex items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all duration-300 ease-[var(--pf-ease)] sm:px-6",
+            scrolled || open
+              ? "pf-glass shadow-[var(--pf-shadow-sm)]"
+              : overlay
+                ? "pf-glass border-white/20 shadow-[var(--pf-shadow-sm)]"
+                : "border border-transparent"
+          )}
         >
-          {/* Wordmark placeholder — final logo slots in here later */}
-          <Link
-            href="/"
-            className="font-[family-name:var(--font-display)] text-lg font-bold tracking-tight text-[var(--pf-heading)]"
-          >
-            Pink<span className="text-[var(--pf-accent)]">Fly</span>
-          </Link>
+          <Logo href={regionPath(region, "/")} />
 
-          {/* Desktop nav */}
-          <ul className="hidden items-center gap-8 md:flex">
-            {mainNav.map((item) => {
-              const active = pathname === item.href;
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "text-sm transition-colors duration-200 hover:text-[var(--pf-accent)]",
-                      active
-                        ? "text-[var(--pf-accent)]"
-                        : "text-[var(--pf-text)]"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          {items.length > 0 && (
+            <ul className="hidden items-center gap-7 lg:flex">
+              {items.map((item) => {
+                const active =
+                  pathname === item.href.split("#")[0] &&
+                  variant !== "knowledge";
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "relative text-sm transition-colors duration-200 hover:text-[var(--pf-accent)]",
+                        "after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-[var(--pf-accent)] after:transition-all after:duration-300 hover:after:w-full",
+                        active
+                          ? "text-[var(--pf-accent)] after:w-full"
+                          : "text-[var(--pf-text)]"
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
 
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-2.5 lg:flex">
+            <RegionSelector current={region} rest={rest} />
             <ThemeToggle />
-            <Button href="/#join" size="sm">
-              Join Community
+            <Button href={joinHref} size="sm">
+              {ctaLabel}
             </Button>
           </div>
 
           {/* Mobile controls */}
-          <div className="flex items-center gap-1 md:hidden">
-            <ThemeToggle />
+          <div className="flex items-center gap-1.5 lg:hidden">
+            <RegionSelector current={region} rest={rest} />
             <button
               type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--pf-heading)]"
@@ -87,7 +127,6 @@ export function Navbar() {
         </nav>
       </Container>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -95,27 +134,32 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden"
+            className="lg:hidden"
           >
             <Container className="mt-2">
-              <div className="pf-glass flex flex-col gap-1 rounded-[var(--pf-radius-xl)] p-4 shadow-[var(--pf-shadow-md)]">
-                {mainNav.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className="rounded-xl px-4 py-3 text-[var(--pf-heading)] transition-colors hover:bg-[var(--pf-surface-muted)]"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                <Button
-                  href="/#join"
-                  className="mt-2 w-full"
-                  onClick={() => setOpen(false)}
-                >
-                  Join Community
-                </Button>
+              <div className="pf-glass flex max-h-[75vh] flex-col gap-1 overflow-y-auto rounded-[var(--pf-radius-xl)] p-4 shadow-[var(--pf-shadow-md)]">
+                {/* The minimal variant still needs a way into the site. */}
+                {(items.length > 0 ? items : mainNav.map((i) => ({ ...i, href: withRegion(i.href) }))).map(
+                  (item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="rounded-xl px-4 py-3 text-[var(--pf-heading)] transition-colors hover:bg-[var(--pf-surface-muted)]"
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                )}
+
+                <div className="my-2 h-px bg-[var(--pf-border)]" />
+                <RegionSelector current={region} rest={rest} variant="inline" />
+
+                <div className="mt-3 flex items-center gap-3">
+                  <ThemeToggle />
+                  <Button href={joinHref} className="flex-1">
+                    {ctaLabel}
+                  </Button>
+                </div>
               </div>
             </Container>
           </motion.div>

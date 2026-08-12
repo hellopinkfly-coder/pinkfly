@@ -43,9 +43,8 @@ export function Newsletter() {
   }
 
   return (
-    <Section id="join">
+    <Section id="newsletter">
       <Reveal className="mx-auto max-w-3xl overflow-hidden rounded-[var(--pf-radius-2xl)] border border-[var(--pf-border)] bg-[var(--pf-surface)] px-6 py-14 text-center shadow-[var(--pf-shadow-md)] sm:px-14">
-        <span className="pf-eyebrow">{newsletter.eyebrow}</span>
         <h2 className="pf-h2 mx-auto mt-4 max-w-xl">{newsletter.headline}</h2>
         <p className="mx-auto mt-4 max-w-md text-[var(--pf-text)]">
           {newsletter.subhead}
