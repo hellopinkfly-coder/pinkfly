@@ -8,7 +8,7 @@ import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/shared/Reveal";
 import { GradientBackdrop } from "@/components/shared/GradientBackdrop";
-import { OinkflyMark } from "@/components/brand/OinkflyMark";
+import { PinkFlyMark } from "@/components/brand/PinkFlyMark";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { newsletterSchema } from "@/lib/validations";
@@ -56,7 +56,7 @@ export function Join({ region }: { region: Region }) {
       <GradientBackdrop />
       <Container>
         <Reveal className="mx-auto flex max-w-2xl flex-col items-center text-center">
-          <OinkflyMark
+          <PinkFlyMark
             size={44}
             className="pf-float text-[var(--pf-accent)]"
             aria-hidden

@@ -4,7 +4,7 @@ import { Reveal } from "@/components/shared/Reveal";
 import { ImageFrame } from "@/components/shared/ImageFrame";
 
 /**
- * The large contextual banner that sits between "Why Oinkfly exists" and
+ * The large contextual banner that sits between "Why Pink Fly exists" and
  * the founder story, as the About wireframe lays it out. It breaks out past
  * the text container on wide screens so it reads as a full-bleed moment.
  */

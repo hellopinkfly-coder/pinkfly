@@ -10,7 +10,7 @@ import { regionPath, type Region } from "@/lib/region";
  * "Your seat is waiting".
  *
  * Left-aligned copy inside a block that stays visually centred in the
- * section — the same treatment as "Why Oinkfly exists", per the wireframe.
+ * section — the same treatment as "Why Pink Fly exists", per the wireframe.
  */
 export function FinalCTA({ region }: { region: Region }) {
   return (

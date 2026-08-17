@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Countdown } from "@/features/events/Countdown";
 import { EventCard } from "@/features/events/EventCard";
-import { getUpcomingEvents, type OinkflyEvent } from "@/data/events";
+import { getUpcomingEvents, type PinkFlyEvent } from "@/data/events";
 import { teamPlaceholder } from "@/config/images";
 import {
   formatDuration,
@@ -26,7 +26,7 @@ export function EventDetailPage({
   event,
   region,
 }: {
-  event: OinkflyEvent;
+  event: PinkFlyEvent;
   region: Region;
 }) {
   const upcoming = getUpcomingEvents(region.slug, event.slug);

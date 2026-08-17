@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { OinkflyMark } from "@/components/brand/OinkflyMark";
+import { PinkFlyMark } from "@/components/brand/PinkFlyMark";
 import { cn } from "@/lib/utils";
 
 /**
- * Oinkfly logo.
+ * Pink Fly logo.
  *
  * SINGLE SOURCE OF TRUTH for the logo. Every placement — navbar, footer,
  * article header — renders this, so the brand only has to change here.
  *
- * The mark is a winged pig drawn as inline SVG (see `OinkflyMark`): crisp at
+ * The mark is a winged pig drawn as inline SVG (see `PinkFlyMark`): crisp at
  * any size, themed via `currentColor`, and free of an image request. If final
  * artwork ever lands, swap the contents of <LogoMark> for an <Image> — the
  * mark keeps its box, so no layout changes are needed.
@@ -41,13 +41,13 @@ export function LogoMark({
   return (
     <span
       className={cn(
-        "oinkfly-lockup inline-flex items-center gap-2 font-[family-name:var(--font-display)] font-bold tracking-tight transition-colors duration-300",
+        "pf-lockup inline-flex items-center gap-2 font-[family-name:var(--font-display)] font-bold tracking-tight transition-colors duration-300",
         onDark ? "text-white" : "text-[var(--pf-heading)]",
         sizes[size],
         className
       )}
     >
-      <OinkflyMark
+      <PinkFlyMark
         size={markSizes[size]}
         wing={onDark ? 0.75 : 0.6}
         className={cn(
@@ -61,9 +61,9 @@ export function LogoMark({
         aria-hidden
       />
       <span>
-        Oink
+        Pink
         <span className={onDark ? "text-white/70" : "text-[var(--pf-accent)]"}>
-          fly
+          Fly
         </span>
       </span>
     </span>
@@ -79,7 +79,7 @@ export function Logo({
   return (
     <Link
       href={href}
-      aria-label="Oinkfly — home"
+      aria-label="Pink Fly — home"
       className={cn(
         "inline-flex items-center transition-opacity duration-200 hover:opacity-80",
         className

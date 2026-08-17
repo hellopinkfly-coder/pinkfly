@@ -1,7 +1,7 @@
 import * as React from "react";
 
 /* ==========================================================================
-   Oinkfly — the mark
+   Pink Fly — the mark
    --------------------------------------------------------------------------
    A pig with wings. The whole brand hangs off one line: "when pigs fly" —
    the thing everyone said was impossible, shipped anyway.
@@ -16,7 +16,7 @@ type MarkProps = Omit<React.SVGProps<SVGSVGElement>, "opacity"> & {
   wing?: number;
 };
 
-export function OinkflyMark({
+export function PinkFlyMark({
   size = 32,
   wing = 0.6,
   className,
@@ -32,7 +32,7 @@ export function OinkflyMark({
       {...props}
     >
       {/* Wing — three fanned feathers, swept up and back */}
-      <g className="oinkfly-wing" opacity={wing}>
+      <g className="pf-wing" opacity={wing}>
         <path d="M28 33C20 26 10 14 14.5 10.5 19 7 26 22 28 33Z" fill="currentColor" />
         <path d="M28 33C18 28 6.5 20 8.5 15 11 10 24 24 28 33Z" fill="currentColor" />
         <path d="M28 33C18 33 6 30 6.5 25 7.5 20 22 28 28 33Z" fill="currentColor" />
@@ -76,25 +76,25 @@ type WordmarkProps = {
 
 /**
  * Mark + word lockup — the only place the brand name is set as a logo.
- * On hover the wings lift once (see `.oinkfly-lockup` in globals.css).
+ * On hover the wings lift once (see `.pf-lockup` in globals.css).
  */
-export function OinkflyWordmark({ className, markSize = 26 }: WordmarkProps) {
+export function PinkFlyWordmark({ className, markSize = 26 }: WordmarkProps) {
   return (
     <span
       className={[
-        "oinkfly-lockup inline-flex items-center gap-2 font-[family-name:var(--font-display)] font-bold tracking-tight text-[var(--pf-heading)]",
+        "pf-lockup inline-flex items-center gap-2 font-[family-name:var(--font-display)] font-bold tracking-tight text-[var(--pf-heading)]",
         className,
       ]
         .filter(Boolean)
         .join(" ")}
     >
-      <OinkflyMark
+      <PinkFlyMark
         size={markSize}
         className="shrink-0 text-[var(--pf-accent)]"
         aria-hidden
       />
       <span>
-        Oink<span className="text-[var(--pf-accent)]">fly</span>
+        Pink<span className="text-[var(--pf-accent)]">Fly</span>
       </span>
     </span>
   );
