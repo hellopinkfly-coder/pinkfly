@@ -1,14 +1,26 @@
 /**
- * Stock image placeholders — women only.
+ * Every image on the site, declared in one place.
  *
- * Every image on this site depicts women: founders, mentors, speakers and
- * community members. That is a hard rule for Oinkfly, so it is enforced here,
- * in the one place images are declared, rather than left to each component.
+ * ── THE RULE ────────────────────────────────────────────────────────────────
+ * Human imagery on this site is **Indian women** — founders, mentors,
+ * speakers and members. Diverse in age, region, industry and body type, shot
+ * naturally in real workplaces. Editorial, not stock-looking; never
+ * AI-generated. That rule is enforced here, in the single place images are
+ * declared, rather than left to each component to remember.
  *
- * ⚠️ VERIFY BEFORE LAUNCH — these are Unsplash IDs chosen for subject and
- * composition. Open the page once and eyeball every frame: a stock photo that
- * does not match the brief is far more damaging on this site than on most.
- * Replace `src` values here and every usage updates.
+ * ── CURRENT STATE ───────────────────────────────────────────────────────────
+ * ⚠️ The `src` values below are GENERIC STOCK PLACEHOLDERS. They are women,
+ * but they are NOT the Indian-women photography the brand calls for, and the
+ * Unsplash IDs have never been visually verified.
+ *
+ * ── HOW TO FIX (one step, no component changes) ─────────────────────────────
+ * 1. Put the real photographs in /public/images/ (see the README there for
+ *    the shoot spec, crops and consent checklist).
+ * 2. Swap each `src` below for its local path, e.g. `local("founders/ananya-rao.jpg")`.
+ * 3. Update the matching `alt` to describe the new photograph accurately —
+ *    alt text must match what is actually in the frame, so do not describe a
+ *    photo as depicting an Indian founder until it does.
+ * Every usage across the site updates at once.
  */
 
 export type StockImage = {
@@ -18,8 +30,15 @@ export type StockImage = {
   label?: string;
 };
 
+/** Temporary stock placeholder. Every call site is pending replacement. */
 const u = (id: string, w = 1600) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=85`;
+
+/**
+ * A real photograph served from /public/images. Use this in place of `u()`
+ * as the assets land — no other change is needed.
+ */
+export const local = (file: string) => `/images/${file}`;
 
 /**
  * Full-screen homepage hero carousel.

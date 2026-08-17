@@ -74,10 +74,8 @@ const GLOBAL: Region = {
   copy: {
     heroEyebrow: "The Oinkfly community",
     heroHeadline: "You were never meant to build alone.",
-    joinIntro:
-      "Join women founders across the world who are building businesses, and each other, at the same time.",
-    eventsIntro:
-      "Meetups, webinars, coffee chats and launches — hosted across every Oinkfly region.",
+    joinIntro: "Women founders worldwide, building businesses and each other.",
+    eventsIntro: "Meetups, webinars and coffee chats, across every region.",
   },
   form: {
     googleFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL ?? "",
@@ -105,8 +103,7 @@ const INDIA: Region = {
   copy: {
     heroEyebrow: "Oinkfly India",
     heroHeadline: "India's women founders, in one room.",
-    joinIntro:
-      "Join founders building across India — from metro startup hubs to tier-2 cities.",
+    joinIntro: "Founders building across India, metro to tier-2.",
     eventsIntro: "Oinkfly gatherings hosted across India.",
   },
   form: {
