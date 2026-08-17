@@ -6,15 +6,15 @@ import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { staggerContainer, fadeUp } from "@/components/motion/variants";
+import { stagger, lift } from "@/components/motion/variants";
 
 export const metadata: Metadata = {
   title: "Events",
   description:
-    "Curated gatherings for women founders — roundtables, masterclasses, city meetups, and the annual Pink Fly summit.",
+    "Curated gatherings for women founders — roundtables, masterclasses, city meetups, and the annual Oinkfly summit.",
 };
 
-// Placeholder events — replace with real listings (or a CMS) before launch.
+// TODO(pre-launch): swap for real listings, or wire to a CMS.
 const events = [
   {
     type: "Masterclass",
@@ -36,7 +36,7 @@ const events = [
   },
   {
     type: "Summit",
-    title: "Pink Fly Annual Founder Summit",
+    title: "Oinkfly Annual Founder Summit",
     date: "Fri–Sat, 14–15 Nov 2026",
     location: "Bengaluru",
   },
@@ -55,11 +55,11 @@ export default function EventsPage() {
         <SectionHeading eyebrow="What's next" title="Upcoming events." />
         <Reveal
           as="ul"
-          variants={staggerContainer}
-          className="mt-14 grid gap-6 sm:grid-cols-2"
+          variants={stagger}
+          className="mt-12 grid gap-6 sm:grid-cols-2"
         >
           {events.map((event) => (
-            <Reveal as="li" key={event.title} variants={fadeUp}>
+            <Reveal as="li" key={event.title} variants={lift}>
               <Card className="flex h-full flex-col">
                 <span className="w-fit rounded-full bg-[var(--pf-accent-soft)] px-3 py-1 text-xs font-medium text-[var(--pf-accent-hover)]">
                   {event.type}
@@ -84,10 +84,6 @@ export default function EventsPage() {
             </Reveal>
           ))}
         </Reveal>
-
-        <p className="mt-10 text-center text-xs text-[var(--pf-muted)]">
-          Placeholder listings — replace with real events before launch.
-        </p>
       </Section>
     </>
   );

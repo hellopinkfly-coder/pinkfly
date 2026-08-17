@@ -9,7 +9,9 @@ import { mainNav } from "@/config/site";
 import { useScrolled } from "@/hooks/useScrollDirection";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
+import { OinkflyWordmark } from "@/components/brand/OinkflyMark";
 import { Container } from "./Container";
+import { DURATION, EASE } from "@/components/motion/variants";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -34,16 +36,12 @@ export function Navbar() {
           )}
           aria-label="Primary"
         >
-          {/* Wordmark placeholder — final logo slots in here later */}
-          <Link
-            href="/"
-            className="font-[family-name:var(--font-display)] text-lg font-bold tracking-tight text-[var(--pf-heading)]"
-          >
-            Pink<span className="text-[var(--pf-accent)]">Fly</span>
+          <Link href="/" aria-label="Oinkfly — home" className="rounded-full">
+            <OinkflyWordmark className="text-lg" markSize={24} />
           </Link>
 
           {/* Desktop nav */}
-          <ul className="hidden items-center gap-8 md:flex">
+          <ul className="hidden items-center gap-8 lg:flex">
             {mainNav.map((item) => {
               const active = pathname === item.href;
               return (
@@ -51,7 +49,7 @@ export function Navbar() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "text-sm transition-colors duration-200 hover:text-[var(--pf-accent)]",
+                      "whitespace-nowrap text-sm transition-colors duration-200 hover:text-[var(--pf-accent)]",
                       active
                         ? "text-[var(--pf-accent)]"
                         : "text-[var(--pf-text)]"
@@ -64,15 +62,15 @@ export function Navbar() {
             })}
           </ul>
 
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-3 lg:flex">
             <ThemeToggle />
             <Button href="/#join" size="sm">
-              Join Community
+              Join Oinkfly
             </Button>
           </div>
 
           {/* Mobile controls */}
-          <div className="flex items-center gap-1 md:hidden">
+          <div className="flex items-center gap-1 lg:hidden">
             <ThemeToggle />
             <button
               type="button"
@@ -94,8 +92,8 @@ export function Navbar() {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden"
+            transition={{ duration: DURATION.fast, ease: EASE }}
+            className="lg:hidden"
           >
             <Container className="mt-2">
               <div className="pf-glass flex flex-col gap-1 rounded-[var(--pf-radius-xl)] p-4 shadow-[var(--pf-shadow-md)]">
@@ -114,7 +112,7 @@ export function Navbar() {
                   className="mt-2 w-full"
                   onClick={() => setOpen(false)}
                 >
-                  Join Community
+                  Join Oinkfly
                 </Button>
               </div>
             </Container>

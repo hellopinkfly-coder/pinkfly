@@ -5,7 +5,7 @@ import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { Card } from "@/components/ui/card";
-import { staggerContainer, fadeUp } from "@/components/motion/variants";
+import { stagger, lift } from "@/components/motion/variants";
 
 export const metadata: Metadata = {
   title: "Knowledge Base",
@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     "Playbooks, guides, and resources for women founders — from first sale to scaling, fundraising, and beyond.",
 };
 
+// TODO(pre-launch): link each topic to real articles, or wire to a CMS.
 const topics = [
   {
     icon: Wrench,
@@ -65,11 +66,11 @@ export default function KnowledgeBasePage() {
         <SectionHeading eyebrow="Browse by topic" title="Where do you want to grow?" />
         <Reveal
           as="ul"
-          variants={staggerContainer}
-          className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          variants={stagger}
+          className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
           {topics.map(({ icon: Icon, title, description, count }) => (
-            <Reveal as="li" key={title} variants={fadeUp}>
+            <Reveal as="li" key={title} variants={lift}>
               <Card className="group flex h-full flex-col hover:-translate-y-1 hover:border-[var(--pf-accent)]/30 hover:shadow-[var(--pf-shadow-md)]">
                 <div className="flex items-start justify-between">
                   <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)]">
@@ -91,10 +92,6 @@ export default function KnowledgeBasePage() {
             </Reveal>
           ))}
         </Reveal>
-
-        <p className="mt-10 text-center text-xs text-[var(--pf-muted)]">
-          Placeholder categories — link to real articles or a CMS before launch.
-        </p>
       </Section>
     </>
   );

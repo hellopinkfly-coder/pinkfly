@@ -2,13 +2,13 @@
  * Central place for site-wide configuration (metadata, nav, links).
  */
 export const siteConfig = {
-  name: "Pink Fly",
-  tagline: "Where ambitious women build what's next",
+  name: "Oinkfly",
+  tagline: "When pigs fly",
   description:
-    "Pink Fly is India's most trusted community for ambitious women entrepreneurs — mentorship, networking, education, and a founder community to help you launch, scale, and conquer. A flagship initiative by Noboru World.",
+    "Oinkfly is India's community for ambitious women founders — mentorship, network, strategy, and the nerve to build the thing everyone called unrealistic. A flagship initiative by Noboru World.",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   parent: "Noboru World",
-  contactEmail: "hello@pinkfly.community",
+  contactEmail: "hello@oinkfly.community",
   socials: {
     instagram: "https://instagram.com",
     linkedin: "https://linkedin.com",
@@ -35,7 +35,7 @@ export const footerNav = {
   ],
   connect: [
     { label: "Contact", href: "/contact" },
-    { label: "Join Community", href: "/#join" },
+    { label: "Join Oinkfly", href: "/#join" },
     { label: "Instagram", href: "https://instagram.com" },
     { label: "LinkedIn", href: "https://linkedin.com" },
   ],

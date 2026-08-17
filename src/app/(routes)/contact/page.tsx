@@ -9,7 +9,7 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with the Pink Fly team — partnerships, press, membership, or just to say hello.",
+    "Get in touch with the Oinkfly team — partnerships, press, membership, or just to say hello.",
 };
 
 export default function ContactPage() {

@@ -1,25 +1,25 @@
 import { Hero } from "@/features/hero/Hero";
-import { Mission } from "@/features/mission/Mission";
-import { Community } from "@/features/community/Community";
-import { WhyPinkFly } from "@/features/why-pinkfly/WhyPinkFly";
-import { Newsletter } from "@/features/newsletter/Newsletter";
-import { FinalCTA } from "@/features/final-cta/FinalCTA";
+import { Manifesto } from "@/features/manifesto/Manifesto";
+import { Proof } from "@/features/proof/Proof";
+import { Offering } from "@/features/offering/Offering";
+import { Stories } from "@/features/stories/Stories";
+import { Join } from "@/features/join/Join";
 
-// NOTE: <Impact /> and <FounderStories /> are intentionally hidden for the MVP.
-// They remain fully built, reusable components and will be reintroduced in a
-// future version — do not delete them.
-// import { Impact } from "@/features/impact/Impact";
-// import { FounderStories } from "@/features/founder-stories/FounderStories";
-
+/**
+ * The homepage is one argument, in order:
+ * who this is for → why it exists → that it works → what you get →
+ * who says so → join.
+ * Every section earns its place; nothing repeats another section's job.
+ */
 export default function Home() {
   return (
     <>
       <Hero />
-      <Mission />
-      <Community />
-      <WhyPinkFly />
-      <FinalCTA />
-      <Newsletter />
+      <Manifesto />
+      <Proof />
+      <Offering />
+      <Stories />
+      <Join />
     </>
   );
 }

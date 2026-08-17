@@ -6,6 +6,7 @@ import {
   TwitterIcon,
   YoutubeIcon,
 } from "@/components/shared/SocialIcons";
+import { OinkflyWordmark } from "@/components/brand/OinkflyMark";
 import { Container } from "./Container";
 
 const socialLinks = [
@@ -21,20 +22,17 @@ function isExternal(href: string) {
 
 export function Footer() {
   return (
-    <footer className="mt-16 border-t border-[var(--pf-border)] bg-[var(--pf-surface)]">
+    <footer className="pf-on-surface mt-16 border-t border-[var(--pf-border)] bg-[var(--pf-surface)]">
       <Container className="py-16">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
           {/* Brand */}
           <div className="max-w-sm">
-            <Link
-              href="/"
-              className="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-[var(--pf-heading)]"
-            >
-              Pink<span className="text-[var(--pf-accent)]">Fly</span>
+            <Link href="/" aria-label="Oinkfly — home" className="rounded-full">
+              <OinkflyWordmark className="text-xl" markSize={28} />
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-[var(--pf-text)]">
-              India&apos;s most trusted community for ambitious women
-              entrepreneurs. A flagship initiative by {siteConfig.parent}.
+              India&apos;s community for ambitious women founders. A flagship
+              initiative by {siteConfig.parent}.
             </p>
             <div className="mt-6 flex gap-3">
               {socialLinks.map(({ icon: Icon, href, label }) => (
@@ -109,7 +107,7 @@ export function Footer() {
             © {new Date().getFullYear()} {siteConfig.name}. A {siteConfig.parent}{" "}
             initiative.
           </p>
-          <p>Made with intention, for women who build.</p>
+          <p>Built for women told to be realistic.</p>
         </div>
       </Container>
     </footer>

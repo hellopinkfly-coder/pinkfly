@@ -1,212 +1,205 @@
 /**
- * Content-as-data. All copy, stats, pillars, and stories live here so
- * messaging can change without touching components — and so this can later
- * be swapped for a CMS with no component changes.
+ * Content-as-data. All copy, stats, and stories live here so messaging can
+ * change without touching components — and so this can later be swapped for
+ * a CMS with no component changes.
+ *
+ * Voice: short, dry, confident. The brand is "when pigs fly" — so every line
+ * should sound like someone who has stopped asking permission. If a sentence
+ * needs a comma to survive, cut it.
  */
 import {
-  Compass,
   Users,
-  Sparkles,
-  TrendingUp,
-  Target,
   HeartHandshake,
+  TrendingUp,
   Calendar,
   GraduationCap,
   Network,
-  Mic,
+  Rocket,
+  Target,
   type LucideIcon,
 } from "lucide-react";
+import type { OrbitIcon } from "@/components/brand/FlightScene";
 
 /* ---------------------------------------------------------------- Hero -- */
+
+/**
+ * One slide of the hero carousel.
+ *
+ * `src` is a path under /public — e.g. "/images/founders/ananya.jpg". Leave it
+ * out and the slide renders the branded portrait treatment instead of a
+ * broken image. See public/images/founders/README.md for the shoot spec.
+ */
+export type HeroSlide = {
+  src?: string;
+  /** Describe the person and what they are doing — this is read aloud. */
+  alt: string;
+  name: string;
+  role: string;
+  city: string;
+};
+
 export const hero = {
   eyebrow: "A Noboru World initiative",
-  headline: "You were never meant to build alone.",
+  headline: "When pigs fly.",
   subhead:
-    "Pink Fly is India's community for ambitious women entrepreneurs — a place to launch, scale, and conquer with the mentorship, network, and belief you deserve.",
-  primaryCta: { label: "Join the community", href: "/#join" },
-  secondaryCta: { label: "Learn more", href: "/about" },
+    "Oinkfly is India's community for women founders — the mentors, network, and nerve to build the thing everyone called unrealistic.",
+  primaryCta: { label: "Join Oinkfly", href: "/#join" },
+  secondaryCta: { label: "See the proof", href: "/#proof" },
+  /**
+   * TODO(pre-launch): add `src` to each slide once the founder portraits are
+   * shot and cleared. Names and roles below are illustrative until then.
+   */
+  slides: [
+    {
+      alt: "Ananya Rao at her workbench in Bengaluru, checking a run of hand-blocked textiles.",
+      name: "Ananya Rao",
+      role: "Founder, Studio Marigold",
+      city: "Bengaluru",
+    },
+    {
+      alt: "Priya Menon in her Kochi studio, packing the first big order of the week.",
+      name: "Priya Menon",
+      role: "Founder & CEO, Loom & Co.",
+      city: "Kochi",
+    },
+    {
+      alt: "Fatima Sheikh on the floor of her Mumbai production unit, mid-conversation with her team.",
+      name: "Fatima Sheikh",
+      role: "Co-founder, Nourish Labs",
+      city: "Mumbai",
+    },
+    {
+      alt: "Kavya Iyer at a Delhi founder meetup, laughing with two other members.",
+      name: "Kavya Iyer",
+      role: "Founder, The Daily Press",
+      city: "Delhi",
+    },
+  ] as HeroSlide[],
+  /** Icons that ring the hero visual. Positions are % of the scene box. */
+  orbit: [
+    { icon: HeartHandshake, label: "Mentorship", x: 2, y: 22 },
+    { icon: Network, label: "Network", x: 97, y: 40 },
+    { icon: Rocket, label: "Launch", x: 8, y: 74 },
+    { icon: TrendingUp, label: "Growth", x: 94, y: 84 },
+  ] satisfies OrbitIcon[],
 };
 
-/* ------------------------------------------------------------- Mission -- */
-export const mission = {
-  eyebrow: "Why Pink Fly exists",
-  headline: "We're building the room every woman founder wishes she'd walked into sooner.",
-  body: "Ambition shouldn't be lonely. Too many women build brilliant businesses in isolation — without mentors who get it, peers who cheer, or a network that opens doors. Pink Fly exists to change that: a long-term ecosystem where women turn dreams into companies, and companies into legacies.",
-  pillars: [
-    {
-      icon: Compass,
-      title: "Our vision",
-      description:
-        "A generation of women founders who never have to choose between ambition and support.",
-    },
-    {
-      icon: Users,
-      title: "Our community",
-      description:
-        "Founders, mentors, and operators who show up for each other — online and in the room.",
-    },
-    {
-      icon: TrendingUp,
-      title: "Business growth",
-      description:
-        "Strategy, accountability, and real playbooks to help you move from idea to scale.",
-    },
-    {
-      icon: Sparkles,
-      title: "Dreams, realized",
-      description:
-        "We help you do the thing you've been quietly planning for years — for real, this time.",
-    },
-  ] satisfies { icon: LucideIcon; title: string; description: string }[],
-};
-
-/* -------------------------------------------------------------- Impact -- */
-export const impact = {
-  eyebrow: "Our impact",
-  headline: "A movement, measured.",
-  subhead:
-    "Placeholder figures — swap for verified numbers before launch.",
-  stats: [
-    { value: 5000, suffix: "+", label: "Community members" },
-    { value: 1200, suffix: "+", label: "Women supported" },
-    { value: 340, suffix: "+", label: "Businesses launched" },
-    { value: 90, suffix: "+", label: "Workshops hosted" },
+/* ------------------------------------------------------------ Manifesto -- */
+export const manifesto = {
+  eyebrow: "Why we exist",
+  headline: "Someone told you to be realistic.",
+  body: "Oinkfly is the room where that advice stops. Women who have built it, women building it now, and the honest help in between.",
+  /** Scrolls across the manifesto band — the flight path, spelled out. */
+  marquee: [
+    "Idea",
+    "First customer",
+    "First hire",
+    "First round",
+    "Scale",
+    "Legacy",
   ],
 };
 
-/* ----------------------------------------------------------- Community -- */
-export const community = {
-  eyebrow: "The community",
-  headline: "Everything you need, and the people to do it with.",
-  offerings: [
-    {
-      icon: Network,
-      title: "Networking",
-      description:
-        "Meaningful introductions to founders, investors, and partners who move your business forward.",
-    },
+/* --------------------------------------------------------------- Proof -- */
+export const proof = {
+  eyebrow: "Our impact",
+  headline: "It flies.",
+  subhead: "Four years of women refusing to stay grounded.",
+  stats: [
+    { value: 1000, suffix: "+", label: "In the community" },
+    { value: 600, suffix: "+", label: "Ideas turned into businesses" },
+    { value: 100, suffix: "+", label: "Founders who raised" },
+    { value: 10, suffix: "+", label: "Businesses scaled with Oinkfly" },
+  ],
+  /** Icons that ring the proof visual. */
+  orbit: [
+    { icon: Users, label: "Community", x: 4, y: 16 },
+    { icon: Rocket, label: "Launched", x: 96, y: 30 },
+    { icon: TrendingUp, label: "Funded", x: 3, y: 66 },
+    { icon: Target, label: "Scaled", x: 97, y: 80 },
+  ] satisfies OrbitIcon[],
+};
+
+/* ------------------------------------------------------------ What you get -- */
+export const offering = {
+  eyebrow: "Membership",
+  headline: "Everything you need for takeoff.",
+  items: [
     {
       icon: HeartHandshake,
       title: "Mentorship",
-      description:
-        "Guidance from women who've built, scaled, and exited — matched to where you are now.",
+      description: "Matched to where you are, not where a curriculum says you should be.",
+    },
+    {
+      icon: Network,
+      title: "Network",
+      description: "Introductions to founders, buyers, and investors who move things.",
+    },
+    {
+      icon: Target,
+      title: "Strategy",
+      description: "Clarity on what to build next — and what to ignore.",
     },
     {
       icon: Calendar,
       title: "Events",
-      description:
-        "Curated gatherings, from intimate roundtables to city-wide founder summits.",
+      description: "Roundtables, meetups, and one very good annual summit.",
     },
     {
       icon: GraduationCap,
       title: "Masterclasses",
-      description:
-        "Practical, no-fluff sessions on the exact skills a founder needs to grow.",
-    },
-    {
-      icon: Mic,
-      title: "Founder meetups",
-      description:
-        "Real rooms, real conversations — the peers who become your board of directors.",
-    },
-    {
-      icon: Sparkles,
-      title: "Accountability",
-      description:
-        "Small circles that keep you moving when motivation alone runs out.",
-    },
-  ] satisfies { icon: LucideIcon; title: string; description: string }[],
-};
-
-/* --------------------------------------------------------- Why Pink Fly -- */
-export const whyPinkFly = {
-  eyebrow: "Why Pink Fly",
-  headline: "Six ways we help you win.",
-  reasons: [
-    {
-      icon: Target,
-      title: "Business Strategy",
-      description: "Clarity on what to build, what to skip, and what to do next.",
-    },
-    {
-      icon: HeartHandshake,
-      title: "Mentorship",
-      description: "One-to-one and group guidance from women who've done it.",
-    },
-    {
-      icon: Network,
-      title: "Networking",
-      description: "The relationships that quietly change the trajectory of a business.",
-    },
-    {
-      icon: TrendingUp,
-      title: "Growth Support",
-      description: "Hands-on help across marketing, product, hiring, and funding.",
-    },
-    {
-      icon: Sparkles,
-      title: "Accountability",
-      description: "Structure and rhythm so progress becomes inevitable.",
+      description: "Short, practical, no-fluff sessions from women who've shipped.",
     },
     {
       icon: Users,
-      title: "Community",
-      description: "A place to belong — where your wins are celebrated and your dips are held.",
+      title: "Accountability",
+      description: "Small circles that keep you moving when motivation runs out.",
     },
   ] satisfies { icon: LucideIcon; title: string; description: string }[],
 };
 
-/* ------------------------------------------------------ Founder Stories -- */
-export const founderStories = {
+/* ------------------------------------------------------------- Stories -- */
+/**
+ * TODO(pre-launch): these are illustrative, not real members. Swap for
+ * consented quotes and photos before the site goes live.
+ */
+export const stories = {
   eyebrow: "Founder stories",
-  headline: "She found her people. Then she found her stride.",
-  subhead: "Placeholder testimonials — replace with real founders and photos before launch.",
-  stories: [
+  headline: "Ask the ones who took off.",
+  items: [
     {
       quote:
-        "Before Pink Fly I was building in a vacuum. Now I have mentors on speed dial and a room full of women who genuinely want me to win.",
+        "I was building in a vacuum. Now I have mentors on speed dial and a room that wants me to win.",
       name: "Ananya Rao",
-      role: "Founder",
-      company: "Studio Marigold",
+      role: "Founder, Studio Marigold",
     },
     {
       quote:
-        "The accountability circle got my brand from a side project to real revenue in six months. I stopped waiting for permission.",
+        "My accountability circle took me from side project to real revenue in six months.",
       name: "Priya Menon",
-      role: "Founder & CEO",
-      company: "Loom & Co.",
+      role: "Founder & CEO, Loom & Co.",
     },
     {
       quote:
-        "One introduction here led to my first stockist, then my first investor. This community opens doors I didn't know existed.",
+        "One introduction here became my first stockist. The next became my first investor.",
       name: "Fatima Sheikh",
-      role: "Co-founder",
-      company: "Nourish Labs",
+      role: "Co-founder, Nourish Labs",
     },
     {
       quote:
-        "I finally felt understood — as a founder and as a woman. That belonging is the thing no course ever gave me.",
+        "Every accelerator taught me tactics. Oinkfly gave me the people who make them stick.",
       name: "Kavya Iyer",
-      role: "Founder",
-      company: "The Daily Press",
+      role: "Founder, The Daily Press",
     },
   ],
 };
 
-/* ---------------------------------------------------------- Newsletter -- */
-export const newsletter = {
-  eyebrow: "Stay close",
-  headline: "Get the Pink Fly letter.",
-  subhead:
-    "Founder stories, playbooks, and event invites — a few times a month, never noise.",
-  placeholder: "you@yourbrand.com",
-  cta: "Subscribe",
-};
-
-/* ------------------------------------------------------------ Final CTA -- */
-export const finalCta = {
+/* ------------------------------------------------------------------ Join -- */
+export const join = {
   eyebrow: "Your seat is waiting",
-  headline: "This is where you find your people.",
-  body: "Join thousands of ambitious women building the businesses — and the lives — they actually want.",
-  cta: { label: "Join the community", href: "/#join" },
+  headline: "Ready when you are.",
+  body: "Join Oinkfly for founder stories, playbooks, and first access to every room we open.",
+  placeholder: "you@yourbrand.com",
+  cta: "Join Oinkfly",
+  success: "You're in. Welcome to Oinkfly.",
 };
