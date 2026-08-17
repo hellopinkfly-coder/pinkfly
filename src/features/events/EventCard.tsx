@@ -2,13 +2,13 @@ import Link from "next/link";
 import { CalendarDays, MapPin } from "lucide-react";
 import { ImageFrame } from "@/components/shared/ImageFrame";
 import { Badge } from "@/components/ui/badge";
-import type { PinkFlyEvent } from "@/data/events";
+import type { OinkflyEvent } from "@/data/events";
 import { formatEventDate } from "@/lib/date";
 import { formatPrice, regionPath, type Region } from "@/lib/region";
 import { cn } from "@/lib/utils";
 
 type EventCardProps = {
-  event: PinkFlyEvent;
+  event: OinkflyEvent;
   region: Region;
   layout?: "grid" | "rail";
   className?: string;

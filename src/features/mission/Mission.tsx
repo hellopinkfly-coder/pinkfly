@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { regionPath, type Region } from "@/lib/region";
 
 /**
- * "Why Pink Fly exists".
+ * "Why Oinkfly exists".
  *
  * The text block is left-aligned but the block itself is centred in the
  * section and held to a comfortable measure, so the copy never stretches the

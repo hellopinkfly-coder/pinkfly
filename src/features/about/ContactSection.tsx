@@ -24,7 +24,7 @@ export function ContactSection({ region }: { region: Region }) {
           </p>
 
           <ul className="mt-8 flex flex-col gap-5 text-sm">
-            <Detail icon={MapPin} label={`Pink Fly ${region.shortName}`}>
+            <Detail icon={MapPin} label={`Oinkfly ${region.shortName}`}>
               {region.address ? (
                 region.address.map((line) => <span key={line} className="block">{line}</span>)
               ) : (

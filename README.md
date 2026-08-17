@@ -1,6 +1,6 @@
-# Pink Fly
+# Oinkfly
 
-Marketing site for Pink Fly — a community for ambitious women entrepreneurs.
+Marketing site for Oinkfly — a community for ambitious women entrepreneurs.
 Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4, Framer Motion.
 
 ```bash
@@ -8,6 +8,22 @@ npm install
 cp .env.example .env.local
 npm run dev
 ```
+
+## The brand in one line
+
+**When pigs fly.** Everything — the mark, the motion, the copy — comes back to
+building the thing everyone said was unrealistic.
+
+- **Mark** — a winged pig, drawn as inline SVG in
+  `src/components/brand/OinkflyMark.tsx`. No image request, crisp at any size,
+  recolours with the theme. Its eye and nostrils knock through to
+  `--pf-knockout`, so any element placing the mark on a raised surface should
+  carry `.pf-on-surface` or `.pf-on-muted`. `src/components/shared/Logo.tsx`
+  wraps it and stays the single source of truth for every logo placement.
+- **Motion** — one language, in `src/components/motion/variants.ts`:
+  everything *lifts*. One easing curve (expo-out), three durations, two travel
+  distances, one stagger rhythm. Nothing bounces or drops in. Reduced motion is
+  honoured globally in `globals.css` and per-component via `useReducedMotion`.
 
 ## Design system
 

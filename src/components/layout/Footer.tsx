@@ -35,7 +35,7 @@ export function Footer({ region }: { region: Region }) {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
           {/* Brand, socials, address */}
           <div className="max-w-sm">
-            <Link href={regionPath(region, "/")} aria-label="Pink Fly — home">
+            <Link href={regionPath(region, "/")} aria-label="Oinkfly — home">
               <LogoMark size="md" />
             </Link>
 
@@ -46,7 +46,7 @@ export function Footer({ region }: { region: Region }) {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`Pink Fly on ${label}`}
+                  aria-label={`Oinkfly on ${label}`}
                   className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--pf-border)] text-[var(--pf-text)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--pf-accent)] hover:text-[var(--pf-accent)]"
                 >
                   <Icon size={17} />
@@ -56,7 +56,7 @@ export function Footer({ region }: { region: Region }) {
 
             <address className="mt-6 not-italic text-sm leading-relaxed text-[var(--pf-text)]">
               <span className="block font-bold text-[var(--pf-heading)]">
-                Pink Fly {region.slug === "global" ? "" : region.shortName}
+                Oinkfly {region.slug === "global" ? "" : region.shortName}
               </span>
               {region.address ? (
                 region.address.map((line) => <span key={line} className="block">{line}</span>)

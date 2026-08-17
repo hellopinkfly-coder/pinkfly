@@ -45,7 +45,7 @@ export function JoinNowCTA({ region }: { region: Region }) {
                 <ArrowUpRight size={18} />
               </Button>
             ) : (
-              <Button href={`mailto:${region.email ?? "hello@pinkfly.community"}?subject=Joining Pink Fly`} size="lg">
+              <Button href={`mailto:${region.email ?? "hello@oinkfly.community"}?subject=Joining Oinkfly`} size="lg">
                 Email us to join
                 <ArrowUpRight size={18} />
               </Button>

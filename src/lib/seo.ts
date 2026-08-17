@@ -47,7 +47,7 @@ export function buildMetadata({
   const suffixed =
     exact || region.slug === "global"
       ? title
-      : `${title} | Pink Fly ${region.shortName}`;
+      : `${title} | Oinkfly ${region.shortName}`;
   const canonical = abs(regionPath(region, path));
 
   return {

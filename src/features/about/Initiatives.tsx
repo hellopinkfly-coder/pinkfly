@@ -7,7 +7,7 @@ import { ImageFrame } from "@/components/shared/ImageFrame";
 import { Badge } from "@/components/ui/badge";
 
 /**
- * Previous Pink Fly activities and initiatives.
+ * Previous Oinkfly activities and initiatives.
  *
  * HIDDEN FOR NOW via `flags.initiatives` in `src/config/flags.ts`. The
  * component and its data are complete — flip the flag to publish it. Do not
@@ -25,7 +25,7 @@ export function Initiatives() {
         align="left"
       />
 
-      <Rail label="Past Pink Fly initiatives" className="mt-12">
+      <Rail label="Past Oinkfly initiatives" className="mt-12">
         {initiatives.map((initiative) => (
           <Reveal
             key={initiative.slug}

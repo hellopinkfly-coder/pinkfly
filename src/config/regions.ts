@@ -29,7 +29,7 @@ export type Region = {
   locale: string;
   /** Currency used for ticket prices and membership fees. */
   currency: { code: string; symbol: string } | null;
-  /** Postal address. `null` until Pink Fly supplies it. */
+  /** Postal address. `null` until Oinkfly supplies it. */
   address: string[] | null;
   /** Contact phone in E.164-ish display form. `null` until supplied. */
   phone: string | null;
@@ -69,24 +69,24 @@ const GLOBAL: Region = {
   currency: null,
   address: null,
   phone: null,
-  email: "hello@pinkfly.community",
+  email: "hello@oinkfly.community",
   timezone: "UTC",
   copy: {
-    heroEyebrow: "The Pink Fly community",
+    heroEyebrow: "The Oinkfly community",
     heroHeadline: "You were never meant to build alone.",
     joinIntro:
       "Join women founders across the world who are building businesses, and each other, at the same time.",
     eventsIntro:
-      "Meetups, webinars, coffee chats and launches — hosted across every Pink Fly region.",
+      "Meetups, webinars, coffee chats and launches — hosted across every Oinkfly region.",
   },
   form: {
     googleFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL ?? "",
     crmSegment: "global",
   },
   seo: {
-    title: "Pink Fly — Where ambitious women build what's next",
+    title: "Oinkfly — Where ambitious women build what's next",
     description:
-      "Pink Fly is a global community for ambitious women entrepreneurs — mentorship, networking, events and education to help you launch, scale and conquer.",
+      "Oinkfly is a global community for ambitious women entrepreneurs — mentorship, networking, events and education to help you launch, scale and conquer.",
   },
 };
 
@@ -103,20 +103,20 @@ const INDIA: Region = {
   email: null,
   timezone: "Asia/Kolkata",
   copy: {
-    heroEyebrow: "Pink Fly India",
+    heroEyebrow: "Oinkfly India",
     heroHeadline: "India's women founders, in one room.",
     joinIntro:
       "Join founders building across India — from metro startup hubs to tier-2 cities.",
-    eventsIntro: "Pink Fly gatherings hosted across India.",
+    eventsIntro: "Oinkfly gatherings hosted across India.",
   },
   form: {
     googleFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL_INDIA ?? "",
     crmSegment: "india",
   },
   seo: {
-    title: "Pink Fly India — A community for women entrepreneurs in India",
+    title: "Oinkfly India — A community for women entrepreneurs in India",
     description:
-      "Pink Fly India connects women entrepreneurs across India with mentorship, founder meetups, masterclasses and a network built to help businesses scale.",
+      "Oinkfly India connects women entrepreneurs across India with mentorship, founder meetups, masterclasses and a network built to help businesses scale.",
   },
 };
 
@@ -133,20 +133,20 @@ const DUBAI: Region = {
   email: null,
   timezone: "Asia/Dubai",
   copy: {
-    heroEyebrow: "Pink Fly Dubai",
+    heroEyebrow: "Oinkfly Dubai",
     heroHeadline: "Build your business where the world meets.",
     joinIntro:
       "Join women founders and operators building across the UAE.",
-    eventsIntro: "Pink Fly gatherings hosted across the UAE.",
+    eventsIntro: "Oinkfly gatherings hosted across the UAE.",
   },
   form: {
     googleFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL_DUBAI ?? "",
     crmSegment: "dubai",
   },
   seo: {
-    title: "Pink Fly Dubai — A community for women entrepreneurs in the UAE",
+    title: "Oinkfly Dubai — A community for women entrepreneurs in the UAE",
     description:
-      "Pink Fly Dubai brings together women entrepreneurs across the UAE with mentorship, networking events, masterclasses and a community built for growth.",
+      "Oinkfly Dubai brings together women entrepreneurs across the UAE with mentorship, networking events, masterclasses and a community built for growth.",
   },
 };
 
@@ -163,19 +163,19 @@ const USA: Region = {
   email: null,
   timezone: "America/New_York",
   copy: {
-    heroEyebrow: "Pink Fly USA",
+    heroEyebrow: "Oinkfly USA",
     heroHeadline: "Ambition, with people behind it.",
     joinIntro: "Join women founders building across the United States.",
-    eventsIntro: "Pink Fly gatherings hosted across the United States.",
+    eventsIntro: "Oinkfly gatherings hosted across the United States.",
   },
   form: {
     googleFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL_USA ?? "",
     crmSegment: "usa",
   },
   seo: {
-    title: "Pink Fly USA — A community for women entrepreneurs in the US",
+    title: "Oinkfly USA — A community for women entrepreneurs in the US",
     description:
-      "Pink Fly USA connects women entrepreneurs across the United States with mentorship, founder meetups, masterclasses and a network built to help businesses scale.",
+      "Oinkfly USA connects women entrepreneurs across the United States with mentorship, founder meetups, masterclasses and a network built to help businesses scale.",
   },
 };
 

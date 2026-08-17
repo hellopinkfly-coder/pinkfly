@@ -2,18 +2,18 @@
  * Site-wide configuration: identity, social links, navigation, integrations.
  *
  * Anything region-specific lives in `src/config/regions.ts` instead — this
- * file holds only what is true for Pink Fly globally.
+ * file holds only what is true for Oinkfly globally.
  */
 
 export const siteConfig = {
-  name: "Pink Fly",
-  tagline: "Where ambitious women build what's next",
+  name: "Oinkfly",
+  tagline: "When pigs fly",
   description:
-    "Pink Fly is a community for ambitious women entrepreneurs — mentorship, networking, education, and the founder network to help you launch, scale, and conquer.",
+    "Oinkfly is a community for ambitious women founders — mentorship, network, strategy, and the nerve to build the thing everyone called unrealistic.",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   parent: "Noboru World",
   parentUrl: "https://noboruworld.com",
-  contactEmail: "hello@pinkfly.community",
+  contactEmail: "hello@oinkfly.community",
   /** Placeholder contact block — confirm before launch. */
   address: ["Noboru World", "Bengaluru, Karnataka", "India"],
   phone: "+91 00000 00000",
@@ -57,7 +57,7 @@ export const footerNav = {
   community: {
     title: "Community",
     links: [
-      { label: "Join Community", href: "/join" },
+      { label: "Join Oinkfly", href: "/join" },
       { label: "FAQs", href: "/join#faqs" },
       { label: "Knowledge Base", href: "/knowledge-base" },
       { label: "Events", href: "/events" },

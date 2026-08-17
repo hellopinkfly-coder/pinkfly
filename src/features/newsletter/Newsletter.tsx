@@ -53,7 +53,7 @@ export function Newsletter() {
         {status === "success" ? (
           <p className="mx-auto mt-8 inline-flex items-center gap-2 rounded-full bg-[var(--pf-accent-soft)] px-5 py-3 text-sm font-medium text-[var(--pf-accent-hover)]">
             <CheckCircle2 size={18} />
-            You&apos;re in. Welcome to Pink Fly.
+            You&apos;re in. Welcome to Oinkfly.
           </p>
         ) : (
           <form
