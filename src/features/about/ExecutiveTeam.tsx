@@ -22,7 +22,7 @@ export function ExecutiveTeam({
     <Section id="team">
       <SectionHeading
         eyebrow="Executive team"
-        title="The people behind Oinkfly."
+        title="The people behind Pink Fly."
         intro="Photographs and biographies are placeholders until the team's final details are confirmed."
         align="left"
       />

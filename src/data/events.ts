@@ -3,7 +3,7 @@
  *
  * Every event declares the regions it belongs to, so the same list powers
  * `/events`, `/india/events`, `/dubai/events` and `/usa/events` without any
- * duplication. Details that Oinkfly has not supplied (venue addresses,
+ * duplication. Details that Pink Fly has not supplied (venue addresses,
  * ticket prices, speakers) are left null/placeholder rather than invented.
  */
 import type { RegionSlug } from "@/config/regions";
@@ -15,7 +15,7 @@ export type EventType =
   | "Coffee Chat"
   | "Launch";
 
-export type OinkflyEvent = {
+export type PinkFlyEvent = {
   slug: string;
   title: string;
   excerpt: string;
@@ -55,10 +55,10 @@ const SPEAKER_TBC = [
   { name: "Speaker to be announced", designation: "Designation TBC", image: null },
 ];
 
-export const events: OinkflyEvent[] = [
+export const events: PinkFlyEvent[] = [
   {
     slug: "founder-meetup-autumn",
-    title: "Oinkfly Founder Meetup",
+    title: "Pink Fly Founder Meetup",
     excerpt:
       "An evening of introductions, short founder talks and the kind of conversation that only happens in person.",
     regions: ["global", "india"],
@@ -172,7 +172,7 @@ export const events: OinkflyEvent[] = [
   },
   {
     slug: "launch-night-november",
-    title: "Oinkfly Launch Night",
+    title: "Pink Fly Launch Night",
     excerpt:
       "Six members launch something new on stage. Come for the launches, stay for the room.",
     regions: ["global", "india"],
@@ -278,13 +278,13 @@ export const eventTypes: EventType[] = [
 
 /* ------------------------------------------------------------- Accessors -- */
 /** Events visible on a region's site, soonest first. */
-export function getEventsForRegion(region: RegionSlug): OinkflyEvent[] {
+export function getEventsForRegion(region: RegionSlug): PinkFlyEvent[] {
   return events
     .filter((e) => e.regions.includes(region))
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 }
 
-export function getEvent(slug: string): OinkflyEvent | undefined {
+export function getEvent(slug: string): PinkFlyEvent | undefined {
   return events.find((e) => e.slug === slug);
 }
 
@@ -293,7 +293,7 @@ export function getUpcomingEvents(
   region: RegionSlug,
   excludeSlug?: string,
   limit = 4
-): OinkflyEvent[] {
+): PinkFlyEvent[] {
   return getEventsForRegion(region)
     .filter((e) => e.slug !== excludeSlug)
     .slice(0, limit);

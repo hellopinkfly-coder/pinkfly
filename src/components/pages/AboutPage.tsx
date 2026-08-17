@@ -13,7 +13,7 @@ import type { Region } from "@/lib/region";
 
 /**
  * About page, in wireframe order:
- * header → why Oinkfly exists → banner → founder story →
+ * header → why Pink Fly exists → banner → founder story →
  * community guidelines → initiatives (hidden) → executive team → footer.
  */
 export function AboutPage({ region }: { region: Region }) {

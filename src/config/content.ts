@@ -24,7 +24,6 @@ import {
   Target,
   type LucideIcon,
 } from "lucide-react";
-import type { OrbitIcon } from "@/components/brand/FlightScene";
 
 /* ------------------------------------------------------------------ Hero -- */
 
@@ -37,64 +36,80 @@ import type { OrbitIcon } from "@/components/brand/FlightScene";
  * broken image. See public/images/founders/README.md for the shoot spec.
  */
 export type HeroSlide = {
-  src?: string;
-  /** Describe the person and what they are doing — this is read aloud. */
-  alt: string;
-  name: string;
-  role: string;
-  city: string;
+  eyebrow: string;
+  headline: string;
+  subhead: string;
+  /** Two short proof points. More than two and the panel stops scanning. */
+  points: { icon: LucideIcon; label: string }[];
+  cta: { label: string; href: string };
+  image: {
+    src?: string;
+    /** Describe the person and what they are doing — this is read aloud. */
+    alt: string;
+  };
 };
 
+/**
+ * The hero banner carousel.
+ *
+ * Each slide is a self-contained panel — its own headline, two proof points,
+ * CTA and photograph — so copy and image travel together and a slide always
+ * reads as one composition. Per the wireframe, every slide leads to About Us;
+ * the CTA band directly beneath handles Join.
+ *
+ * TODO(pre-launch): every `image.src` is a generic stock placeholder, NOT the
+ * Indian-women photography the brand calls for. Replace the images and their
+ * alt text together — see public/images/README.md.
+ */
 export const hero = {
-  eyebrow: "A Noboru World initiative",
-  headline: "When pigs fly.",
-  subhead:
-    "India's community for women founders. The mentors, network and nerve to build what everyone called unrealistic.",
-  primaryCta: { label: "Join Oinkfly", href: "/join" },
-  secondaryCta: { label: "Explore events", href: "/events" },
-  /**
-   * TODO(pre-launch): these are stock photographs standing in for real
-   * members, and the names and roles are illustrative. Replace both with
-   * consented founder portraits — see public/images/founders/README.md.
-   */
   slides: [
     {
-      src: heroPhotos[0]?.src,
-      alt: "A woman founder presenting to her team.",
-      name: "Ananya Rao",
-      role: "Founder, Studio Marigold",
-      city: "Bengaluru",
+      eyebrow: "The Pink Fly community",
+      headline: "Find your people.",
+      subhead: "India's community for ambitious women founders.",
+      points: [
+        { icon: HeartHandshake, label: "Mentors who have already built it" },
+        { icon: Network, label: "Introductions that open doors" },
+      ],
+      cta: { label: "About Pink Fly", href: "/about" },
+      image: { src: heroPhotos[0]?.src, alt: "A woman founder presenting to her team." },
     },
     {
-      src: heroPhotos[1]?.src,
-      alt: "Two women in conversation across a desk.",
-      name: "Priya Menon",
-      role: "Founder & CEO, Loom & Co.",
-      city: "Kochi",
+      eyebrow: "Mentorship",
+      headline: "Guidance that fits your stage.",
+      subhead: "Matched to where you are, not to a curriculum.",
+      points: [
+        { icon: Target, label: "What to build next, what to ignore" },
+        { icon: Users, label: "Small circles that keep you moving" },
+      ],
+      cta: { label: "About Pink Fly", href: "/about" },
+      image: { src: heroPhotos[1]?.src, alt: "Two women in conversation across a desk." },
     },
     {
-      src: heroPhotos[2]?.src,
-      alt: "Women gathered in conversation at a community event.",
-      name: "Fatima Sheikh",
-      role: "Co-founder, Nourish Labs",
-      city: "Mumbai",
+      eyebrow: "Events",
+      headline: "Rooms worth showing up for.",
+      subhead: "Roundtables, meetups and one very good annual summit.",
+      points: [
+        { icon: Calendar, label: "Curated gatherings across India" },
+        { icon: Rocket, label: "Launches, live and in person" },
+      ],
+      cta: { label: "About Pink Fly", href: "/about" },
+      image: { src: heroPhotos[2]?.src, alt: "Women gathered in conversation at a community event." },
     },
     {
-      src: heroPhotos[3]?.src,
-      alt: "A woman speaking to an audience at an Oinkfly event.",
-      name: "Kavya Iyer",
-      role: "Founder, The Daily Press",
-      city: "Delhi",
+      eyebrow: "Knowledge Base",
+      headline: "Playbooks, not platitudes.",
+      subhead: "Written for founders in a hurry.",
+      points: [
+        { icon: GraduationCap, label: "Masterclasses from women who shipped" },
+        { icon: TrendingUp, label: "The policy changes that affect you" },
+      ],
+      cta: { label: "About Pink Fly", href: "/about" },
+      image: { src: heroPhotos[3]?.src, alt: "A woman speaking to an audience at a Pink Fly event." },
     },
   ] as HeroSlide[],
-  /** Icons that ring the hero visual. Positions are % of the scene box. */
-  orbit: [
-    { icon: HeartHandshake, label: "Mentorship", x: 2, y: 22 },
-    { icon: Network, label: "Network", x: 97, y: 40 },
-    { icon: Rocket, label: "Launch", x: 8, y: 74 },
-    { icon: TrendingUp, label: "Growth", x: 94, y: 84 },
-  ] satisfies OrbitIcon[],
 };
+
 
 /* --------------------------------------------------------------- Trust -- */
 /**
@@ -104,7 +119,7 @@ export const hero = {
  */
 export const trust = {
   statement:
-    "Trusted by founders, mentors and partner organisations across the Oinkfly network.",
+    "Trusted by founders, mentors and partner organisations across the Pink Fly network.",
   /** Placeholder names — replace with real logo assets before use. */
   logos: [
     "Partner name TBC",
@@ -116,12 +131,12 @@ export const trust = {
   ],
 };
 
-/* --------------------------------------------------- Why Oinkfly exists -- */
+/* --------------------------------------------------- Why Pink Fly exists -- */
 export const mission = {
-  eyebrow: "Why Oinkfly exists",
+  eyebrow: "Why Pink Fly exists",
   headline: "The room every founder wishes she'd found sooner.",
   body: [
-    "Too many women build brilliant businesses alone. Oinkfly is the mentors, the peers and the network that changes that.",
+    "Too many women build brilliant businesses alone. Pink Fly is the mentors, the peers and the network that changes that.",
   ],
   cta: { label: "Join the community", href: "/join" },
 };
@@ -130,13 +145,22 @@ export const mission = {
 export const impact = {
   eyebrow: "Our impact",
   headline: "A movement, measured.",
-  note: "Placeholder figures — replace with verified numbers before launch.",
+  /**
+   * Figures and labels are the wireframe's own. One icon each, so the row
+   * reads visually before it reads verbally.
+   * TODO(pre-launch): confirm every figure against source data.
+   */
   stats: [
-    { value: 1000, suffix: "+", label: "Community members" },
-    { value: 600, suffix: "+", label: "Women who bootstrapped an idea into a business" },
-    { value: 100, suffix: "+", label: "Founders who went on to raise funding" },
-    { value: 10, suffix: "+", label: "Businesses scaled with Oinkfly support" },
-  ],
+    { icon: Users, value: 1000, suffix: "+", label: "Community members" },
+    { icon: Rocket, value: 600, suffix: "+", label: "Women who bootstrapped an idea into a business" },
+    { icon: TrendingUp, value: 100, suffix: "+", label: "Founders who went on to raise funding" },
+    { icon: Target, value: 10, suffix: "+", label: "Businesses scaled" },
+  ] satisfies {
+    icon: LucideIcon;
+    value: number;
+    suffix: string;
+    label: string;
+  }[],
 };
 
 /* ------------------------------------------------------------- Community -- */
@@ -225,7 +249,7 @@ export const finalCta = {
 
 /* ------------------------------------------------------------ Newsletter -- */
 export const newsletter = {
-  headline: "Get the Oinkfly letter.",
+  headline: "Get the Pink Fly letter.",
   subhead: "Stories, playbooks and invites. Never noise.",
   placeholder: "you@yourbrand.com",
   cta: "Subscribe",
@@ -234,7 +258,7 @@ export const newsletter = {
 /* ------------------------------------------------------------ About page -- */
 export const about = {
   hero: {
-    eyebrow: "About Oinkfly",
+    eyebrow: "About Pink Fly",
     title: "A community built for the long climb.",
     intro:
       "Where ambitious women find the mentorship, network and belief to build.",
@@ -243,7 +267,7 @@ export const about = {
   founder: {
     eyebrow: "Founder story",
     name: "Anjan Prasad",
-    role: "Founder, Oinkfly",
+    role: "Founder, Pink Fly",
     image: aboutImages.founder,
     body: [
       "The women building the most interesting businesses were almost always doing it alone. They had the ambition. What they lacked was a room.",
@@ -291,7 +315,7 @@ export const about = {
   },
   contact: {
     eyebrow: "Contact us",
-    headline: "Talk to the Oinkfly team.",
+    headline: "Talk to the Pink Fly team.",
     intro: "Partnerships, press, speaking, or just a question. We read everything.",
   },
 };
@@ -361,7 +385,7 @@ export const join = {
   },
   faqs: [
     {
-      q: "Who can join Oinkfly?",
+      q: "Who can join Pink Fly?",
       a: "Any woman building, or seriously planning, a business. No revenue threshold, no stage requirement.",
     },
     {
@@ -406,122 +430,6 @@ export const valueSpotlight = {
 };
 
 
-/* ==========================================================================
-   Oinkfly homepage
-   --------------------------------------------------------------------------
-   The sections below drive the homepage. Voice: short, dry, confident. The
-   brand is "when pigs fly" — every line should sound like someone who has
-   stopped asking permission. If a sentence needs a comma to survive, cut it.
-
-   `mission`, `impact`, `community`, `testimonials`, `finalCta` and
-   `newsletter` above still power the About, Events and Knowledge Base pages
-   (and remain available for reuse), so they are intentionally kept.
-   ========================================================================== */
-
-/* ------------------------------------------------------------ Manifesto -- */
-export const manifesto = {
-  eyebrow: "Why we exist",
-  headline: "Someone told you to be realistic.",
-  body: "Oinkfly is the room where that advice stops.",
-  /** Scrolls across the manifesto band — the flight path, spelled out. */
-  marquee: ["Idea", "First customer", "First hire", "First round", "Scale", "Legacy"],
-};
-
-/* --------------------------------------------------------------- Proof -- */
-export const proof = {
-  eyebrow: "Our impact",
-  headline: "It flies.",
-  /**
-   * One icon per number so the row reads visually before it reads verbally.
-   * TODO(pre-launch): confirm every figure against source data.
-   */
-  stats: [
-    { icon: Users, value: 1000, suffix: "+", label: "In the community" },
-    { icon: Rocket, value: 600, suffix: "+", label: "Ideas turned into businesses" },
-    { icon: TrendingUp, value: 100, suffix: "+", label: "Founders who raised" },
-    { icon: Target, value: 10, suffix: "+", label: "Businesses scaled" },
-  ] satisfies {
-    icon: LucideIcon;
-    value: number;
-    suffix: string;
-    label: string;
-  }[],
-};
-
-/* ---------------------------------------------------------- Membership -- */
-export const offering = {
-  eyebrow: "Membership",
-  headline: "Everything you need for takeoff.",
-  items: [
-    {
-      icon: HeartHandshake,
-      title: "Mentorship",
-      description: "Matched to your stage, not a curriculum.",
-    },
-    {
-      icon: Network,
-      title: "Network",
-      description: "Founders, buyers and investors who move things.",
-    },
-    {
-      icon: Target,
-      title: "Strategy",
-      description: "What to build next. What to ignore.",
-    },
-    {
-      icon: Calendar,
-      title: "Events",
-      description: "Roundtables, meetups, one very good summit.",
-    },
-    {
-      icon: GraduationCap,
-      title: "Masterclasses",
-      description: "Short, practical, from women who've shipped.",
-    },
-    {
-      icon: Users,
-      title: "Accountability",
-      description: "Circles that keep you moving when motivation runs out.",
-    },
-  ] satisfies { icon: LucideIcon; title: string; description: string }[],
-};
-
-/* ------------------------------------------------------------- Stories -- */
-/**
- * TODO(pre-launch): illustrative, not real members. Swap for consented
- * quotes and photographs before the site goes live.
- */
-export const stories = {
-  eyebrow: "Founder stories",
-  headline: "Ask the ones who took off.",
-  items: [
-    {
-      quote:
-        "I was building in a vacuum. Now I have mentors on speed dial and a room that wants me to win.",
-      name: "Ananya Rao",
-      role: "Founder, Studio Marigold",
-    },
-    {
-      quote:
-        "My accountability circle took me from side project to real revenue in six months.",
-      name: "Priya Menon",
-      role: "Founder & CEO, Loom & Co.",
-    },
-    {
-      quote:
-        "One introduction here became my first stockist. The next became my first investor.",
-      name: "Fatima Sheikh",
-      role: "Co-founder, Nourish Labs",
-    },
-    {
-      quote:
-        "Every accelerator taught me tactics. Oinkfly gave me the people who make them stick.",
-      name: "Kavya Iyer",
-      role: "Founder, The Daily Press",
-    },
-  ],
-};
-
 /* ---------------------------------------------------------- Join (CTA) -- */
 /**
  * The homepage's closing section. Distinct from `join` above, which is the
@@ -532,6 +440,6 @@ export const joinCta = {
   headline: "Ready when you are.",
   body: "Founder stories, playbooks, and first access to every room we open.",
   placeholder: "you@yourbrand.com",
-  cta: "Join Oinkfly",
-  success: "You're in. Welcome to Oinkfly.",
+  cta: "Join Pink Fly",
+  success: "You're in. Welcome to Pink Fly.",
 };

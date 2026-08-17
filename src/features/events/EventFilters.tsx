@@ -7,7 +7,7 @@ import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { EventCard } from "./EventCard";
-import type { OinkflyEvent } from "@/data/events";
+import type { PinkFlyEvent } from "@/data/events";
 import { formatMonthKey } from "@/lib/date";
 import type { Region } from "@/lib/region";
 
@@ -31,7 +31,7 @@ export function EventFilters({
   types,
   perPage = 6,
 }: {
-  events: OinkflyEvent[];
+  events: PinkFlyEvent[];
   region: Region;
   cities: string[];
   months: string[];

@@ -3,33 +3,31 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { hero, type HeroSlide } from "@/config/content";
-import { OinkflyMark } from "@/components/brand/OinkflyMark";
-import {
-  DURATION,
-  EASE,
-  lift,
-  liftScale,
-  staggerSlow,
-} from "@/components/motion/variants";
+import { Container } from "@/components/layout/Container";
+import { Button } from "@/components/ui/button";
+import { PinkFlyMark } from "@/components/brand/PinkFlyMark";
+import { DURATION, EASE, STAGGER } from "@/components/motion/variants";
+import { regionPath, type Region } from "@/lib/region";
 import { cn } from "@/lib/utils";
 
 /* ==========================================================================
-   Hero carousel
+   Hero banner carousel
    --------------------------------------------------------------------------
-   Portraits of the women who actually use Oinkfly. The photograph, the
-   caption and the orbiting icons sit inside one frame and animate as one
-   composition — the caption rises with the image, it does not pop in after.
+   A full-width promotional band: copy on the left, photograph on the right,
+   round arrows on either edge. Each slide carries its own headline, two proof
+   points, CTA and image, so a slide always reads as one composition rather
+   than a caption bolted to a picture.
 
-   Motion is the same language as the rest of the site: slide along the
-   reading axis, fade, settle. The only addition is a very slow scale on the
-   active photo, which keeps a still image feeling alive without drawing
-   attention to itself.
+   Motion stays the house language — everything lifts, one easing curve. The
+   copy staggers in behind the image so the eye lands on the photograph first,
+   then reads.
    ========================================================================== */
 
-const AUTOPLAY_MS = 5500;
+const AUTOPLAY_MS = 6000;
 
-export function HeroCarousel({ className }: { className?: string }) {
+export function HeroCarousel({ region }: { region: Region }) {
   const slides = hero.slides;
   const still = useReducedMotion();
   const [index, setIndex] = useState(0);
@@ -53,218 +51,238 @@ export function HeroCarousel({ className }: { className?: string }) {
   }, [paused, still, slides.length]);
 
   const active = slides[index];
-  // A photograph needs a dark scrim to stay legible; the branded fallback is
-  // already light, so it keeps the page's own type colours instead of going
-  // grey under an overlay it doesn't need.
-  const hasPhoto = Boolean(active.src);
 
   return (
-    <motion.div
-      variants={liftScale}
-      initial="hidden"
-      animate="visible"
-      className={cn("relative isolate", className)}
+    <section
+      className="pf-on-muted relative isolate overflow-hidden bg-[linear-gradient(110deg,var(--pf-bg)_0%,var(--pf-accent-soft)_55%,var(--pf-surface-muted)_100%)] pt-24 sm:pt-28"
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Pink Fly"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div
-        className="pf-on-muted relative aspect-[4/5] overflow-hidden rounded-[var(--pf-radius-2xl)] border border-[var(--pf-border)] bg-[var(--pf-surface-muted)] shadow-[var(--pf-shadow-lg)]"
-        role="group"
-        aria-roledescription="carousel"
-        aria-label="Oinkfly founders"
-      >
-        <AnimatePresence mode="popLayout" custom={direction} initial={false}>
-          <motion.figure
-            key={index}
-            custom={direction}
-            initial={{ opacity: 0, x: direction >= 0 ? 40 : -40, scale: 1.04 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: direction >= 0 ? -28 : 28, scale: 1.02 }}
-            transition={{ duration: DURATION.slow, ease: EASE }}
-            drag={still || slides.length < 2 ? false : "x"}
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.12}
-            onDragEnd={(_, info) => {
-              if (info.offset.x < -60) goTo(index + 1, 1);
-              else if (info.offset.x > 60) goTo(index - 1, -1);
-            }}
-            className="absolute inset-0 m-0 cursor-grab active:cursor-grabbing"
-          >
-            <SlideMedia slide={active} priority={index === 0} still={!!still} />
+      <GhostWordmark />
 
-            {/* Legibility scrim — only where there is a photograph to darken */}
-            {hasPhoto && (
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-[linear-gradient(to_top,rgba(20,17,15,0.82)_0%,rgba(20,17,15,0.28)_38%,transparent_62%)]"
-              />
-            )}
+      <Container className="relative">
+        <div className="min-h-[26rem] sm:min-h-[30rem] lg:min-h-[32rem]">
+          <AnimatePresence mode="wait" custom={direction} initial={false}>
+            <motion.div
+              key={index}
+              className="grid items-center gap-8 py-10 lg:grid-cols-[1fr_1.05fr] lg:gap-10 lg:py-14"
+            >
+              {/* ---- Copy ---------------------------------------------- */}
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={{
+                  hidden: {},
+                  visible: { transition: { staggerChildren: STAGGER, delayChildren: 0.1 } },
+                  exit: { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
+                }}
+                className="order-2 flex flex-col items-start gap-5 lg:order-1"
+              >
+                <Line>
+                  <span className="pf-eyebrow">{active.eyebrow}</span>
+                </Line>
 
-            {/* Caption — part of the slide, so it travels with the photo */}
-            <figcaption className="absolute inset-x-5 bottom-5">
-              <p
-                className={cn(
-                  "font-[family-name:var(--font-display)] text-lg font-bold leading-tight",
-                  hasPhoto ? "text-white" : "text-[var(--pf-heading)]"
-                )}
+                <Line>
+                  <h1 className="pf-display text-[var(--pf-heading)]">
+                    {active.headline}
+                  </h1>
+                </Line>
+
+                <Line>
+                  <p className="max-w-md text-lg leading-relaxed text-[var(--pf-text)]">
+                    {active.subhead}
+                  </p>
+                </Line>
+
+                <Line>
+                  <ul className="flex flex-col gap-3">
+                    {active.points.map(({ icon: Icon, label }) => (
+                      <li
+                        key={label}
+                        className="flex items-center gap-3 text-[var(--pf-heading)]"
+                      >
+                        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--pf-surface)] text-[var(--pf-accent)] shadow-[var(--pf-shadow-sm)]">
+                          <Icon size={17} strokeWidth={1.9} aria-hidden />
+                        </span>
+                        <span className="text-sm sm:text-base">{label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Line>
+
+                <Line>
+                  <Button href={regionPath(region, active.cta.href)} size="lg">
+                    {active.cta.label}
+                    <ArrowRight size={18} />
+                  </Button>
+                </Line>
+              </motion.div>
+
+              {/* ---- Image --------------------------------------------- */}
+              <motion.div
+                custom={direction}
+                initial={{ opacity: 0, x: direction >= 0 ? 48 : -48, scale: 1.02 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: direction >= 0 ? -32 : 32 }}
+                transition={{ duration: DURATION.slow, ease: EASE }}
+                drag={still || slides.length < 2 ? false : "x"}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.12}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x < -60) goTo(index + 1, 1);
+                  else if (info.offset.x > 60) goTo(index - 1, -1);
+                }}
+                className="order-1 lg:order-2"
               >
-                {active.name}
-              </p>
-              <p
-                className={cn(
-                  "mt-1 text-sm",
-                  hasPhoto ? "text-white/80" : "text-[var(--pf-text)]"
-                )}
-              >
-                {active.role}
-              </p>
-              <p
-                className={cn(
-                  "mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs backdrop-blur-md",
-                  hasPhoto
-                    ? "bg-white/15 text-white/90"
-                    : "bg-[var(--pf-surface)]/70 text-[var(--pf-text)]"
-                )}
-              >
-                <OinkflyMark
-                  size={14}
-                  wing={0.7}
-                  className={hasPhoto ? "text-white" : "text-[var(--pf-accent)]"}
-                  style={{ ["--pf-knockout" as string]: "transparent" }}
-                  aria-hidden
+                <SlideImage
+                  image={active.image}
+                  priority={index === 0}
+                  still={!!still}
                 />
-                {active.city}
-              </p>
-            </figcaption>
-          </motion.figure>
-        </AnimatePresence>
+              </motion.div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-        {/* Progress dots */}
+        {/* ---- Dots ------------------------------------------------- */}
         {slides.length > 1 && (
           <div
-            className="absolute inset-x-5 top-5 flex gap-1.5"
+            className="flex justify-center gap-2 pb-8"
             role="tablist"
-            aria-label="Founders"
+            aria-label="Slides"
           >
             {slides.map((slide, i) => (
               <button
-                key={slide.name}
+                key={slide.headline}
                 type="button"
                 role="tab"
                 aria-selected={i === index}
-                aria-label={`${slide.name}, ${slide.role}`}
+                aria-label={slide.headline}
                 onClick={() => goTo(i, i > index ? 1 : -1)}
                 className={cn(
-                  "h-1 flex-1 overflow-hidden rounded-full transition-colors duration-300",
-                  hasPhoto ? "bg-white/30" : "bg-[var(--pf-border-strong)]"
+                  "h-2 rounded-full transition-all duration-300 ease-[var(--pf-ease)]",
+                  i === index
+                    ? "w-9 bg-[var(--pf-accent)]"
+                    : "w-2 bg-[var(--pf-border-strong)] hover:bg-[var(--pf-accent)]/50"
                 )}
-              >
-                <span
-                  className={cn(
-                    "block h-full rounded-full transition-transform duration-500 ease-[var(--pf-ease)]",
-                    hasPhoto ? "bg-white" : "bg-[var(--pf-accent)]",
-                    i === index ? "scale-x-100" : "scale-x-0"
-                  )}
-                  style={{ transformOrigin: "left" }}
-                />
-              </button>
+              />
             ))}
           </div>
         )}
-      </div>
+      </Container>
 
-      {/* Orbiting icons — the support that surrounds every founder here */}
-      <motion.ul
-        variants={staggerSlow}
-        initial="hidden"
-        animate="visible"
-        aria-hidden
-        className="pointer-events-none absolute inset-x-3 inset-y-0 sm:inset-x-0"
-      >
-        {hero.orbit.map(({ icon: Icon, label, x, y }, i) => (
-          <motion.li
-            key={label}
-            variants={lift}
-            className="absolute"
-            style={{ left: `${x}%`, top: `${y}%` }}
-          >
-            <motion.span
-              title={label}
-              animate={still ? undefined : { y: [0, -9, 0] }}
-              transition={{
-                duration: 5.5 + (i % 3),
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: i * 0.45,
-              }}
-              className="pf-glass flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[var(--pf-accent)] shadow-[var(--pf-shadow-md)]"
-            >
-              <Icon size={19} strokeWidth={1.9} />
-            </motion.span>
-          </motion.li>
-        ))}
-      </motion.ul>
+      {/* ---- Arrows ------------------------------------------------- */}
+      {slides.length > 1 && (
+        <>
+          <Arrow side="left" onClick={() => goTo(index - 1, -1)} />
+          <Arrow side="right" onClick={() => goTo(index + 1, 1)} />
+        </>
+      )}
+    </section>
+  );
+}
+
+/** One staggered line of hero copy. */
+function Line({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 16 },
+        visible: { opacity: 1, y: 0, transition: { duration: DURATION.base, ease: EASE } },
+        exit: { opacity: 0, y: -8, transition: { duration: 0.2, ease: EASE } },
+      }}
+    >
+      {children}
     </motion.div>
   );
 }
 
-/* -------------------------------------------------------------- Media -- */
+function Arrow({ side, onClick }: { side: "left" | "right"; onClick: () => void }) {
+  const Icon = side === "left" ? ChevronLeft : ChevronRight;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={side === "left" ? "Previous slide" : "Next slide"}
+      className={cn(
+        "absolute top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[var(--pf-heading)] text-[var(--pf-bg)] shadow-[var(--pf-shadow-md)] transition-all duration-300 ease-[var(--pf-ease)] hover:bg-[var(--pf-accent)] sm:inline-flex",
+        side === "left" ? "left-3 lg:left-5" : "right-3 lg:right-5"
+      )}
+    >
+      <Icon size={20} />
+    </button>
+  );
+}
 
 /**
- * Renders the photograph when one has been supplied, and a branded portrait
- * treatment when it hasn't — so a missing asset degrades into something that
- * still looks designed, never a broken image or an empty grey box.
- * See public/images/founders/README.md for how to add the photographs.
+ * The slide photograph, or the branded panel when no asset has been supplied
+ * yet — so a missing image degrades into something still designed, never a
+ * broken frame. See public/images/README.md.
  */
-function SlideMedia({
-  slide,
+function SlideImage({
+  image,
   priority,
   still,
 }: {
-  slide: HeroSlide;
+  image: HeroSlide["image"];
   priority: boolean;
   still: boolean;
 }) {
-  if (slide.src) {
-    return (
-      <motion.div
-        className="absolute inset-0"
-        animate={still ? undefined : { scale: [1, 1.06] }}
-        transition={{ duration: 14, ease: "easeInOut" }}
-      >
-        <Image
-          src={slide.src}
-          alt={slide.alt}
-          fill
-          priority={priority}
-          sizes="(max-width: 1024px) 90vw, 460px"
-          className="object-cover"
-          draggable={false}
-        />
-      </motion.div>
-    );
-  }
-
   return (
-    <div className="absolute inset-0 bg-gradient-to-br from-[var(--pf-accent-soft)] via-[var(--pf-surface)] to-[var(--pf-surface-muted)]">
-      <svg viewBox="0 0 100 110" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" aria-hidden>
-        <path
-          d="M-4 92 C 22 88, 34 62, 52 48 C 70 34, 86 26, 104 22"
-          className="pf-flightpath"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-      <div className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2">
-        <OinkflyMark
-          size={170}
-          wing={0.55}
-          className="w-[38vw] max-w-[170px] text-[var(--pf-accent)] drop-shadow-[0_18px_36px_rgba(216,3,125,0.28)]"
-          aria-hidden
-        />
-      </div>
-      <span className="sr-only">{slide.alt}</span>
+    <div className="relative mx-auto aspect-[16/10] w-full max-w-xl overflow-hidden rounded-[var(--pf-radius-2xl)] border border-[var(--pf-border)] bg-[var(--pf-surface-muted)] shadow-[var(--pf-shadow-lg)]">
+      {image.src ? (
+        <motion.div
+          className="absolute inset-0"
+          animate={still ? undefined : { scale: [1, 1.05] }}
+          transition={{ duration: 12, ease: "easeInOut" }}
+        >
+          <Image
+            src={image.src}
+            alt={image.alt}
+            fill
+            priority={priority}
+            sizes="(max-width: 1024px) 92vw, 560px"
+            className="object-cover"
+            draggable={false}
+          />
+        </motion.div>
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[var(--pf-accent-soft)] via-[var(--pf-surface)] to-[var(--pf-surface-muted)]">
+          <PinkFlyMark
+            size={150}
+            wing={0.55}
+            className="w-[34vw] max-w-[150px] text-[var(--pf-accent)] drop-shadow-[0_18px_36px_rgba(216,3,125,0.28)]"
+            aria-hidden
+          />
+          <span className="sr-only">{image.alt}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Oversized repeating wordmark behind the band. Purely decorative. */
+function GhostWordmark() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 -z-10 flex flex-col justify-center overflow-hidden opacity-[0.05]"
+    >
+      {[0, 1, 2].map((row) => (
+        <span
+          key={row}
+          className="whitespace-nowrap font-[family-name:var(--font-display)] text-[5.5rem] font-bold leading-[0.95] tracking-tight text-[var(--pf-accent)] sm:text-[8rem]"
+          style={{ marginLeft: row % 2 ? "-6rem" : "-2rem" }}
+        >
+          PINKFLYPINKFLYPINKFLYPINKFLYPINKFLY
+        </span>
+      ))}
     </div>
   );
 }

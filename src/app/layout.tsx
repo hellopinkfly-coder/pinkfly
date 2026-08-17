@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     "founder community",
     "mentorship",
     "women in business",
-    "Oinkfly",
+    "Pink Fly",
     "Noboru World",
   ],
   authors: [{ name: siteConfig.parent }],

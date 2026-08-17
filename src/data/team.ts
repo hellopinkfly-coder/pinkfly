@@ -43,7 +43,7 @@ export type Initiative = {
 };
 
 /**
- * Previous Oinkfly activities and initiatives. Hidden for now via
+ * Previous Pink Fly activities and initiatives. Hidden for now via
  * `flags.initiatives` — do not delete, this goes live once content is ready.
  */
 export const initiatives: Initiative[] = [
@@ -52,10 +52,10 @@ export const initiatives: Initiative[] = [
     title: "Initiative title to be confirmed",
     period: "Year TBC",
     summary:
-      "Placeholder summary of a past Oinkfly initiative. Replace with the real programme description.",
+      "Placeholder summary of a past Pink Fly initiative. Replace with the real programme description.",
     image: {
       src: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1000&q=80",
-      alt: "Placeholder image for a past Oinkfly initiative",
+      alt: "Placeholder image for a past Pink Fly initiative",
     },
     highlights: ["Placeholder outcome", "Placeholder reach"],
   },
@@ -64,10 +64,10 @@ export const initiatives: Initiative[] = [
     title: "Initiative title to be confirmed",
     period: "Year TBC",
     summary:
-      "Placeholder summary of a past Oinkfly initiative. Replace with the real programme description.",
+      "Placeholder summary of a past Pink Fly initiative. Replace with the real programme description.",
     image: {
       src: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1000&q=80",
-      alt: "Placeholder image for a past Oinkfly initiative",
+      alt: "Placeholder image for a past Pink Fly initiative",
     },
     highlights: ["Placeholder outcome", "Placeholder reach"],
   },
@@ -76,10 +76,10 @@ export const initiatives: Initiative[] = [
     title: "Initiative title to be confirmed",
     period: "Year TBC",
     summary:
-      "Placeholder summary of a past Oinkfly initiative. Replace with the real programme description.",
+      "Placeholder summary of a past Pink Fly initiative. Replace with the real programme description.",
     image: {
       src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1000&q=80",
-      alt: "Placeholder image for a past Oinkfly initiative",
+      alt: "Placeholder image for a past Pink Fly initiative",
     },
     highlights: ["Placeholder outcome", "Placeholder reach"],
   },

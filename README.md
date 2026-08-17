@@ -1,6 +1,6 @@
-# Oinkfly
+# Pink Fly
 
-Marketing site for Oinkfly — a community for ambitious women entrepreneurs.
+Marketing site for Pink Fly — a community for ambitious women entrepreneurs.
 Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4, Framer Motion.
 
 ```bash
@@ -9,13 +9,10 @@ cp .env.example .env.local
 npm run dev
 ```
 
-## The brand in one line
-
-**When pigs fly.** Everything — the mark, the motion, the copy — comes back to
-building the thing everyone said was unrealistic.
+## The brand
 
 - **Mark** — a winged pig, drawn as inline SVG in
-  `src/components/brand/OinkflyMark.tsx`. No image request, crisp at any size,
+  `src/components/brand/PinkFlyMark.tsx`. No image request, crisp at any size,
   recolours with the theme. Its eye and nostrils knock through to
   `--pf-knockout`, so any element placing the mark on a raised surface should
   carry `.pf-on-surface` or `.pf-on-muted`. `src/components/shared/Logo.tsx`
@@ -24,6 +21,20 @@ building the thing everyone said was unrealistic.
   everything *lifts*. One easing curve (expo-out), three durations, two travel
   distances, one stagger rhythm. Nothing bounces or drops in. Reduced motion is
   honoured globally in `globals.css` and per-component via `useReducedMotion`.
+
+## Homepage structure
+
+Set by the wireframe, in this order — see `src/components/pages/HomePage.tsx`:
+
+```
+Hero banner carousel  →  every slide leads to About Us
+Join CTA              →  FinalCTA
+Impact                →  four figures, horizontal, one icon each
+How we gather         →  Community, four image cards
+Testimonials          →  hidden behind flags.testimonials
+Why Pink Fly exists   →  Mission
+Join + newsletter     →  Join
+```
 
 ## Design system
 
