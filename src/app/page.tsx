@@ -1,25 +1,17 @@
-import { Hero } from "@/features/hero/Hero";
-import { Manifesto } from "@/features/manifesto/Manifesto";
-import { Proof } from "@/features/proof/Proof";
-import { Offering } from "@/features/offering/Offering";
-import { Stories } from "@/features/stories/Stories";
-import { Join } from "@/features/join/Join";
-
 /**
- * The homepage is one argument, in order:
- * who this is for → why it exists → that it works → what you get →
- * who says so → join.
- * Every section earns its place; nothing repeats another section's job.
+ * Global homepage (`/`).
+ *
+ * Regional homepages live at `/india`, `/dubai` and `/usa` and render this
+ * same component — see `src/app/[region]/page.tsx`.
  */
-export default function Home() {
-  return (
-    <>
-      <Hero />
-      <Manifesto />
-      <Proof />
-      <Offering />
-      <Stories />
-      <Join />
-    </>
-  );
+import { HomePage } from "@/components/pages/HomePage";
+import { getRegion } from "@/lib/region";
+import { buildHomeMetadata } from "@/lib/seo";
+
+const region = getRegion();
+
+export const metadata = buildHomeMetadata(region);
+
+export default function Page() {
+  return <HomePage region={region} />;
 }

@@ -1,44 +1,86 @@
 /**
- * Central place for site-wide configuration (metadata, nav, links).
+ * Site-wide configuration: identity, social links, navigation, integrations.
+ *
+ * Anything region-specific lives in `src/config/regions.ts` instead — this
+ * file holds only what is true for Oinkfly globally.
  */
+
 export const siteConfig = {
   name: "Oinkfly",
   tagline: "When pigs fly",
   description:
-    "Oinkfly is India's community for ambitious women founders — mentorship, network, strategy, and the nerve to build the thing everyone called unrealistic. A flagship initiative by Noboru World.",
+    "Oinkfly is a community for ambitious women founders — mentorship, network, strategy, and the nerve to build the thing everyone called unrealistic.",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   parent: "Noboru World",
+  parentUrl: "https://noboruworld.com",
   contactEmail: "hello@oinkfly.community",
+  /** Placeholder contact block — confirm before launch. */
+  address: ["Noboru World", "Bengaluru, Karnataka", "India"],
+  phone: "+91 00000 00000",
   socials: {
-    instagram: "https://instagram.com",
-    linkedin: "https://linkedin.com",
-    twitter: "https://twitter.com",
-    youtube: "https://youtube.com",
+    instagram: "https://www.instagram.com/pinkfly_official/",
+    youtube: "https://www.youtube.com/@PinkFly-official",
+    linkedin: "https://www.linkedin.com/in/pink-fly-aaa198429/",
+    twitter: "https://x.com/Pinkflyofficial",
   },
 } as const;
 
-/** Primary navigation — each item is a route or in-page anchor. */
+/**
+ * External integrations. These are intentionally environment-driven so the
+ * real destinations can be supplied without a code change. Nothing here is
+ * invented — where a URL has not been provided the value stays empty and the
+ * UI falls back to the on-site Join Community page.
+ */
+export const integrations = {
+  /** Google Form that backs the Join Community CTA. */
+  joinFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL ?? "",
+  /** Endpoint that will forward form submissions into the CRM. */
+  crmWebhookConfigured: Boolean(process.env.CRM_WEBHOOK_URL),
+} as const;
+
+/** Primary navigation, per the homepage wireframe. */
 export const mainNav = [
-  { label: "About", href: "/about" },
-  { label: "Community", href: "/community" },
   { label: "Events", href: "/events" },
   { label: "Knowledge Base", href: "/knowledge-base" },
-  { label: "Contact", href: "/contact" },
+  { label: "About Us", href: "/about" },
 ] as const;
 
+/** Knowledge Base has its own navigation (see the Knowledge Base wireframe). */
+export const knowledgeBaseNav = [
+  { label: "Recent Articles", href: "/knowledge-base#recent-articles" },
+  { label: "Business News", href: "/knowledge-base#business-news" },
+  { label: "Government Policies", href: "/knowledge-base#government-policies" },
+] as const;
+
+/** Footer link columns, per the wireframe's three-column layout. */
 export const footerNav = {
-  explore: [
-    { label: "About", href: "/about" },
-    { label: "Community", href: "/community" },
-    { label: "Events", href: "/events" },
-    { label: "Knowledge Base", href: "/knowledge-base" },
-  ],
-  connect: [
-    { label: "Contact", href: "/contact" },
-    { label: "Join Oinkfly", href: "/#join" },
-    { label: "Instagram", href: "https://instagram.com" },
-    { label: "LinkedIn", href: "https://linkedin.com" },
-  ],
+  community: {
+    title: "Community",
+    links: [
+      { label: "Join Oinkfly", href: "/join" },
+      { label: "FAQs", href: "/join#faqs" },
+      { label: "Knowledge Base", href: "/knowledge-base" },
+      { label: "Events", href: "/events" },
+    ],
+  },
+  company: {
+    title: "Company",
+    links: [
+      { label: "About Us", href: "/about" },
+      { label: "Contact Us", href: "/about#contact" },
+      {
+        label: "Community Guidelines",
+        href: "/policies/community-guidelines",
+      },
+      { label: "Privacy Policy", href: "/policies/privacy" },
+    ],
+  },
 } as const;
+
+/** Legal pages, linked from the footer's bottom bar. */
+export const policyNav = [
+  { label: "Terms & Conditions", href: "/policies/terms" },
+  { label: "Refund Policy", href: "/policies/refund" },
+] as const;
 
 export type SiteConfig = typeof siteConfig;

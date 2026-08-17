@@ -25,8 +25,8 @@ export function Manifesto() {
       </Container>
 
       {/* Flight path marquee */}
-      <Reveal className="pf-marquee-mask mt-12 overflow-hidden" delay={0.15}>
-        <div className="pf-marquee" style={{ ["--pf-marquee-duration" as string]: "42s" }}>
+      <Reveal className="pf-flight-mask mt-12 overflow-hidden" delay={0.15}>
+        <div className="pf-flight-strip" style={{ ["--pf-flight-duration" as string]: "42s" }}>
           {track.map((word, i) => (
             <span
               key={`${word}-${i}`}

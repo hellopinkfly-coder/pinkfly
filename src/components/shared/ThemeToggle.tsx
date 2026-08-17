@@ -10,7 +10,14 @@ type Theme = "light" | "dark";
  * Light / dark toggle. The initial theme is applied pre-paint by the inline
  * script in layout.tsx; this component syncs UI state and persists changes.
  */
-export function ThemeToggle({ className }: { className?: string }) {
+export function ThemeToggle({
+  className,
+  onDark = false,
+}: {
+  className?: string;
+  /** Render light, for use over a dark full-bleed hero. */
+  onDark?: boolean;
+}) {
   const [theme, setTheme] = useState<Theme>("light");
   const [mounted, setMounted] = useState(false);
 
@@ -38,7 +45,10 @@ export function ThemeToggle({ className }: { className?: string }) {
       onClick={toggle}
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
       className={cn(
-        "inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--pf-border-strong)] text-[var(--pf-heading)] transition-all duration-200 hover:border-[var(--pf-accent)] hover:text-[var(--pf-accent)]",
+        "inline-flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-200",
+        onDark
+          ? "border-white/35 text-white hover:border-white/70"
+          : "border-[var(--pf-border-strong)] text-[var(--pf-heading)] hover:border-[var(--pf-accent)] hover:text-[var(--pf-accent)]",
         className
       )}
     >

@@ -1,0 +1,61 @@
+import { community } from "@/config/content";
+import { Section } from "@/components/layout/Section";
+import { SectionHeading } from "@/components/shared/SectionHeading";
+import { Reveal } from "@/components/shared/Reveal";
+import { ImageFrame } from "@/components/shared/ImageFrame";
+import { staggerContainer, fadeUp } from "@/components/motion/variants";
+import { cn } from "@/lib/utils";
+
+/**
+ * "How we gather" — four ways the community meets.
+ *
+ * Real photography rather than infographics, each in a different organic
+ * frame, with the alternating vertical offset giving the row an editorial,
+ * asymmetric rhythm on wide screens.
+ */
+export function Community() {
+  return (
+    <Section id="community" className="bg-[var(--pf-surface)]">
+      <SectionHeading
+        eyebrow={community.eyebrow}
+        title={community.headline}
+        intro={community.intro}
+      />
+
+      <Reveal
+        as="ul"
+        variants={staggerContainer}
+        className="mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        {community.cards.map((card, i) => (
+          <Reveal
+            as="li"
+            key={card.title}
+            variants={fadeUp}
+            className={cn(
+              "group flex flex-col",
+              // Staggered baseline — only on the widest layout.
+              i % 2 === 1 && "lg:mt-14"
+            )}
+          >
+            <ImageFrame
+              src={card.image.src}
+              alt={card.image.alt}
+              label={card.image.label ?? card.title}
+              shape={card.shape}
+              aspect="aspect-[4/5]"
+              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 23vw"
+              className="shadow-[var(--pf-shadow-md)] transition-shadow duration-500 group-hover:shadow-[var(--pf-shadow-lg)]"
+            />
+            <h3 className="mt-6 text-lg transition-colors duration-300 group-hover:text-[var(--pf-accent)]">
+              {card.title}
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--pf-text)]">
+              {card.description}
+            </p>
+          </Reveal>
+        ))}
+      </Reveal>
+    </Section>
+  );
+}

@@ -9,8 +9,16 @@ import { GradientBackdrop } from "@/components/shared/GradientBackdrop";
 import { HeroCarousel } from "./HeroCarousel";
 import { OinkflyMark } from "@/components/brand/OinkflyMark";
 import { lift, stagger } from "@/components/motion/variants";
+import { regionPath, type Region } from "@/lib/region";
 
-export function Hero() {
+/**
+ * The Oinkfly hero: the brand line, one short paragraph, two CTAs, and the
+ * founder carousel beside them.
+ *
+ * Region-aware — CTAs are prefixed so `/india` keeps a visitor in their
+ * region rather than dropping them onto the global site.
+ */
+export function Hero({ region }: { region: Region }) {
   return (
     <section className="relative overflow-hidden pt-32 pb-16 sm:pt-40 sm:pb-24">
       <GradientBackdrop />
@@ -46,11 +54,15 @@ export function Hero() {
             </motion.p>
 
             <motion.div variants={lift} className="flex flex-wrap gap-3 sm:gap-4">
-              <Button href={hero.primaryCta.href} size="lg">
+              <Button href={regionPath(region, hero.primaryCta.href)} size="lg">
                 {hero.primaryCta.label}
                 <ArrowRight size={18} />
               </Button>
-              <Button href={hero.secondaryCta.href} variant="secondary" size="lg">
+              <Button
+                href={regionPath(region, hero.secondaryCta.href)}
+                variant="secondary"
+                size="lg"
+              >
                 {hero.secondaryCta.label}
               </Button>
             </motion.div>
