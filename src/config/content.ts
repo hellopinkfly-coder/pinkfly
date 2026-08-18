@@ -46,6 +46,8 @@ export type HeroSlide = {
     src?: string;
     /** Describe the person and what they are doing — this is read aloud. */
     alt: string;
+    /** object-position, keeping the subject in frame as the crop changes. */
+    focal?: string;
   };
 };
 
@@ -72,7 +74,11 @@ export const hero = {
         { icon: Network, label: "Introductions that open doors" },
       ],
       cta: { label: "About Pink Fly", href: "/about" },
-      image: { src: heroPhotos[0]?.src, alt: "A woman founder presenting to her team." },
+      image: {
+        src: heroPhotos[0]?.src,
+        alt: "A woman founder presenting to her team.",
+        focal: heroPhotos[0]?.focal,
+      },
     },
     {
       eyebrow: "Mentorship",
@@ -83,7 +89,11 @@ export const hero = {
         { icon: Users, label: "Small circles that keep you moving" },
       ],
       cta: { label: "About Pink Fly", href: "/about" },
-      image: { src: heroPhotos[1]?.src, alt: "Two women in conversation across a desk." },
+      image: {
+        src: heroPhotos[1]?.src,
+        alt: "Two women in conversation across a desk.",
+        focal: heroPhotos[1]?.focal,
+      },
     },
     {
       eyebrow: "Events",
@@ -94,7 +104,11 @@ export const hero = {
         { icon: Rocket, label: "Launches, live and in person" },
       ],
       cta: { label: "About Pink Fly", href: "/about" },
-      image: { src: heroPhotos[2]?.src, alt: "Women gathered in conversation at a community event." },
+      image: {
+        src: heroPhotos[2]?.src,
+        alt: "Women gathered in conversation at a community event.",
+        focal: heroPhotos[2]?.focal,
+      },
     },
     {
       eyebrow: "Knowledge Base",
@@ -105,7 +119,11 @@ export const hero = {
         { icon: TrendingUp, label: "The policy changes that affect you" },
       ],
       cta: { label: "About Pink Fly", href: "/about" },
-      image: { src: heroPhotos[3]?.src, alt: "A woman speaking to an audience at a Pink Fly event." },
+      image: {
+        src: heroPhotos[3]?.src,
+        alt: "A woman speaking to an audience at a Pink Fly event.",
+        focal: heroPhotos[3]?.focal,
+      },
     },
   ] as HeroSlide[],
 };
