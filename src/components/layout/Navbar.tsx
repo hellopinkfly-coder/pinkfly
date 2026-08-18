@@ -63,7 +63,7 @@ export function Navbar({
   }
 
   const joinHref = regionPath(region, "/join");
-  const ctaLabel = variant === "knowledge" ? "Join Our Community" : "Join Community";
+  const ctaLabel = variant === "knowledge" ? "Join Our Community" : "Join Pink Fly";
   // Light type only while genuinely over the image — the glass bar takes over
   // the moment the visitor scrolls.
   const onDark = overHero && !scrolled && !open;

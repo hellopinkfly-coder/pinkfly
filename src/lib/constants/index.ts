@@ -1,4 +1,4 @@
 /**
  * App-wide constant values.
  */
-export const APP_NAME = "Pinkfly";
+export const APP_NAME = "Pink Fly";

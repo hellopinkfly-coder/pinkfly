@@ -9,7 +9,7 @@ export const siteConfig = {
   name: "Pink Fly",
   tagline: "Where ambitious women build what's next",
   description:
-    "Pink Fly is a community for ambitious women entrepreneurs — mentorship, networking, education, and the founder network to help you launch, scale, and conquer.",
+    "Pink Fly is a community for ambitious women founders — mentorship, network, events and education to help you launch, scale and conquer.",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   parent: "Noboru World",
   parentUrl: "https://noboruworld.com",
@@ -57,7 +57,7 @@ export const footerNav = {
   community: {
     title: "Community",
     links: [
-      { label: "Join Community", href: "/join" },
+      { label: "Join Pink Fly", href: "/join" },
       { label: "FAQs", href: "/join#faqs" },
       { label: "Knowledge Base", href: "/knowledge-base" },
       { label: "Events", href: "/events" },

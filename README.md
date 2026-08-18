@@ -9,6 +9,33 @@ cp .env.example .env.local
 npm run dev
 ```
 
+## The brand
+
+- **Mark** — a winged pig, drawn as inline SVG in
+  `src/components/brand/PinkFlyMark.tsx`. No image request, crisp at any size,
+  recolours with the theme. Its eye and nostrils knock through to
+  `--pf-knockout`, so any element placing the mark on a raised surface should
+  carry `.pf-on-surface` or `.pf-on-muted`. `src/components/shared/Logo.tsx`
+  wraps it and stays the single source of truth for every logo placement.
+- **Motion** — one language, in `src/components/motion/variants.ts`:
+  everything *lifts*. One easing curve (expo-out), three durations, two travel
+  distances, one stagger rhythm. Nothing bounces or drops in. Reduced motion is
+  honoured globally in `globals.css` and per-component via `useReducedMotion`.
+
+## Homepage structure
+
+Set by the wireframe, in this order — see `src/components/pages/HomePage.tsx`:
+
+```
+Hero banner carousel  →  every slide leads to About Us
+Join CTA              →  FinalCTA
+Impact                →  four figures, horizontal, one icon each
+How we gather         →  Community, four image cards
+Testimonials          →  hidden behind flags.testimonials
+Why Pink Fly exists   →  Mission
+Join + newsletter     →  Join
+```
+
 ## Design system
 
 Space Mono throughout; hierarchy comes from size and weight. Pink `#D8037D` is
