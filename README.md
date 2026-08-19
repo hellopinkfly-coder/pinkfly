@@ -97,35 +97,24 @@ invented. Everything is replaceable from the config/data files above.
 When the final artwork arrives, replace the contents of `LogoMark` with an
 `<Image>` — every placement updates and no layout changes.
 
-## Join Community → CRM
+## Join Community → Google Form
 
-The Google Form is the intended destination. Set `NEXT_PUBLIC_JOIN_FORM_URL`
-(or the per-region variable in `src/config/regions.ts`) and every join CTA
-switches over — no code change:
+Registration is collected entirely in a Google Form. The site never asks for
+the same details itself, so there is no second place a lead can go missing.
 
-- `/join` becomes a single button to the form, with the three steps spelled
-  out beneath the heading and a note that it opens in a new tab.
+Set `NEXT_PUBLIC_JOIN_FORM_URL` (or the per-region variable in
+`src/config/regions.ts`, which takes precedence) and every join CTA points at
+it:
+
+- `/join` shows the three steps and a single "Register now" button that opens
+  the form in a new tab.
 - The site-wide "Your seat is waiting" CTA on the homepage, About, Events,
-  Knowledge Base and the region entry page reads "Open the join form".
+  Knowledge Base and the region entry page also reads "Register now".
 - Each link carries the region's `crmSegment`, so leads route to the right
-  team. A per-region URL wins over the global one.
+  team.
 
-Until that URL exists an on-site form (`JoinForm`) stands in on `/join`,
-posting to `/api/join`:
-
-```
-Join form → /api/join → CRM_WEBHOOK_URL → CRM record
-```
-
-It validates with `joinSchema`, forwards to the webhook when one is set, and
-tags every submission with `regionSlug`. With no webhook it validates, logs,
-and still shows the success state, so the flow works end to end in
-development.
-
-**The two are never shown together.** They collect the same details into
-different places, and a visitor who fills in the wrong one is a lead nobody
-sees. Configuring the form URL replaces the on-site form rather than sitting
-beside it.
+Until a URL is supplied, `/join` says registration is opening shortly rather
+than rendering a button with nowhere to go — no URL is ever invented.
 
 ## SEO
 

@@ -414,6 +414,8 @@ export const join = {
     formLabel: "Register now",
     /** Sets expectations before the visitor leaves the site. */
     formNote: "Opens in a new tab · Free · Takes about a minute",
+    /** Shown until a form URL is configured — never a dead button. */
+    pending: "Registration opens shortly. Check back soon.",
     steps: [
       "Register in under a minute.",
       "We'll send your welcome pack and the community links.",

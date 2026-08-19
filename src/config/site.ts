@@ -35,10 +35,8 @@ export const siteConfig = {
  * UI falls back to the on-site Join Community page.
  */
 export const integrations = {
-  /** Google Form that backs the Join Community CTA. */
+  /** Google Form that backs every join CTA. */
   joinFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL ?? "",
-  /** Endpoint that will forward form submissions into the CRM. */
-  crmWebhookConfigured: Boolean(process.env.CRM_WEBHOOK_URL),
 } as const;
 
 /** Primary navigation, per the homepage wireframe. */
