@@ -66,13 +66,14 @@ export const hero = {
   slides: [
     {
       eyebrow: "The Pink Fly community",
-      headline: "Find your people.",
-      subhead: "India's community for ambitious women founders.",
+      headline: "For dreams that are ready to fly.",
+      subhead:
+        "A community for ambitious women, giving you the connections, confidence and support to take your ambition further.",
       points: [
         { icon: HeartHandshake, label: "Mentors who have already built it" },
         { icon: Network, label: "Introductions that open doors" },
       ],
-      cta: { label: "Join Community", href: "/join" },
+      cta: { label: "Take flight with Pink Fly", href: "/join" },
       image: {
         src: heroPhotos[0]?.src,
         alt: "A woman founder presenting to her team.",
@@ -87,7 +88,7 @@ export const hero = {
         { icon: Target, label: "What to build next, what to ignore" },
         { icon: Users, label: "Small circles that keep you moving" },
       ],
-      cta: { label: "Join Community", href: "/join" },
+      cta: { label: "Take flight with Pink Fly", href: "/join" },
       image: {
         src: heroPhotos[1]?.src,
         alt: "Two women in conversation across a desk.",
@@ -102,7 +103,7 @@ export const hero = {
         { icon: Calendar, label: "Curated gatherings across India" },
         { icon: Rocket, label: "Launches, live and in person" },
       ],
-      cta: { label: "Join Community", href: "/join" },
+      cta: { label: "Take flight with Pink Fly", href: "/join" },
       image: {
         src: heroPhotos[2]?.src,
         alt: "Women gathered in conversation at a community event.",
@@ -117,7 +118,7 @@ export const hero = {
         { icon: GraduationCap, label: "Masterclasses from women who shipped" },
         { icon: TrendingUp, label: "The policy changes that affect you" },
       ],
-      cta: { label: "Join Community", href: "/join" },
+      cta: { label: "Take flight with Pink Fly", href: "/join" },
       image: {
         src: heroPhotos[3]?.src,
         alt: "A woman speaking to an audience at a Pink Fly event.",
@@ -260,8 +261,18 @@ export const testimonials = {
 export const finalCta = {
   eyebrow: "Your seat is waiting",
   headline: "This is where you find your people.",
-  body: "Membership is free. The room is already warm.",
-  cta: { label: "Join the community", href: "/join" },
+  body: "Membership is free. Fill in the form and we'll send your welcome pack, the community links, and the next events near you.",
+  /**
+   * Two labels, because the button has two honest destinations: the Google
+   * Form once its URL is configured, or the on-site Join page until then.
+   * See <FinalCTA>.
+   */
+  cta: {
+    formLabel: "Open the join form",
+    label: "Join the community",
+    href: "/join",
+  },
+  note: "Free to join · Takes about a minute",
 };
 
 /* ------------------------------------------------------------ Newsletter -- */
@@ -396,9 +407,25 @@ export const join = {
     ],
   },
   cta: {
-    headline: "Ready when you are.",
-    body: "Fill in the short form and we'll send your welcome pack.",
-    label: "Join now",
+    eyebrow: "Membership",
+    headline: "Join the community.",
+    body: "Tell us where you are and what you're building. We'll send your welcome pack, point you at the next room, and introduce you to founders a step ahead.",
+    /** Shown when the Google Form is live. */
+    formLabel: "Open the join form",
+    /** Sets expectations before the visitor leaves the site. */
+    formNote: "Opens in a new tab · Free to join · Takes about a minute",
+    steps: [
+      "Fill in the short form.",
+      "We'll send your welcome pack and the community links.",
+      "You'll get the next events and introductions near you.",
+    ],
+  },
+  form: {
+    submit: "Join Pink Fly",
+    reassurance: "Free to join · Takes about a minute",
+    successTitle: "You're in.",
+    successBody:
+      "Welcome to Pink Fly. Your welcome pack is on its way, with the community links and the next events near you.",
   },
   faqs: [
     {

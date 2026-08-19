@@ -10,7 +10,7 @@ type SectionProps = React.HTMLAttributes<HTMLElement> & {
   containerClassName?: string;
 };
 
-/** Standard section with generous vertical rhythm. */
+/** Standard section. One vertical rhythm for the whole site. */
 export function Section({
   id,
   bleed = false,
@@ -22,7 +22,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={cn("scroll-mt-24 py-14 sm:py-20", className)}
+      className={cn("scroll-mt-24 py-10 sm:py-14", className)}
       {...props}
     >
       {bleed ? children : <Container className={containerClassName}>{children}</Container>}

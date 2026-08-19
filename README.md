@@ -99,16 +99,33 @@ When the final artwork arrives, replace the contents of `LogoMark` with an
 
 ## Join Community → CRM
 
-The "Join now" CTA points at a Google Form supplied via environment variables
-(`NEXT_PUBLIC_JOIN_FORM_URL`, plus per-region overrides). Each region carries a
-`form.crmSegment` tag so submissions can be routed. The intended flow is:
+The Google Form is the intended destination. Set `NEXT_PUBLIC_JOIN_FORM_URL`
+(or the per-region variable in `src/config/regions.ts`) and every join CTA
+switches over — no code change:
+
+- `/join` becomes a single button to the form, with the three steps spelled
+  out beneath the heading and a note that it opens in a new tab.
+- The site-wide "Your seat is waiting" CTA on the homepage, About, Events,
+  Knowledge Base and the region entry page reads "Open the join form".
+- Each link carries the region's `crmSegment`, so leads route to the right
+  team. A per-region URL wins over the global one.
+
+Until that URL exists an on-site form (`JoinForm`) stands in on `/join`,
+posting to `/api/join`:
 
 ```
-Google Form → Apps Script / Zapier → CRM_WEBHOOK_URL → CRM record
+Join form → /api/join → CRM_WEBHOOK_URL → CRM record
 ```
 
-Until a form URL is configured the button falls back to a mailto and the page
-says so — no URL is fabricated.
+It validates with `joinSchema`, forwards to the webhook when one is set, and
+tags every submission with `regionSlug`. With no webhook it validates, logs,
+and still shows the success state, so the flow works end to end in
+development.
+
+**The two are never shown together.** They collect the same details into
+different places, and a visitor who fills in the wrong one is a lead nobody
+sees. Configuring the form URL replaces the on-site form rather than sitting
+beside it.
 
 ## SEO
 
