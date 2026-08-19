@@ -14,8 +14,11 @@ export const siteConfig = {
   parent: "Noboru World",
   parentUrl: "https://noboruworld.com",
   contactEmail: "hello@pinkfly.community",
-  /** Placeholder contact block — confirm before launch. */
-  address: ["Noboru World", "Bengaluru, Karnataka", "India"],
+  address: [
+    "919, Gera's Imperium Rise",
+    "Hinjawadi Phase II, Rajiv Gandhi Infotech Park",
+    "Hinjawadi, Pune, Maharashtra 411057",
+  ],
   phone: "+91 00000 00000",
   socials: {
     instagram: "https://www.instagram.com/pinkfly_official/",

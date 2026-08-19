@@ -6,10 +6,11 @@
  * from this map. To add a region, add one entry here and it appears in the
  * region selector, the sitemap, and the hreflang tags automatically.
  *
- * IMPORTANT: addresses, phone numbers, and other contact details have not
- * been supplied yet. They are `null` on purpose so the UI can render an
- * honest placeholder instead of invented information. Fill them in here and
- * nowhere else.
+ * IMPORTANT: contact details that have not been supplied are `null` on
+ * purpose, so the UI renders an honest placeholder instead of invented
+ * information. Fill them in here and nowhere else. The Pune office address
+ * is set on the global and India regions; Dubai and the USA have no office
+ * yet, so theirs stay null.
  */
 
 export type RegionSlug = "global" | "india" | "dubai" | "usa";
@@ -67,7 +68,11 @@ const GLOBAL: Region = {
   countryCode: null,
   locale: "en",
   currency: null,
-  address: null,
+  address: [
+    "919, Gera's Imperium Rise",
+    "Hinjawadi Phase II, Rajiv Gandhi Infotech Park",
+    "Hinjawadi, Pune, Maharashtra 411057",
+  ],
   phone: null,
   email: "hello@pinkfly.community",
   timezone: "UTC",
@@ -96,7 +101,11 @@ const INDIA: Region = {
   countryCode: "IN",
   locale: "en-IN",
   currency: { code: "INR", symbol: "₹" },
-  address: null,
+  address: [
+    "919, Gera's Imperium Rise",
+    "Hinjawadi Phase II, Rajiv Gandhi Infotech Park",
+    "Hinjawadi, Pune, Maharashtra 411057",
+  ],
   phone: null,
   email: null,
   timezone: "Asia/Kolkata",
