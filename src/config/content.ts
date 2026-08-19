@@ -396,9 +396,16 @@ export const join = {
     ],
   },
   cta: {
-    headline: "Ready when you are.",
-    body: "Fill in the short form and we'll send your welcome pack.",
-    label: "Join now",
+    eyebrow: "Membership",
+    headline: "Join the community.",
+    body: "Tell us where you are and what you're building. We'll send your welcome pack, point you at the next room, and introduce you to founders a step ahead.",
+  },
+  form: {
+    submit: "Join Pink Fly",
+    reassurance: "Free to join · Takes about a minute",
+    successTitle: "You're in.",
+    successBody:
+      "Welcome to Pink Fly. Your welcome pack is on its way, with the community links and the next events near you.",
   },
   faqs: [
     {

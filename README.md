@@ -99,16 +99,22 @@ When the final artwork arrives, replace the contents of `LogoMark` with an
 
 ## Join Community → CRM
 
-The "Join now" CTA points at a Google Form supplied via environment variables
-(`NEXT_PUBLIC_JOIN_FORM_URL`, plus per-region overrides). Each region carries a
-`form.crmSegment` tag so submissions can be routed. The intended flow is:
+Membership applications are collected by an on-site form (`JoinForm`), posted
+to `/api/join`. The route validates with `joinSchema` and, when
+`CRM_WEBHOOK_URL` is set, forwards the submission:
 
 ```
-Google Form → Apps Script / Zapier → CRM_WEBHOOK_URL → CRM record
+Join form → /api/join → CRM_WEBHOOK_URL → CRM record
 ```
 
-Until a form URL is configured the button falls back to a mailto and the page
-says so — no URL is fabricated.
+Every submission carries `regionSlug`, so leads route to the right team. With
+no webhook configured the submission is validated and logged, and the visitor
+still sees the success state — so the form works end to end in development.
+Add persistence or a confirmation email in the same route before launch.
+
+If a Google Form URL is supplied (`NEXT_PUBLIC_JOIN_FORM_URL`, or the
+per-region variable), it is offered as an alternative link beneath the form
+rather than replacing it.
 
 ## SEO
 
