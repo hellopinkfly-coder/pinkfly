@@ -46,6 +46,8 @@ export type HeroSlide = {
     src?: string;
     /** Describe the person and what they are doing — this is read aloud. */
     alt: string;
+    /** object-position, keeping the subject in frame as the crop changes. */
+    focal?: string;
   };
 };
 
@@ -54,8 +56,7 @@ export type HeroSlide = {
  *
  * Each slide is a self-contained panel — its own headline, two proof points,
  * CTA and photograph — so copy and image travel together and a slide always
- * reads as one composition. Per the wireframe, every slide leads to About Us;
- * the CTA band directly beneath handles Join.
+ * reads as one composition. Every slide's CTA leads to Join Community.
  *
  * TODO(pre-launch): every `image.src` is a generic stock placeholder, NOT the
  * Indian-women photography the brand calls for. Replace the images and their
@@ -71,8 +72,12 @@ export const hero = {
         { icon: HeartHandshake, label: "Mentors who have already built it" },
         { icon: Network, label: "Introductions that open doors" },
       ],
-      cta: { label: "About Pink Fly", href: "/about" },
-      image: { src: heroPhotos[0]?.src, alt: "A woman founder presenting to her team." },
+      cta: { label: "Join Community", href: "/join" },
+      image: {
+        src: heroPhotos[0]?.src,
+        alt: "A woman founder presenting to her team.",
+        focal: heroPhotos[0]?.focal,
+      },
     },
     {
       eyebrow: "Mentorship",
@@ -82,8 +87,12 @@ export const hero = {
         { icon: Target, label: "What to build next, what to ignore" },
         { icon: Users, label: "Small circles that keep you moving" },
       ],
-      cta: { label: "About Pink Fly", href: "/about" },
-      image: { src: heroPhotos[1]?.src, alt: "Two women in conversation across a desk." },
+      cta: { label: "Join Community", href: "/join" },
+      image: {
+        src: heroPhotos[1]?.src,
+        alt: "Two women in conversation across a desk.",
+        focal: heroPhotos[1]?.focal,
+      },
     },
     {
       eyebrow: "Events",
@@ -93,8 +102,12 @@ export const hero = {
         { icon: Calendar, label: "Curated gatherings across India" },
         { icon: Rocket, label: "Launches, live and in person" },
       ],
-      cta: { label: "About Pink Fly", href: "/about" },
-      image: { src: heroPhotos[2]?.src, alt: "Women gathered in conversation at a community event." },
+      cta: { label: "Join Community", href: "/join" },
+      image: {
+        src: heroPhotos[2]?.src,
+        alt: "Women gathered in conversation at a community event.",
+        focal: heroPhotos[2]?.focal,
+      },
     },
     {
       eyebrow: "Knowledge Base",
@@ -104,8 +117,12 @@ export const hero = {
         { icon: GraduationCap, label: "Masterclasses from women who shipped" },
         { icon: TrendingUp, label: "The policy changes that affect you" },
       ],
-      cta: { label: "About Pink Fly", href: "/about" },
-      image: { src: heroPhotos[3]?.src, alt: "A woman speaking to an audience at a Pink Fly event." },
+      cta: { label: "Join Community", href: "/join" },
+      image: {
+        src: heroPhotos[3]?.src,
+        alt: "A woman speaking to an audience at a Pink Fly event.",
+        focal: heroPhotos[3]?.focal,
+      },
     },
   ] as HeroSlide[],
 };
