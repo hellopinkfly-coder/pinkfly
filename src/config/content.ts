@@ -260,8 +260,18 @@ export const testimonials = {
 export const finalCta = {
   eyebrow: "Your seat is waiting",
   headline: "This is where you find your people.",
-  body: "Membership is free. The room is already warm.",
-  cta: { label: "Join the community", href: "/join" },
+  body: "Membership is free. Fill in the form and we'll send your welcome pack, the community links, and the next events near you.",
+  /**
+   * Two labels, because the button has two honest destinations: the Google
+   * Form once its URL is configured, or the on-site Join page until then.
+   * See <FinalCTA>.
+   */
+  cta: {
+    formLabel: "Open the join form",
+    label: "Join the community",
+    href: "/join",
+  },
+  note: "Free to join · Takes about a minute",
 };
 
 /* ------------------------------------------------------------ Newsletter -- */
