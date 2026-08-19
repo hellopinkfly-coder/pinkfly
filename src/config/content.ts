@@ -66,13 +66,14 @@ export const hero = {
   slides: [
     {
       eyebrow: "The Pink Fly community",
-      headline: "Find your people.",
-      subhead: "India's community for ambitious women founders.",
+      headline: "For dreams that are ready to fly.",
+      subhead:
+        "A community for ambitious women, giving you the connections, confidence and support to take your ambition further.",
       points: [
         { icon: HeartHandshake, label: "Mentors who have already built it" },
         { icon: Network, label: "Introductions that open doors" },
       ],
-      cta: { label: "Join Community", href: "/join" },
+      cta: { label: "Take flight with Pink Fly", href: "/join" },
       image: {
         src: heroPhotos[0]?.src,
         alt: "A woman founder presenting to her team.",
@@ -87,7 +88,7 @@ export const hero = {
         { icon: Target, label: "What to build next, what to ignore" },
         { icon: Users, label: "Small circles that keep you moving" },
       ],
-      cta: { label: "Join Community", href: "/join" },
+      cta: { label: "Take flight with Pink Fly", href: "/join" },
       image: {
         src: heroPhotos[1]?.src,
         alt: "Two women in conversation across a desk.",
@@ -102,7 +103,7 @@ export const hero = {
         { icon: Calendar, label: "Curated gatherings across India" },
         { icon: Rocket, label: "Launches, live and in person" },
       ],
-      cta: { label: "Join Community", href: "/join" },
+      cta: { label: "Take flight with Pink Fly", href: "/join" },
       image: {
         src: heroPhotos[2]?.src,
         alt: "Women gathered in conversation at a community event.",
@@ -117,7 +118,7 @@ export const hero = {
         { icon: GraduationCap, label: "Masterclasses from women who shipped" },
         { icon: TrendingUp, label: "The policy changes that affect you" },
       ],
-      cta: { label: "Join Community", href: "/join" },
+      cta: { label: "Take flight with Pink Fly", href: "/join" },
       image: {
         src: heroPhotos[3]?.src,
         alt: "A woman speaking to an audience at a Pink Fly event.",
