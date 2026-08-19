@@ -1,27 +1,27 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Check } from "lucide-react";
 import { join } from "@/config/content";
 import { integrations } from "@/config/site";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
 import { GradientBackdrop } from "@/components/shared/GradientBackdrop";
+import { Button } from "@/components/ui/button";
 import { JoinForm } from "./JoinForm";
 import type { Region } from "@/lib/region";
 
 /**
- * "Join now" — the membership form itself, on the page.
+ * "Join now" — the membership sign-up.
  *
- * This used to be a button that opened a Google Form, and a mailto when no
- * form URL was configured. The mailto asked a visitor to compose an email
- * from scratch, which is the highest-friction way to join anything, and the
- * unconfigured state also printed a note about an environment variable to
- * real visitors. Both are gone.
+ * The Google Form is the real destination. When its URL is configured this
+ * section is a single, unmissable button to it, with the three steps spelled
+ * out so nobody has to guess what happens after they click.
  *
- * Submissions post to /api/join, which forwards to `CRM_WEBHOOK_URL` when it
- * is set — the same CRM destination the Google Form was always meant to feed,
- * tagged with the region so leads route to the right team.
+ * Until that URL exists the on-site form (`JoinForm`) stands in, so the page
+ * is never a dead end. The two are deliberately never shown together: they
+ * collect the same details into different places, and a visitor who fills in
+ * the wrong one is a lead nobody sees.
  *
- * If a Google Form URL is configured it is offered underneath as an
- * alternative, rather than replacing the form.
+ * Switching over is one environment variable — `NEXT_PUBLIC_JOIN_FORM_URL`,
+ * or the per-region variable in `src/config/regions.ts`. No code change.
  */
 export function JoinNowCTA({ region }: { region: Region }) {
   const formUrl = region.form.googleFormUrl || integrations.joinFormUrl;
@@ -37,22 +37,40 @@ export function JoinNowCTA({ region }: { region: Region }) {
             {join.cta.body}
           </p>
 
-          <JoinForm region={region} />
+          {formUrl ? (
+            <>
+              {/* What happens after the click, before they leave the site. */}
+              <ol className="mt-8 flex flex-col gap-3">
+                {join.cta.steps.map((step) => (
+                  <li
+                    key={step}
+                    className="flex items-start gap-3 text-sm text-[var(--pf-text)] sm:text-base"
+                  >
+                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)]">
+                      <Check size={13} strokeWidth={3} aria-hidden />
+                    </span>
+                    {step}
+                  </li>
+                ))}
+              </ol>
 
-          {formUrl && (
-            <p className="mt-8 border-t border-[var(--pf-border)] pt-6 text-sm text-[var(--pf-muted)]">
-              Prefer a form?{" "}
-              <a
-                href={formUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-crm-segment={region.form.crmSegment}
-                className="pf-link inline-flex items-center gap-1 font-bold"
-              >
-                Open the Google Form
-                <ArrowUpRight size={14} aria-hidden />
-              </a>
-            </p>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Button
+                  href={formUrl}
+                  size="lg"
+                  data-crm-segment={region.form.crmSegment}
+                >
+                  {join.cta.formLabel}
+                  {/* Up-and-out arrow: this one leaves the site. */}
+                  <ArrowUpRight size={18} />
+                </Button>
+                <p className="text-sm text-[var(--pf-muted)]">
+                  {join.cta.formNote}
+                </p>
+              </div>
+            </>
+          ) : (
+            <JoinForm region={region} />
           )}
         </div>
       </Reveal>

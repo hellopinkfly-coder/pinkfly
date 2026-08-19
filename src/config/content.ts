@@ -409,6 +409,15 @@ export const join = {
     eyebrow: "Membership",
     headline: "Join the community.",
     body: "Tell us where you are and what you're building. We'll send your welcome pack, point you at the next room, and introduce you to founders a step ahead.",
+    /** Shown when the Google Form is live. */
+    formLabel: "Open the join form",
+    /** Sets expectations before the visitor leaves the site. */
+    formNote: "Opens in a new tab · Free to join · Takes about a minute",
+    steps: [
+      "Fill in the short form.",
+      "We'll send your welcome pack and the community links.",
+      "You'll get the next events and introductions near you.",
+    ],
   },
   form: {
     submit: "Join Pink Fly",

@@ -99,22 +99,33 @@ When the final artwork arrives, replace the contents of `LogoMark` with an
 
 ## Join Community → CRM
 
-Membership applications are collected by an on-site form (`JoinForm`), posted
-to `/api/join`. The route validates with `joinSchema` and, when
-`CRM_WEBHOOK_URL` is set, forwards the submission:
+The Google Form is the intended destination. Set `NEXT_PUBLIC_JOIN_FORM_URL`
+(or the per-region variable in `src/config/regions.ts`) and every join CTA
+switches over — no code change:
+
+- `/join` becomes a single button to the form, with the three steps spelled
+  out beneath the heading and a note that it opens in a new tab.
+- The site-wide "Your seat is waiting" CTA on the homepage, About, Events,
+  Knowledge Base and the region entry page reads "Open the join form".
+- Each link carries the region's `crmSegment`, so leads route to the right
+  team. A per-region URL wins over the global one.
+
+Until that URL exists an on-site form (`JoinForm`) stands in on `/join`,
+posting to `/api/join`:
 
 ```
 Join form → /api/join → CRM_WEBHOOK_URL → CRM record
 ```
 
-Every submission carries `regionSlug`, so leads route to the right team. With
-no webhook configured the submission is validated and logged, and the visitor
-still sees the success state — so the form works end to end in development.
-Add persistence or a confirmation email in the same route before launch.
+It validates with `joinSchema`, forwards to the webhook when one is set, and
+tags every submission with `regionSlug`. With no webhook it validates, logs,
+and still shows the success state, so the flow works end to end in
+development.
 
-If a Google Form URL is supplied (`NEXT_PUBLIC_JOIN_FORM_URL`, or the
-per-region variable), it is offered as an alternative link beneath the form
-rather than replacing it.
+**The two are never shown together.** They collect the same details into
+different places, and a visitor who fills in the wrong one is a lead nobody
+sees. Configuring the form URL replaces the on-site form rather than sitting
+beside it.
 
 ## SEO
 
