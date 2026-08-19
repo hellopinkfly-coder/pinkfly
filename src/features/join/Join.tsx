@@ -8,7 +8,6 @@ import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/shared/Reveal";
 import { GradientBackdrop } from "@/components/shared/GradientBackdrop";
-import { PinkFlyMark } from "@/components/brand/PinkFlyMark";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { newsletterSchema } from "@/lib/validations";
@@ -56,12 +55,7 @@ export function Join({ region }: { region: Region }) {
       <GradientBackdrop />
       <Container>
         <Reveal className="mx-auto flex max-w-2xl flex-col items-center text-center">
-          <PinkFlyMark
-            size={44}
-            className="pf-float text-[var(--pf-accent)]"
-            aria-hidden
-          />
-          <span className="pf-eyebrow mt-6">{joinCta.eyebrow}</span>
+          <span className="pf-eyebrow">{joinCta.eyebrow}</span>
           <h2 className="pf-h2 mt-4">{joinCta.headline}</h2>
           <p className="mt-5 max-w-md text-lg leading-relaxed text-[var(--pf-text)]">
             {joinCta.body}

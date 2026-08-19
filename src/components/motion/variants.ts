@@ -87,8 +87,8 @@ export const staggerSlow: Variants = {
 /* ------------------------------------------------------------- Ambient -- */
 
 /**
- * Gentle, endless hover. Used on the pig mark, orbiting icons, and floating
- * chips so the page always feels a little airborne — never busy.
+ * Gentle, endless hover for anything that should feel a little airborne —
+ * never busy.
  * `seed` offsets each element so a group never moves in lockstep.
  */
 export function float(seed = 0, distance = 8, duration = 6) {

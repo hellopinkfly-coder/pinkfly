@@ -3,11 +3,10 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { hero, type HeroSlide } from "@/config/content";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
-import { PinkFlyMark } from "@/components/brand/PinkFlyMark";
 import { DURATION, EASE, STAGGER } from "@/components/motion/variants";
 import { regionPath, type Region } from "@/lib/region";
 import { cn } from "@/lib/utils";
@@ -28,6 +27,16 @@ import { cn } from "@/lib/utils";
 
    Motion is unchanged house language: the photograph cross-fades and drifts,
    the copy staggers in behind it.
+
+   Autoplay and manual control both work, and neither cancels the other:
+   advancing by arrow, dot or swipe simply restarts the countdown from the
+   chosen slide, so the loop never dies.
+
+   Hover does NOT pause it. This hero fills the whole fold, so the cursor
+   simply rests on it — pausing there meant the carousel almost never
+   advanced. Holds are limited to unambiguous, event-free state: an explicit
+   pause button (which also satisfies WCAG 2.2.2), keyboard focus inside the
+   carousel, a backgrounded tab, and `prefers-reduced-motion`.
    ========================================================================== */
 
 const AUTOPLAY_MS = 6000;
@@ -36,7 +45,11 @@ export function HeroCarousel({ region }: { region: Region }) {
   const slides = hero.slides;
   const still = useReducedMotion();
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  // Independent reasons to hold the timer, tracked separately so one
+  // clearing does not cancel another.
+  const [userPaused, setUserPaused] = useState(false);
+  const [focusWithin, setFocusWithin] = useState(false);
+  const holding = userPaused || focusWithin || !!still;
 
   const goTo = useCallback(
     (next: number) => {
@@ -45,13 +58,17 @@ export function HeroCarousel({ region }: { region: Region }) {
     [slides.length]
   );
 
+  // Keyed on `index`: every manual move restarts the countdown from the slide
+  // the visitor chose, rather than stopping the loop or advancing early.
   useEffect(() => {
-    if (paused || still || slides.length < 2) return;
+    if (holding || slides.length < 2) return;
     const id = window.setInterval(() => {
+      // A backgrounded tab holds without tearing the timer down, so the loop
+      // resumes on its own when the visitor comes back.
       if (!document.hidden) setIndex((i) => (i + 1) % slides.length);
     }, AUTOPLAY_MS);
     return () => window.clearInterval(id);
-  }, [paused, still, slides.length]);
+  }, [index, holding, slides.length]);
 
   const active = slides[index];
 
@@ -65,10 +82,16 @@ export function HeroCarousel({ region }: { region: Region }) {
       role="group"
       aria-roledescription="carousel"
       aria-label="Pink Fly"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
+      // Hold for KEYBOARD focus only. A mouse click on a control also focuses
+      // it, and treating that as a hold left autoplay stopped for good after
+      // the first click — `:focus-visible` is exactly the distinction.
+      onFocusCapture={(e) => {
+        const el = e.target as HTMLElement;
+        if (typeof el.matches === "function" && el.matches(":focus-visible")) {
+          setFocusWithin(true);
+        }
+      }}
+      onBlurCapture={() => setFocusWithin(false)}
       onTouchStart={(e) => setSwipeStart(e.touches[0]?.clientX ?? null)}
       onTouchEnd={(e) => {
         if (swipeStart === null) return;
@@ -179,8 +202,21 @@ export function HeroCarousel({ region }: { region: Region }) {
             </div>
 
             <div className="flex gap-2">
-              <Arrow side="left" onClick={() => goTo(index - 1)} />
-              <Arrow side="right" onClick={() => goTo(index + 1)} />
+              {/* Explicit pause, so autoplay is stoppable without hovering. */}
+              {!still && (
+                <RoundButton
+                  label={userPaused ? "Play slideshow" : "Pause slideshow"}
+                  onClick={() => setUserPaused((v) => !v)}
+                >
+                  {userPaused ? <Play size={17} /> : <Pause size={17} />}
+                </RoundButton>
+              )}
+              <RoundButton label="Previous slide" onClick={() => goTo(index - 1)}>
+                <ChevronLeft size={20} />
+              </RoundButton>
+              <RoundButton label="Next slide" onClick={() => goTo(index + 1)}>
+                <ChevronRight size={20} />
+              </RoundButton>
             </div>
           </div>
         )}
@@ -205,16 +241,24 @@ function Line({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Arrow({ side, onClick }: { side: "left" | "right"; onClick: () => void }) {
-  const Icon = side === "left" ? ChevronLeft : ChevronRight;
+function RoundButton({
+  label,
+  onClick,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={side === "left" ? "Previous slide" : "Next slide"}
+      aria-label={label}
+      title={label}
       className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-md transition-colors duration-300 ease-[var(--pf-ease)] hover:border-transparent hover:bg-[var(--pf-accent)]"
     >
-      <Icon size={20} />
+      {children}
     </button>
   );
 }
@@ -236,14 +280,7 @@ function SlideMedia({
 }) {
   if (!slide.image.src) {
     return (
-      <div className="absolute inset-0 flex items-center justify-end bg-[linear-gradient(120deg,var(--pf-heading)_0%,#3a1230_55%,var(--pf-accent)_140%)]">
-        <PinkFlyMark
-          size={260}
-          wing={0.5}
-          className="mr-[8vw] w-[46vw] max-w-[260px] text-white/20"
-          style={{ ["--pf-knockout" as string]: "transparent" }}
-          aria-hidden
-        />
+      <div className="absolute inset-0 bg-[linear-gradient(120deg,var(--pf-heading)_0%,#3a1230_55%,var(--pf-accent)_140%)]">
         <span className="sr-only">{slide.image.alt}</span>
       </div>
     );
