@@ -11,12 +11,9 @@ npm run dev
 
 ## The brand
 
-- **Mark** — a winged pig, drawn as inline SVG in
-  `src/components/brand/PinkFlyMark.tsx`. No image request, crisp at any size,
-  recolours with the theme. Its eye and nostrils knock through to
-  `--pf-knockout`, so any element placing the mark on a raised surface should
-  carry `.pf-on-surface` or `.pf-on-muted`. `src/components/shared/Logo.tsx`
-  wraps it and stays the single source of truth for every logo placement.
+- **Logo** — a type-set wordmark, no symbol. `src/components/shared/Logo.tsx`
+  is the single source of truth for every placement; the favicon at
+  `src/app/icon.svg` is the matching PF monogram.
 - **Motion** — one language, in `src/components/motion/variants.ts`:
   everything *lifts*. One easing curve (expo-out), three durations, two travel
   distances, one stagger rhythm. Nothing bounces or drops in. Reduced motion is

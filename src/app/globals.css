@@ -13,10 +13,6 @@
   --pf-accent-hover: #b80268;
   --pf-accent-soft: #fbe6f2;
 
-  /* Knockout — the colour punched through the mark's eye and nostrils.
-     Must match whatever surface the mark is sitting on. */
-  --pf-knockout: #fdf9f7;
-
   /* Surfaces — LIGHT */
   --pf-bg: #fdf9f7;
   --pf-surface: #ffffff;
@@ -56,7 +52,6 @@
   --pf-accent: #ec2a97;
   --pf-accent-hover: #ff5cb1;
   --pf-accent-soft: rgba(216, 3, 125, 0.18);
-  --pf-knockout: #14110f;
 
   /* Surfaces — warm charcoal / deep neutrals */
   --pf-bg: #14110f;
@@ -377,28 +372,6 @@
    Pink Fly — brand mark and the flight motion language
    Everything lifts. One curve, three durations, no bounce.
    ========================================================================== */
-
-/* The mark knocks its eye + nostrils through to the background. Any element
-   that sits the mark on a raised surface should carry one of these. */
-.pf-on-surface {
-  --pf-knockout: var(--pf-surface);
-}
-.pf-on-muted {
-  --pf-knockout: var(--pf-surface-muted);
-}
-
-/* Wordmark: the wings lift once on hover. The whole brand in 300ms. */
-.pf-lockup .pf-wing {
-  transform-origin: 28px 33px;
-  transition: transform 0.3s var(--pf-ease), opacity 0.3s var(--pf-ease);
-}
-a:hover .pf-lockup .pf-wing,
-a:focus-visible .pf-lockup .pf-wing,
-.pf-lockup:hover .pf-wing,
-.pf-lockup:focus-visible .pf-wing {
-  transform: rotate(-12deg) translateY(-1.5px);
-  opacity: 0.9;
-}
 
 /* Ambient float — the house idle state for anything airborne. */
 @keyframes pf-float {

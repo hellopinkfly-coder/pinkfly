@@ -7,7 +7,6 @@ import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react
 import { hero, type HeroSlide } from "@/config/content";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
-import { PinkFlyMark } from "@/components/brand/PinkFlyMark";
 import { DURATION, EASE, STAGGER } from "@/components/motion/variants";
 import { regionPath, type Region } from "@/lib/region";
 import { cn } from "@/lib/utils";
@@ -281,14 +280,7 @@ function SlideMedia({
 }) {
   if (!slide.image.src) {
     return (
-      <div className="absolute inset-0 flex items-center justify-end bg-[linear-gradient(120deg,var(--pf-heading)_0%,#3a1230_55%,var(--pf-accent)_140%)]">
-        <PinkFlyMark
-          size={260}
-          wing={0.5}
-          className="mr-[8vw] w-[46vw] max-w-[260px] text-white/20"
-          style={{ ["--pf-knockout" as string]: "transparent" }}
-          aria-hidden
-        />
+      <div className="absolute inset-0 bg-[linear-gradient(120deg,var(--pf-heading)_0%,#3a1230_55%,var(--pf-accent)_140%)]">
         <span className="sr-only">{slide.image.alt}</span>
       </div>
     );
