@@ -1,16 +1,16 @@
-import { join } from "@/config/content";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
+import type { JoinContent } from "@/lib/cms/content";
 
 /** FAQ accordion built on native <details> — no JS, fully keyboard-usable. */
-export function Faqs() {
+export function Faqs({ items }: { items: JoinContent["faqs"]["items"] }) {
   return (
     <Section id="faqs" className="bg-[var(--pf-surface)]">
       <SectionHeading eyebrow="FAQs" title="The questions we get most." align="left" />
 
       <Reveal className="mt-10 divide-y divide-[var(--pf-border)] border-y border-[var(--pf-border)]">
-        {join.faqs.map((faq) => (
+        {items.map((faq) => (
           <details key={faq.q} className="group py-5">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-bold text-[var(--pf-heading)] transition-colors hover:text-[var(--pf-accent)]">
               {faq.q}

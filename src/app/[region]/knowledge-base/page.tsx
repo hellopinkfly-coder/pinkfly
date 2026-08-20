@@ -6,10 +6,12 @@
  */
 import { notFound } from "next/navigation";
 import { KnowledgeBasePage } from "@/components/pages/KnowledgeBasePage";
+import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion, isRegionSlug } from "@/lib/region";
 import { regionalSlugs } from "@/config/regions";
 import { buildMetadata } from "@/lib/seo";
 import { pageSeo } from "@/config/seo-pages";
+import { getPageSeo } from "@/lib/cms/content";
 
 type Params = { params: Promise<{ region: string }> };
 
@@ -21,14 +23,14 @@ export async function generateMetadata({ params }: Params) {
   const { region: slug } = await params;
   if (!isRegionSlug(slug)) return {};
   return buildMetadata({
-    region: getRegion(slug),
+    region: await getRegionContent(getRegion(slug)),
     path: "/knowledge-base",
-    ...pageSeo.knowledgeBase,
+    ...(await getPageSeo("knowledgeBase", pageSeo.knowledgeBase)),
   });
 }
 
 export default async function Page({ params }: Params) {
   const { region: slug } = await params;
   if (!isRegionSlug(slug)) notFound();
-  return <KnowledgeBasePage region={getRegion(slug)} />;
+  return <KnowledgeBasePage region={await getRegionContent(getRegion(slug))} />;
 }

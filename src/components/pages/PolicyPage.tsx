@@ -2,23 +2,27 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
 import { staggerContainer, fadeUp } from "@/components/motion/variants";
-import { siteConfig } from "@/config/site";
-import { policies, type PolicySlug } from "@/config/policies";
+import type { PolicySlug } from "@/config/policies";
+import { getPolicyContent, getSiteContent } from "@/lib/cms/content";
 import type { Region } from "@/lib/region";
 
 /**
  * Shared layout for every policy page (terms, refund, privacy, community
- * guidelines) across every region. Copy comes from `src/config/policies.ts`.
+ * guidelines) across every region. Copy is edited in Sanity under Policy
+ * pages, keyed by the page's slug.
  */
-export function PolicyPage({
+export async function PolicyPage({
   slug,
   region,
 }: {
   slug: PolicySlug;
   region: Region;
 }) {
-  const policy = policies[slug];
-  const email = region.email ?? siteConfig.contactEmail;
+  const [policy, site] = await Promise.all([
+    getPolicyContent(slug),
+    getSiteContent(),
+  ]);
+  const email = region.email ?? site.contactEmail;
 
   return (
     <>

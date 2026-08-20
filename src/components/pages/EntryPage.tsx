@@ -9,11 +9,13 @@ import { Badge } from "@/components/ui/badge";
 import { ArticleCard } from "@/features/knowledge-base/ArticleCard";
 import { FinalCTA } from "@/features/final-cta/FinalCTA";
 import { flags } from "@/config/flags";
+import { relatedEntries, type KbEntry } from "@/data/knowledge-base";
+import { getKbEntries } from "@/lib/cms/collections";
 import {
-  getRelatedEntries,
-  kbCategories,
-  type KbEntry,
-} from "@/data/knowledge-base";
+  getKnowledgeBaseContent,
+  getFinalCta,
+  getSiteContent,
+} from "@/lib/cms/content";
 import { regionPath, type Region } from "@/lib/region";
 
 /**
@@ -25,15 +27,21 @@ import { regionPath, type Region } from "@/lib/region";
  * government policy carries the structured policy summary its wireframe
  * calls for. Articles carry neither.
  */
-export function EntryPage({
+export async function EntryPage({
   entry,
   region,
 }: {
   entry: KbEntry;
   region: Region;
 }) {
-  const related = getRelatedEntries(entry);
-  const category = kbCategories.find((c) => c.id === entry.category);
+  const [entries, kb, finalCta, site] = await Promise.all([
+    getKbEntries(),
+    getKnowledgeBaseContent(),
+    getFinalCta(),
+    getSiteContent(),
+  ]);
+  const related = relatedEntries(entries, entry);
+  const category = kb.categories.find((c) => c.id === entry.category);
   const publishedLabel = new Date(entry.publishedAt).toLocaleDateString(
     region.locale,
     { day: "numeric", month: "long", year: "numeric" }
@@ -142,7 +150,7 @@ export function EntryPage({
             <p className="max-w-lg text-sm leading-relaxed text-[var(--pf-text)]">
               {flags.articleComments
                 ? "Be the first to comment on this piece."
-                : "Discussion opens once the comment backend is connected. Until then, bring your thoughts to the community — that is where the good arguments happen anyway."}
+                : kb.commentsClosedMessage}
             </p>
           </Reveal>
         </div>
@@ -162,7 +170,11 @@ export function EntryPage({
         </Section>
       )}
 
-      <FinalCTA region={region} />
+      <FinalCTA
+        region={region}
+        content={finalCta}
+        formUrl={region.form.googleFormUrl || site.joinFormUrl}
+      />
     </>
   );
 }

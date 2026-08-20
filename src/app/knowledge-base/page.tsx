@@ -5,18 +5,20 @@
  * the global site and every regional site run the exact same code.
  */
 import { KnowledgeBasePage } from "@/components/pages/KnowledgeBasePage";
+import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion } from "@/lib/region";
 import { buildMetadata } from "@/lib/seo";
 import { pageSeo } from "@/config/seo-pages";
+import { getPageSeo } from "@/lib/cms/content";
 
-const region = getRegion();
+export async function generateMetadata() {
+  return buildMetadata({
+    region: await getRegionContent(getRegion()),
+    path: "/knowledge-base",
+    ...(await getPageSeo("knowledgeBase", pageSeo.knowledgeBase)),
+  });
+}
 
-export const metadata = buildMetadata({
-  region,
-  path: "/knowledge-base",
-  ...pageSeo.knowledgeBase,
-});
-
-export default function Page() {
-  return <KnowledgeBasePage region={region} />;
+export default async function Page() {
+  return <KnowledgeBasePage region={await getRegionContent(getRegion())} />;
 }

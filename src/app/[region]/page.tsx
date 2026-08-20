@@ -5,6 +5,7 @@
  */
 import { notFound } from "next/navigation";
 import { HomePage } from "@/components/pages/HomePage";
+import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion, isRegionSlug } from "@/lib/region";
 import { regionalSlugs } from "@/config/regions";
 import { buildHomeMetadata } from "@/lib/seo";
@@ -18,11 +19,11 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Params) {
   const { region: slug } = await params;
   if (!isRegionSlug(slug)) return {};
-  return buildHomeMetadata(getRegion(slug));
+  return buildHomeMetadata(await getRegionContent(getRegion(slug)));
 }
 
 export default async function Page({ params }: Params) {
   const { region: slug } = await params;
   if (!isRegionSlug(slug)) notFound();
-  return <HomePage region={getRegion(slug)} />;
+  return <HomePage region={await getRegionContent(getRegion(slug))} />;
 }

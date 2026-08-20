@@ -268,8 +268,8 @@ export const finalCta = {
    * See <FinalCTA>.
    */
   cta: {
-    formLabel: "Open the join form",
-    label: "Join the community",
+    formLabel: "Register now",
+    label: "Register now",
     href: "/join",
   },
   note: "Free to join · Takes about a minute",
@@ -411,17 +411,19 @@ export const join = {
     headline: "Join the community.",
     body: "Tell us where you are and what you're building. We'll send your welcome pack, point you at the next room, and introduce you to founders a step ahead.",
     /** Shown when the Google Form is live. */
-    formLabel: "Open the join form",
+    formLabel: "Register now",
     /** Sets expectations before the visitor leaves the site. */
-    formNote: "Opens in a new tab · Free to join · Takes about a minute",
+    formNote: "Opens in a new tab · Free · Takes about a minute",
+    /** Shown until a form URL is configured — never a dead button. */
+    pending: "Registration opens shortly. Check back soon.",
     steps: [
-      "Fill in the short form.",
+      "Register in under a minute.",
       "We'll send your welcome pack and the community links.",
       "You'll get the next events and introductions near you.",
     ],
   },
   form: {
-    submit: "Join Pink Fly",
+    submit: "Register",
     reassurance: "Free to join · Takes about a minute",
     successTitle: "You're in.",
     successBody:

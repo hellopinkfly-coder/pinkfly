@@ -7,9 +7,12 @@ const nextConfig: NextConfig = {
   // parent directory, which otherwise confuses Next's workspace detection).
   outputFileTracingRoot: path.join(__dirname),
   images: {
-    // Temporary stock photography. When final assets land in /public these
-    // remote patterns can be dropped entirely — see src/config/images.ts.
     remotePatterns: [
+      // Images uploaded in the Sanity Studio.
+      { protocol: "https", hostname: "cdn.sanity.io" },
+      // Seed stock photography, and any external URL an editor pastes into a
+      // figure's "External image URL" field. Uploads are preferred — see
+      // src/config/images.ts and sanity/schemas/objects/figure.ts.
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
     formats: ["image/avif", "image/webp"],
