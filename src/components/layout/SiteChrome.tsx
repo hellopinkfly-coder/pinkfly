@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { parsePathname } from "@/lib/region";
 import { Navbar, type NavVariant } from "./Navbar";
 import { Footer } from "./Footer";
+import type { SiteContent } from "@/lib/cms/content";
 
 /**
  * Resolves the active region from the URL and renders the shared chrome
@@ -31,7 +32,14 @@ function opensOnDarkHero(rest: string): boolean {
   return rest === "/" || rest === "" || rest === "/events";
 }
 
-export function SiteChrome({ children }: { children: React.ReactNode }) {
+export function SiteChrome({
+  children,
+  site,
+}: {
+  children: React.ReactNode;
+  /** Fetched once by the root layout, so the chrome stays a client component. */
+  site: SiteContent;
+}) {
   const pathname = usePathname() || "/";
   const { region, rest } = parsePathname(pathname);
 
@@ -42,9 +50,10 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
         rest={rest}
         variant={navVariantFor(rest)}
         overHero={opensOnDarkHero(rest)}
+        site={site}
       />
       <main id="main">{children}</main>
-      <Footer region={region} />
+      <Footer region={region} site={site} />
     </>
   );
 }

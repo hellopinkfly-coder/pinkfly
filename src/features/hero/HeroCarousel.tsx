@@ -4,12 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
-import { hero, type HeroSlide } from "@/config/content";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
 import { DURATION, EASE, STAGGER } from "@/components/motion/variants";
 import { regionPath, type Region } from "@/lib/region";
 import { cn } from "@/lib/utils";
+import type { HeroSlideContent } from "@/lib/cms/content";
+import { iconFor } from "@/lib/cms/icons";
 
 /* ==========================================================================
    Hero — full-bleed carousel
@@ -41,8 +42,13 @@ import { cn } from "@/lib/utils";
 
 const AUTOPLAY_MS = 6000;
 
-export function HeroCarousel({ region }: { region: Region }) {
-  const slides = hero.slides;
+export function HeroCarousel({
+  region,
+  slides,
+}: {
+  region: Region;
+  slides: HeroSlideContent[];
+}) {
   const still = useReducedMotion();
   const [index, setIndex] = useState(0);
   // Independent reasons to hold the timer, tracked separately so one
@@ -161,14 +167,20 @@ export function HeroCarousel({ region }: { region: Region }) {
 
             <Line>
               <ul className="flex flex-col gap-3">
-                {active.points.map(({ icon: Icon, label }) => (
-                  <li key={label} className="flex items-center gap-3 text-white">
-                    <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-sm">
-                      <Icon size={17} strokeWidth={1.9} aria-hidden />
-                    </span>
-                    <span className="text-sm sm:text-base">{label}</span>
-                  </li>
-                ))}
+                {active.points.map(({ icon, label }) => {
+                  const Icon = iconFor(icon);
+                  return (
+                    <li
+                      key={label}
+                      className="flex items-center gap-3 text-white"
+                    >
+                      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-sm">
+                        <Icon size={17} strokeWidth={1.9} aria-hidden />
+                      </span>
+                      <span className="text-sm sm:text-base">{label}</span>
+                    </li>
+                  );
+                })}
               </ul>
             </Line>
 
@@ -281,7 +293,7 @@ function SlideMedia({
   priority,
   still,
 }: {
-  slide: HeroSlide;
+  slide: HeroSlideContent;
   priority: boolean;
   still: boolean;
 }) {

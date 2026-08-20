@@ -1,35 +1,34 @@
-import { join } from "@/config/content";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
 
 export type EditorialContent = {
-  key: string;
   eyebrow: string;
   headline: string;
   body: string[];
 };
 
+/** Stable anchor and CMS block id. Not copy — links point at it. */
+const BLOCK_ID = "join-community-editorial";
+
 /**
  * CMS-managed editorial block.
  *
- * Deliberately dumb: it renders whatever `content` it is handed. Today that
- * comes from `src/config/content.ts`; tomorrow a CMS/CRM loader can pass the
- * same shape (`{ eyebrow, headline, body[] }`) straight through with no
- * change here or at the call site. The `key` field is the content
- * identifier the CMS entry will be keyed on.
+ * Deliberately dumb: it renders whatever `content` it is handed. The eyebrow,
+ * headline and every paragraph come from Sanity (Pages → Join Community →
+ * Editorial block); an empty body hides the section entirely.
  */
 export function EditorialBlock({
-  content = join.editorial,
+  content,
 }: {
-  content?: EditorialContent;
+  content: EditorialContent;
 }) {
   if (!content?.body?.length) return null;
 
   return (
     <Section
-      id={content.key}
+      id={BLOCK_ID}
       className="bg-[var(--pf-surface)]"
-      data-cms-block={content.key}
+      data-cms-block={BLOCK_ID}
     >
       <Reveal className="mx-auto max-w-3xl text-left">
         <span className="pf-eyebrow">{content.eyebrow}</span>

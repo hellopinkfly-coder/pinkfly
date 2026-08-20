@@ -5,6 +5,7 @@
 import { notFound } from "next/navigation";
 import { PolicyPage } from "@/components/pages/PolicyPage";
 import { policies, type PolicySlug } from "@/config/policies";
+import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion } from "@/lib/region";
 import { buildMetadata } from "@/lib/seo";
 
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: Params) {
   if (!isPolicySlug(slug)) return {};
   const policy = policies[slug];
   return buildMetadata({
-    region: getRegion(),
+    region: await getRegionContent(getRegion()),
     path: `/policies/${slug}`,
     title: policy.title,
     description: policy.intro,
@@ -31,5 +32,5 @@ export async function generateMetadata({ params }: Params) {
 export default async function Page({ params }: Params) {
   const { slug } = await params;
   if (!isPolicySlug(slug)) notFound();
-  return <PolicyPage slug={slug} region={getRegion()} />;
+  return <PolicyPage slug={slug} region={await getRegionContent(getRegion())} />;
 }

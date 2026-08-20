@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { joinCta } from "@/config/content";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/shared/Reveal";
@@ -12,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { newsletterSchema } from "@/lib/validations";
 import { regionPath, type Region } from "@/lib/region";
+import type { HomeContent } from "@/lib/cms/content";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -19,7 +19,13 @@ type Status = "idle" | "loading" | "success" | "error";
  * One closing section. The old site had a "final CTA" and a newsletter block
  * back to back asking for the same thing twice — this is the merge.
  */
-export function Join({ region }: { region: Region }) {
+export function Join({
+  region,
+  content,
+}: {
+  region: Region;
+  content: HomeContent["joinCta"];
+}) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -55,16 +61,16 @@ export function Join({ region }: { region: Region }) {
       <GradientBackdrop />
       <Container>
         <Reveal className="mx-auto flex max-w-2xl flex-col items-center text-center">
-          <span className="pf-eyebrow">{joinCta.eyebrow}</span>
-          <h2 className="pf-h2 mt-4">{joinCta.headline}</h2>
+          <span className="pf-eyebrow">{content.eyebrow}</span>
+          <h2 className="pf-h2 mt-4">{content.headline}</h2>
           <p className="mt-5 max-w-md text-lg leading-relaxed text-[var(--pf-text)]">
-            {joinCta.body}
+            {content.body}
           </p>
 
           {status === "success" ? (
             <p className="mt-8 inline-flex items-center gap-2 rounded-full bg-[var(--pf-accent-soft)] px-5 py-3 text-sm font-bold text-[var(--pf-accent-hover)]">
               <CheckCircle2 size={18} />
-              {joinCta.success}
+              {content.success}
             </p>
           ) : (
             <form
@@ -80,7 +86,7 @@ export function Join({ region }: { region: Region }) {
                   id="join-email"
                   type="email"
                   autoComplete="email"
-                  placeholder={joinCta.placeholder}
+                  placeholder={content.placeholder}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   aria-invalid={!!error}
@@ -88,7 +94,7 @@ export function Join({ region }: { region: Region }) {
                 />
               </div>
               <Button type="submit" disabled={status === "loading"}>
-                {status === "loading" ? "…" : joinCta.cta}
+                {status === "loading" ? "…" : content.cta}
                 {status !== "loading" && <ArrowRight size={16} />}
               </Button>
             </form>

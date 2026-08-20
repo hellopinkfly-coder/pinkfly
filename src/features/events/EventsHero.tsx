@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { eventImages } from "@/config/images";
 import { Container } from "@/components/layout/Container";
 import type { Region } from "@/lib/region";
+import type { EventsPageContent } from "@/lib/cms/content";
 
 /**
  * Events opening visual.
@@ -11,12 +11,18 @@ import type { Region } from "@/lib/region";
  * it. The navbar switches to its `minimal` variant for this route so a
  * visitor still has the logo, region selector and CTA.
  */
-export function EventsHero({ region }: { region: Region }) {
+export function EventsHero({
+  region,
+  content,
+}: {
+  region: Region;
+  content: EventsPageContent;
+}) {
   return (
     <section className="relative isolate min-h-[62vh] w-full overflow-hidden sm:min-h-[70vh]">
       <Image
-        src={eventImages.banner.src}
-        alt={eventImages.banner.alt}
+        src={content.banner.src}
+        alt={content.banner.alt}
         fill
         priority
         sizes="100vw"
@@ -29,10 +35,10 @@ export function EventsHero({ region }: { region: Region }) {
 
       <Container className="relative flex min-h-[62vh] flex-col justify-end pb-14 pt-36 sm:min-h-[70vh] sm:pb-20">
         <span className="text-xs font-bold uppercase tracking-[0.22em] text-white/85">
-          Events
+          {content.eyebrow}
         </span>
         <h1 className="pf-display mt-4 max-w-3xl text-white">
-          Come and be in the room.
+          {content.title}
         </h1>
         <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
           {region.copy.eventsIntro}

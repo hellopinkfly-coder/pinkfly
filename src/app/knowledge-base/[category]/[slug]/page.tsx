@@ -5,7 +5,9 @@
  */
 import { notFound } from "next/navigation";
 import { EntryPage } from "@/components/pages/EntryPage";
-import { getAllEntryPaths, getEntry, isKbCategory } from "@/data/knowledge-base";
+import { getAllEntryPaths, findEntry, isKbCategory } from "@/data/knowledge-base";
+import { getKbEntries } from "@/lib/cms/collections";
+import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion } from "@/lib/region";
 import { buildMetadata } from "@/lib/seo";
 
@@ -18,10 +20,10 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Params) {
   const { category, slug } = await params;
   if (!isKbCategory(category)) return {};
-  const entry = getEntry(category, slug);
+  const entry = findEntry(await getKbEntries(), category, slug);
   if (!entry) return {};
   return buildMetadata({
-    region: getRegion(),
+    region: await getRegionContent(getRegion()),
     path: `/knowledge-base/${category}/${slug}`,
     title: entry.title,
     description: entry.excerpt,
@@ -32,7 +34,7 @@ export async function generateMetadata({ params }: Params) {
 export default async function Page({ params }: Params) {
   const { category, slug } = await params;
   if (!isKbCategory(category)) notFound();
-  const entry = getEntry(category, slug);
+  const entry = findEntry(await getKbEntries(), category, slug);
   if (!entry) notFound();
-  return <EntryPage entry={entry} region={getRegion()} />;
+  return <EntryPage entry={entry} region={await getRegionContent(getRegion())} />;
 }

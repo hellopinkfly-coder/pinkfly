@@ -5,26 +5,35 @@ import { Community } from "@/features/community/Community";
 import { Testimonials } from "@/features/testimonials/Testimonials";
 import { Mission } from "@/features/mission/Mission";
 import { Join } from "@/features/join/Join";
-import { flags } from "@/config/flags";
+import { getHomeContent, getSiteContent } from "@/lib/cms/content";
 import type { Region } from "@/lib/region";
 
 /**
  * The homepage, in the order the wireframe sets out:
  * hero carousel → join CTA → impact → how we gather →
- * testimonials (hidden) → why Pink Fly → join + newsletter.
+ * testimonials → why Pink Fly → join + newsletter.
  *
  * One component serves every region; only the `region` object changes.
+ * All copy, imagery and section visibility come from Sanity — this file
+ * fetches the page's content once and hands each section its own slice.
  */
-export function HomePage({ region }: { region: Region }) {
+export async function HomePage({ region }: { region: Region }) {
+  const [content, site] = await Promise.all([getHomeContent(), getSiteContent()]);
+  const formUrl = region.form.googleFormUrl || site.joinFormUrl;
+
   return (
     <>
-      <Hero region={region} />
-      <FinalCTA region={region} />
-      <Impact />
-      <Community />
-      {flags.testimonials && <Testimonials />}
-      <Mission region={region} />
-      <Join region={region} />
+      <Hero region={region} slides={content.hero.slides} />
+      <FinalCTA region={region} content={content.finalCta} formUrl={formUrl} />
+      {content.impact.visible && <Impact content={content.impact} />}
+      {content.community.visible && <Community content={content.community} />}
+      {content.testimonials.visible && (
+        <Testimonials content={content.testimonials} />
+      )}
+      {content.mission.visible && (
+        <Mission region={region} content={content.mission} />
+      )}
+      <Join region={region} content={content.joinCta} />
     </>
   );
 }

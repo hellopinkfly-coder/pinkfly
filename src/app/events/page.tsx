@@ -5,18 +5,20 @@
  * the global site and every regional site run the exact same code.
  */
 import { EventsPage } from "@/components/pages/EventsPage";
+import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion } from "@/lib/region";
 import { buildMetadata } from "@/lib/seo";
 import { pageSeo } from "@/config/seo-pages";
+import { getPageSeo } from "@/lib/cms/content";
 
-const region = getRegion();
+export async function generateMetadata() {
+  return buildMetadata({
+    region: await getRegionContent(getRegion()),
+    path: "/events",
+    ...(await getPageSeo("events", pageSeo.events)),
+  });
+}
 
-export const metadata = buildMetadata({
-  region,
-  path: "/events",
-  ...pageSeo.events,
-});
-
-export default function Page() {
-  return <EventsPage region={region} />;
+export default async function Page() {
+  return <EventsPage region={await getRegionContent(getRegion())} />;
 }

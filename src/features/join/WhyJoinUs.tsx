@@ -1,16 +1,20 @@
-import { join } from "@/config/content";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { staggerContainer, fadeUp } from "@/components/motion/variants";
+import type { JoinContent } from "@/lib/cms/content";
 
 /** "Why join us" — the benefits grid from the Join Community wireframe. */
-export function WhyJoinUs() {
+export function WhyJoinUs({
+  content,
+}: {
+  content: JoinContent["whyJoin"];
+}) {
   return (
     <Section id="why-join-us">
       <SectionHeading
-        eyebrow={join.whyJoin.eyebrow}
-        title={join.whyJoin.headline}
+        eyebrow={content.heading.eyebrow}
+        title={content.heading.headline}
         align="left"
       />
 
@@ -19,7 +23,7 @@ export function WhyJoinUs() {
         variants={staggerContainer}
         className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
       >
-        {join.whyJoin.benefits.map((benefit, i) => (
+        {content.benefits.map((benefit, i) => (
           <Reveal
             as="li"
             key={benefit.title}

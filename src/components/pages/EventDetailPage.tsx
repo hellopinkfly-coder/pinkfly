@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Countdown } from "@/features/events/Countdown";
 import { EventCard } from "@/features/events/EventCard";
-import { getUpcomingEvents, type PinkFlyEvent } from "@/data/events";
+import { upcomingEvents, type PinkFlyEvent } from "@/data/events";
+import { getEvents } from "@/lib/cms/collections";
 import { teamPlaceholder } from "@/config/images";
 import {
   formatDuration,
@@ -22,14 +23,14 @@ import { formatPrice, regionPath, type Region } from "@/lib/region";
  * header → time left + image → register now → who should join →
  * why you should join → speaker details → upcoming events → footer.
  */
-export function EventDetailPage({
+export async function EventDetailPage({
   event,
   region,
 }: {
   event: PinkFlyEvent;
   region: Region;
 }) {
-  const upcoming = getUpcomingEvents(region.slug, event.slug);
+  const upcoming = upcomingEvents(await getEvents(), region.slug, event.slug);
   const price = formatPrice(region, event.price);
   const registerHref =
     event.registrationUrl || regionPath(region, "/join");
@@ -207,7 +208,7 @@ export function EventDetailPage({
             <h2 className="pf-h2 text-2xl sm:text-3xl">Upcoming events</h2>
           </Reveal>
           <Rail label="Upcoming events" className="mt-10">
-            {upcoming.map((item) => (
+            {upcoming.map((item: PinkFlyEvent) => (
               <EventCard
                 key={item.slug}
                 event={item}

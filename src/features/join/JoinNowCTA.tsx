@@ -1,11 +1,10 @@
 import { ArrowUpRight, Check } from "lucide-react";
-import { join } from "@/config/content";
-import { integrations } from "@/config/site";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
 import { GradientBackdrop } from "@/components/shared/GradientBackdrop";
 import { Button } from "@/components/ui/button";
 import type { Region } from "@/lib/region";
+import type { JoinContent } from "@/lib/cms/content";
 
 /**
  * "Join now" — the membership sign-up.
@@ -19,23 +18,31 @@ import type { Region } from "@/lib/region";
  * the section says registration is opening shortly rather than rendering a
  * button with nowhere to go.
  */
-export function JoinNowCTA({ region }: { region: Region }) {
-  const formUrl = region.form.googleFormUrl || integrations.joinFormUrl;
+export function JoinNowCTA({
+  region,
+  content,
+  formUrl,
+}: {
+  region: Region;
+  content: JoinContent["cta"];
+  /** The region's registration form, resolved by the page. */
+  formUrl: string;
+}) {
 
   return (
     <Section id="join-now" className="relative overflow-hidden">
       <GradientBackdrop />
       <Reveal className="mx-auto max-w-3xl">
         <div className="pf-glass rounded-[var(--pf-radius-2xl)] p-8 text-left shadow-[var(--pf-shadow-md)] sm:p-12">
-          <span className="pf-eyebrow">{join.cta.eyebrow}</span>
-          <h2 className="pf-h2 mt-4">{join.cta.headline}</h2>
+          <span className="pf-eyebrow">{content.eyebrow}</span>
+          <h2 className="pf-h2 mt-4">{content.headline}</h2>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-[var(--pf-text)] sm:text-lg">
-            {join.cta.body}
+            {content.body}
           </p>
 
           {/* What happens after the click, before they leave the site. */}
           <ol className="mt-8 flex flex-col gap-3">
-            {join.cta.steps.map((step) => (
+            {content.steps.map((step) => (
               <li
                 key={step}
                 className="flex items-start gap-3 text-sm text-[var(--pf-text)] sm:text-base"
@@ -55,16 +62,16 @@ export function JoinNowCTA({ region }: { region: Region }) {
                 size="lg"
                 data-crm-segment={region.form.crmSegment}
               >
-                {join.cta.formLabel}
+                {content.formLabel}
                 {/* Up-and-out arrow: this one leaves the site. */}
                 <ArrowUpRight size={18} />
               </Button>
-              <p className="text-sm text-[var(--pf-muted)]">{join.cta.formNote}</p>
+              <p className="text-sm text-[var(--pf-muted)]">{content.formNote}</p>
             </div>
           ) : (
             /* No URL yet. An honest "not open yet" beats a dead button. */
             <p className="mt-8 inline-flex items-center rounded-full bg-[var(--pf-surface-muted)] px-5 py-3 text-sm text-[var(--pf-text)]">
-              {join.cta.pending}
+              {content.pending}
             </p>
           )}
         </div>

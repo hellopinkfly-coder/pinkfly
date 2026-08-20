@@ -1,29 +1,34 @@
-import { join } from "@/config/content";
-import { joinImages } from "@/config/images";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { WhyJoinUs } from "@/features/join/WhyJoinUs";
 import { EditorialBlock } from "@/features/join/EditorialBlock";
 import { JoinNowCTA } from "@/features/join/JoinNowCTA";
 import { Faqs } from "@/features/join/Faqs";
+import { getJoinContent, getSiteContent } from "@/lib/cms/content";
 import type { Region } from "@/lib/region";
 
 /**
  * Join Community page, in wireframe order:
- * header → why join us → (CMS-managed editorial) → join now → FAQs → footer.
+ * header → why join us → editorial block → register → FAQs → footer.
+ *
+ * Edited in Sanity under Pages → Join Community, including the registration
+ * form URL each CTA opens.
  */
-export function JoinPage({ region }: { region: Region }) {
+export async function JoinPage({ region }: { region: Region }) {
+  const [content, site] = await Promise.all([getJoinContent(), getSiteContent()]);
+  const formUrl = region.form.googleFormUrl || site.joinFormUrl;
+
   return (
     <>
       <PageHeader
-        eyebrow={join.hero.eyebrow}
-        title={join.hero.title}
-        intro={`${join.hero.intro} ${region.copy.joinIntro}`}
-        banner={joinImages.banner}
+        eyebrow={content.hero.eyebrow}
+        title={content.hero.title}
+        intro={`${content.hero.intro} ${region.copy.joinIntro}`}
+        banner={content.hero.banner}
       />
-      <WhyJoinUs />
-      <EditorialBlock />
-      <JoinNowCTA region={region} />
-      <Faqs />
+      {content.whyJoin.visible && <WhyJoinUs content={content.whyJoin} />}
+      {content.editorial.visible && <EditorialBlock content={content.editorial} />}
+      <JoinNowCTA region={region} content={content.cta} formUrl={formUrl} />
+      {content.faqs.visible && <Faqs items={content.faqs.items} />}
     </>
   );
 }

@@ -1,10 +1,10 @@
-import { initiatives } from "@/data/team";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { Rail } from "@/components/shared/Rail";
 import { ImageFrame } from "@/components/shared/ImageFrame";
 import { Badge } from "@/components/ui/badge";
+import type { AboutContent } from "@/lib/cms/content";
 
 /**
  * Previous Pink Fly activities and initiatives.
@@ -13,15 +13,20 @@ import { Badge } from "@/components/ui/badge";
  * component and its data are complete — flip the flag to publish it. Do not
  * delete: this section is scheduled to go live once content is ready.
  */
-export function Initiatives() {
+export function Initiatives({
+  content,
+}: {
+  content: AboutContent["initiatives"];
+}) {
+  const initiatives = content.items;
   if (initiatives.length === 0) return null;
 
   return (
     <Section id="initiatives" className="bg-[var(--pf-surface)]">
       <SectionHeading
-        eyebrow="Initiatives"
-        title="What we've built so far."
-        intro="Programmes, campaigns and gatherings the community has run."
+        eyebrow={content.heading.eyebrow}
+        title={content.heading.headline}
+        intro={content.heading.intro}
         align="left"
       />
 

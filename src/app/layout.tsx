@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { siteConfig } from "@/config/site";
 import { SiteChrome } from "@/components/layout/SiteChrome";
+import { getSiteContent } from "@/lib/cms/content";
 import "./globals.css";
 
 /**
@@ -77,9 +78,13 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // Navigation, footer links, contact details and the header button are all
+  // edited in Sanity; fetching them here keeps the chrome in one place.
+  const site = await getSiteContent();
+
   return (
     <html lang="en" className={spaceMono.variable} suppressHydrationWarning>
       <head>
@@ -92,7 +97,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <SiteChrome>{children}</SiteChrome>
+        <SiteChrome site={site}>{children}</SiteChrome>
       </body>
     </html>
   );

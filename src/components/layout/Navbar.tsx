@@ -5,13 +5,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { mainNav, knowledgeBaseNav } from "@/config/site";
 import { useScrolled } from "@/hooks/useScrollDirection";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/Logo";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { RegionSelector } from "@/components/region/RegionSelector";
 import { regionPath, type Region } from "@/lib/region";
+import type { SiteContent } from "@/lib/cms/content";
 import { Container } from "./Container";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +33,8 @@ type NavbarProps = {
    * transparent with light type until the visitor scrolls past the fold.
    */
   overHero?: boolean;
+  /** Navigation, header button and brand name — all edited in Sanity. */
+  site: SiteContent;
 };
 
 export function Navbar({
@@ -40,6 +42,7 @@ export function Navbar({
   rest,
   variant = "default",
   overHero = false,
+  site,
 }: NavbarProps) {
   const [open, setOpen] = useState(false);
   const scrolled = useScrolled();
@@ -50,10 +53,10 @@ export function Navbar({
 
   const items =
     variant === "knowledge"
-      ? knowledgeBaseNav.map((i) => ({ ...i, href: withRegion(i.href) }))
+      ? site.knowledgeBaseNav.map((i) => ({ ...i, href: withRegion(i.href) }))
       : variant === "minimal"
         ? []
-        : mainNav.map((i) => ({ ...i, href: withRegion(i.href) }));
+        : site.mainNav.map((i) => ({ ...i, href: withRegion(i.href) }));
 
   function withRegion(href: string) {
     // In-page anchors on the current page stay as-is.
@@ -62,8 +65,9 @@ export function Navbar({
     return regionPath(region, path) + (hash ? `#${hash}` : "");
   }
 
-  const joinHref = regionPath(region, "/join");
-  const ctaLabel = variant === "knowledge" ? "Join Our Community" : "Join Pink Fly";
+  const joinHref = regionPath(region, site.navCta.href);
+  const ctaLabel =
+    variant === "knowledge" ? site.navCta.knowledgeLabel : site.navCta.label;
   // Light type only while genuinely over the image — the glass bar takes over
   // the moment the visitor scrolls.
   const onDark = overHero && !scrolled && !open;
@@ -154,7 +158,10 @@ export function Navbar({
             <Container className="mt-2">
               <div className="pf-glass flex max-h-[75vh] flex-col gap-1 overflow-y-auto rounded-[var(--pf-radius-xl)] p-4 shadow-[var(--pf-shadow-md)]">
                 {/* The minimal variant still needs a way into the site. */}
-                {(items.length > 0 ? items : mainNav.map((i) => ({ ...i, href: withRegion(i.href) }))).map(
+                {(items.length > 0
+                  ? items
+                  : site.mainNav.map((i) => ({ ...i, href: withRegion(i.href) }))
+                ).map(
                   (item) => (
                     <Link
                       key={item.href}

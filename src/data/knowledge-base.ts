@@ -324,3 +324,31 @@ export function getAllEntryPaths(): { category: KbCategory; slug: string }[] {
 export function isKbCategory(value: string): value is KbCategory {
   return kbCategories.some((c) => c.id === value);
 }
+
+/* ------------------------------------------------------------------------- */
+/* List-taking variants, so the same helpers work over CMS entries as well as */
+/* the seed list above. See `getKbEntries()` in src/lib/cms/collections.ts.   */
+
+export function entriesByCategory(list: KbEntry[], category: KbCategory): KbEntry[] {
+  return list
+    .filter((e) => e.category === category)
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+}
+
+export function findEntry(
+  list: KbEntry[],
+  category: KbCategory,
+  slug: string
+): KbEntry | undefined {
+  return list.find((e) => e.category === category && e.slug === slug);
+}
+
+export function relatedEntries(
+  list: KbEntry[],
+  entry: KbEntry,
+  limit = 3
+): KbEntry[] {
+  return entriesByCategory(list, entry.category)
+    .filter((e) => e.slug !== entry.slug)
+    .slice(0, limit);
+}

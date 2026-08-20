@@ -6,10 +6,12 @@
  */
 import { notFound } from "next/navigation";
 import { JoinPage } from "@/components/pages/JoinPage";
+import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion, isRegionSlug } from "@/lib/region";
 import { regionalSlugs } from "@/config/regions";
 import { buildMetadata } from "@/lib/seo";
 import { pageSeo } from "@/config/seo-pages";
+import { getPageSeo } from "@/lib/cms/content";
 
 type Params = { params: Promise<{ region: string }> };
 
@@ -21,14 +23,14 @@ export async function generateMetadata({ params }: Params) {
   const { region: slug } = await params;
   if (!isRegionSlug(slug)) return {};
   return buildMetadata({
-    region: getRegion(slug),
+    region: await getRegionContent(getRegion(slug)),
     path: "/join",
-    ...pageSeo.join,
+    ...(await getPageSeo("join", pageSeo.join)),
   });
 }
 
 export default async function Page({ params }: Params) {
   const { region: slug } = await params;
   if (!isRegionSlug(slug)) notFound();
-  return <JoinPage region={getRegion(slug)} />;
+  return <JoinPage region={await getRegionContent(getRegion(slug))} />;
 }

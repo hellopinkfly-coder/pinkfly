@@ -1,10 +1,10 @@
-import { community } from "@/config/content";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { ImageFrame } from "@/components/shared/ImageFrame";
 import { staggerContainer, fadeUp } from "@/components/motion/variants";
 import { cn } from "@/lib/utils";
+import type { HomeContent } from "@/lib/cms/content";
 
 /**
  * "How we gather" — four ways the community meets.
@@ -13,13 +13,13 @@ import { cn } from "@/lib/utils";
  * frame, with the alternating vertical offset giving the row an editorial,
  * asymmetric rhythm on wide screens.
  */
-export function Community() {
+export function Community({ content }: { content: HomeContent["community"] }) {
   return (
     <Section id="community" className="bg-[var(--pf-surface)]">
       <SectionHeading
-        eyebrow={community.eyebrow}
-        title={community.headline}
-        intro={community.intro}
+        eyebrow={content.heading.eyebrow}
+        title={content.heading.headline}
+        intro={content.heading.intro}
       />
 
       <Reveal
@@ -27,7 +27,7 @@ export function Community() {
         variants={staggerContainer}
         className="mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4"
       >
-        {community.cards.map((card, i) => (
+        {content.cards.map((card, i) => (
           <Reveal
             as="li"
             key={card.title}
