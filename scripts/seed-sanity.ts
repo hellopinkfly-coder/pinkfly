@@ -7,16 +7,19 @@
  * `src/data` modules stay in the repository as the seed and as the fallback
  * used when Sanity is unreachable, but editors never need to touch them.
  *
- *   NEXT_PUBLIC_SANITY_PROJECT_ID=xxx \
- *   NEXT_PUBLIC_SANITY_DATASET=production \
- *   SANITY_API_WRITE_TOKEN=sk... \
- *   npx tsx scripts/seed-sanity.ts
+ *   npm run seed:sanity
+ *
+ * It reads the write token from `.env.local` (or the shell), and targets the
+ * Pink Fly project unless NEXT_PUBLIC_SANITY_PROJECT_ID / _DATASET say
+ * otherwise.
  *
  * Safe to re-run: every document has a fixed id and is written with
  * `createOrReplace`, so a second run restores the seed rather than
  * duplicating it. It will overwrite editor changes to those documents —
  * which is the point of a reset, and the reason it is not part of the build.
  */
+import { readFileSync } from "node:fs";
+
 import { createClient } from "@sanity/client";
 
 import * as content from "../src/config/content";
@@ -37,13 +40,36 @@ import { executiveTeam, initiatives } from "../src/data/team";
 import { kbCategories } from "../src/data/knowledge-base";
 import { iconKey } from "../src/lib/cms/icons";
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+/**
+ * `.env.local` is where the write token lives, and Next loads it for the app —
+ * but this script runs outside Next, so it reads the file itself. Anything
+ * already exported in the shell wins.
+ */
+function loadEnvLocal() {
+  let file: string;
+  try {
+    file = readFileSync(new URL("../.env.local", import.meta.url), "utf8");
+  } catch {
+    return;
+  }
+  for (const line of file.split("\n")) {
+    const match = /^\s*([A-Z0-9_]+)\s*=\s*(.*)$/.exec(line);
+    if (!match) continue;
+    const [, key, raw] = match;
+    if (process.env[key]) continue;
+    process.env[key] = raw.trim().replace(/^["']|["']$/g, "");
+  }
+}
+
+loadEnvLocal();
+
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "5t0hmzzq";
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production";
 const token = process.env.SANITY_API_WRITE_TOKEN;
 
-if (!projectId || !token) {
+if (!token) {
   console.error(
-    "Set NEXT_PUBLIC_SANITY_PROJECT_ID and SANITY_API_WRITE_TOKEN before running the seed."
+    "Set SANITY_API_WRITE_TOKEN (in .env.local or the shell) before running the seed."
   );
   process.exit(1);
 }
