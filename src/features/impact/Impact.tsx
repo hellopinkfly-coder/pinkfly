@@ -1,9 +1,9 @@
-import { impact } from "@/config/content";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { AnimatedCounter } from "@/components/shared/AnimatedCounter";
 import { stagger, lift } from "@/components/motion/variants";
+import type { HomeContent } from "@/lib/cms/content";
 
 /**
  * Impact — four headline numbers in a single horizontal row, counted up once
@@ -13,17 +13,20 @@ import { stagger, lift } from "@/components/motion/variants";
  * one claim, not four. Each carries a quiet icon so the row reads visually
  * before it reads verbally, and nothing else competes with the figures.
  */
-export function Impact() {
+export function Impact({ content }: { content: HomeContent["impact"] }) {
   return (
     <Section id="impact">
-      <SectionHeading eyebrow={impact.eyebrow} title={impact.headline} />
+      <SectionHeading
+        eyebrow={content.heading.eyebrow}
+        title={content.heading.headline}
+      />
 
       <Reveal
         as="ul"
         variants={stagger}
         className="mt-12 grid gap-px overflow-hidden rounded-[var(--pf-radius-2xl)] border border-[var(--pf-border)] bg-[var(--pf-border)] sm:grid-cols-2 lg:grid-cols-4"
       >
-        {impact.stats.map(({ icon: Icon, value, suffix, label }) => (
+        {content.stats.map(({ icon: Icon, value, suffix, label }) => (
           <Reveal
             as="li"
             key={label}

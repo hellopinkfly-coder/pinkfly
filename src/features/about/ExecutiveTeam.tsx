@@ -1,9 +1,10 @@
-import { executiveTeam, type TeamMember } from "@/data/team";
+import type { TeamMember } from "@/data/team";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { ImageFrame } from "@/components/shared/ImageFrame";
 import { staggerContainer, fadeUp } from "@/components/motion/variants";
+import type { Heading } from "@/lib/cms/content";
 
 /**
  * Executive team.
@@ -12,18 +13,20 @@ import { staggerContainer, fadeUp } from "@/components/motion/variants";
  * team member is a matter of appending one object, and the grid reflows.
  */
 export function ExecutiveTeam({
-  members = executiveTeam,
+  members,
+  heading,
 }: {
-  members?: TeamMember[];
+  members: TeamMember[];
+  heading: Heading;
 }) {
   if (members.length === 0) return null;
 
   return (
     <Section id="team">
       <SectionHeading
-        eyebrow="Executive team"
-        title="The people behind Pink Fly."
-        intro="Photographs and biographies are placeholders until the team's final details are confirmed."
+        eyebrow={heading.eyebrow}
+        title={heading.headline}
+        intro={heading.intro}
         align="left"
       />
 

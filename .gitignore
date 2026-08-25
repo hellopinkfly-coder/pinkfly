@@ -1,5 +1,10 @@
 # dependencies
 /node_modules
+sanity/node_modules
+
+# sanity studio build/dev artifacts
+sanity/.sanity
+sanity/dist
 /.pnp
 .pnp.*
 

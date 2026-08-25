@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
-import { testimonials } from "@/config/content";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { EASE } from "@/components/motion/variants";
 import { cn } from "@/lib/utils";
+import type { HomeContent } from "@/lib/cms/content";
 
 /**
  * Founder testimonials.
@@ -16,8 +16,12 @@ import { cn } from "@/lib/utils";
  * Built and ready, but hidden on the homepage behind `flags.testimonials`
  * until real founder quotes are available. Do not delete.
  */
-export function Testimonials() {
-  const items = testimonials.items;
+export function Testimonials({
+  content,
+}: {
+  content: HomeContent["testimonials"];
+}) {
+  const items = content.items;
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
@@ -31,8 +35,8 @@ export function Testimonials() {
   return (
     <Section id="testimonials">
       <SectionHeading
-        eyebrow={testimonials.eyebrow}
-        title={testimonials.headline}
+        eyebrow={content.heading.eyebrow}
+        title={content.heading.headline}
       />
 
       <Reveal className="mx-auto mt-14 max-w-3xl">
@@ -106,9 +110,11 @@ export function Testimonials() {
         </div>
       </Reveal>
 
-      <p className="mt-6 text-center text-xs text-[var(--pf-muted)]">
-        {testimonials.note}
-      </p>
+      {content.heading.intro && (
+        <p className="mt-6 text-center text-xs text-[var(--pf-muted)]">
+          {content.heading.intro}
+        </p>
+      )}
     </Section>
   );
 }

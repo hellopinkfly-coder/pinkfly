@@ -5,7 +5,9 @@
  */
 import { notFound } from "next/navigation";
 import { EventDetailPage } from "@/components/pages/EventDetailPage";
-import { events, getEvent } from "@/data/events";
+import { events, findEvent } from "@/data/events";
+import { getEvents } from "@/lib/cms/collections";
+import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion } from "@/lib/region";
 import { buildMetadata } from "@/lib/seo";
 
@@ -17,10 +19,10 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Params) {
   const { slug } = await params;
-  const event = getEvent(slug);
+  const event = findEvent(await getEvents(), slug);
   if (!event) return {};
   return buildMetadata({
-    region: getRegion(),
+    region: await getRegionContent(getRegion()),
     path: `/events/${event.slug}`,
     title: event.title,
     description: event.excerpt,
@@ -30,7 +32,7 @@ export async function generateMetadata({ params }: Params) {
 
 export default async function Page({ params }: Params) {
   const { slug } = await params;
-  const event = getEvent(slug);
+  const event = findEvent(await getEvents(), slug);
   if (!event) notFound();
-  return <EventDetailPage event={event} region={getRegion()} />;
+  return <EventDetailPage event={event} region={await getRegionContent(getRegion())} />;
 }

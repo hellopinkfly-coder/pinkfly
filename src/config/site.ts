@@ -7,15 +7,18 @@
 
 export const siteConfig = {
   name: "Pink Fly",
-  tagline: "Where ambitious women build what's next",
+  tagline: "Building Dreams",
   description:
     "Pink Fly is a community for ambitious women founders — mentorship, network, events and education to help you launch, scale and conquer.",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   parent: "Noboru World",
   parentUrl: "https://noboruworld.com",
-  contactEmail: "hello@pinkfly.community",
-  /** Placeholder contact block — confirm before launch. */
-  address: ["Noboru World", "Bengaluru, Karnataka", "India"],
+  contactEmail: "hello.pinkfly@gmail.com",
+  address: [
+    "919, Gera's Imperium Rise",
+    "Hinjawadi Phase II, Rajiv Gandhi Infotech Park",
+    "Hinjawadi, Pune, Maharashtra 411057",
+  ],
   phone: "+91 00000 00000",
   socials: {
     instagram: "https://www.instagram.com/pinkfly_official/",
@@ -32,10 +35,8 @@ export const siteConfig = {
  * UI falls back to the on-site Join Community page.
  */
 export const integrations = {
-  /** Google Form that backs the Join Community CTA. */
+  /** Google Form that backs every join CTA. */
   joinFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL ?? "",
-  /** Endpoint that will forward form submissions into the CRM. */
-  crmWebhookConfigured: Boolean(process.env.CRM_WEBHOOK_URL),
 } as const;
 
 /** Primary navigation, per the homepage wireframe. */

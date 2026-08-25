@@ -1,15 +1,14 @@
-import { about } from "@/config/content";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/shared/Reveal";
 import { ImageFrame } from "@/components/shared/ImageFrame";
+import type { AboutContent } from "@/lib/cms/content";
 
 /**
  * The large contextual banner that sits between "Why Pink Fly exists" and
  * the founder story, as the About wireframe lays it out. It breaks out past
  * the text container on wide screens so it reads as a full-bleed moment.
  */
-export function AboutBanner() {
-  const { image } = about.hero;
+export function AboutBanner({ image }: { image: AboutContent["banner"]["image"] }) {
 
   return (
     <section className="py-4 sm:py-8">

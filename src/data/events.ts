@@ -278,41 +278,57 @@ export const eventTypes: EventType[] = [
 
 /* ------------------------------------------------------------- Accessors -- */
 /** Events visible on a region's site, soonest first. */
-export function getEventsForRegion(region: RegionSlug): PinkFlyEvent[] {
-  return events
+/**
+ * The accessors below take the event list as their first argument so the same
+ * filtering works whether the events came from Sanity or from the seed list
+ * in this file. `getEvents()` in `src/lib/cms/collections.ts` supplies the
+ * former; the `events` export above is the fallback.
+ */
+export function filterEventsForRegion(
+  list: PinkFlyEvent[],
+  region: RegionSlug
+): PinkFlyEvent[] {
+  return list
     .filter((e) => e.regions.includes(region))
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 }
 
-export function getEvent(slug: string): PinkFlyEvent | undefined {
-  return events.find((e) => e.slug === slug);
+export function findEvent(
+  list: PinkFlyEvent[],
+  slug: string
+): PinkFlyEvent | undefined {
+  return list.find((e) => e.slug === slug);
 }
 
 /** Upcoming events other than the one being viewed. */
-export function getUpcomingEvents(
+export function upcomingEvents(
+  list: PinkFlyEvent[],
   region: RegionSlug,
   excludeSlug?: string,
   limit = 4
 ): PinkFlyEvent[] {
-  return getEventsForRegion(region)
+  return filterEventsForRegion(list, region)
     .filter((e) => e.slug !== excludeSlug)
     .slice(0, limit);
 }
 
 /** Distinct cities across a region's events — powers the Location filter. */
-export function getEventCities(region: RegionSlug): string[] {
-  return [...new Set(getEventsForRegion(region).map((e) => e.city))].sort();
+export function eventCities(list: PinkFlyEvent[], region: RegionSlug): string[] {
+  return [...new Set(filterEventsForRegion(list, region).map((e) => e.city))].sort();
 }
 
 /** Distinct `YYYY-MM` keys across a region's events — powers the Month filter. */
-export function getEventMonths(region: RegionSlug): string[] {
+export function eventMonths(list: PinkFlyEvent[], region: RegionSlug): string[] {
   return [
-    ...new Set(getEventsForRegion(region).map((e) => e.startsAt.slice(0, 7))),
+    ...new Set(filterEventsForRegion(list, region).map((e) => e.startsAt.slice(0, 7))),
   ].sort();
 }
 
 /** Distinct event types present in a region — powers the Type filter. */
-export function getEventTypesForRegion(region: RegionSlug): EventType[] {
-  const present = new Set(getEventsForRegion(region).map((e) => e.type));
+export function eventTypesForRegion(
+  list: PinkFlyEvent[],
+  region: RegionSlug
+): EventType[] {
+  const present = new Set(filterEventsForRegion(list, region).map((e) => e.type));
   return eventTypes.filter((t) => present.has(t));
 }

@@ -1,14 +1,17 @@
-import { about } from "@/config/content";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
 import { ImageFrame } from "@/components/shared/ImageFrame";
+import type { AboutContent } from "@/lib/cms/content";
 
 /**
  * Founder story — portrait on the right, narrative on the left, with the
  * image lifted slightly out of the text column for an editorial feel.
  */
-export function FounderStory() {
-  const { founder } = about;
+export function FounderStory({
+  founder,
+}: {
+  founder: AboutContent["founder"];
+}) {
 
   return (
     <Section id="founder-story" className="bg-[var(--pf-surface)]">

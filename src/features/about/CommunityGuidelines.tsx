@@ -1,21 +1,24 @@
-import { about } from "@/config/content";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
 import { ImageFrame } from "@/components/shared/ImageFrame";
 import { staggerContainer, fadeUp } from "@/components/motion/variants";
+import type { AboutContent } from "@/lib/cms/content";
 
 /** The agreements that hold the community together. */
-export function CommunityGuidelines() {
-  const { guidelines } = about;
+export function CommunityGuidelines({
+  guidelines,
+}: {
+  guidelines: AboutContent["guidelines"];
+}) {
 
   return (
     <Section id="community-guidelines">
       <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <Reveal className="group">
-          <span className="pf-eyebrow">{guidelines.eyebrow}</span>
-          <h2 className="pf-h2 mt-4">{guidelines.headline}</h2>
+          <span className="pf-eyebrow">{guidelines.heading.eyebrow}</span>
+          <h2 className="pf-h2 mt-4">{guidelines.heading.headline}</h2>
           <p className="mt-5 text-base leading-relaxed text-[var(--pf-text)]">
-            {guidelines.intro}
+            {guidelines.heading.intro}
           </p>
           <ImageFrame
             src={guidelines.image.src}

@@ -29,6 +29,7 @@ export function EventFilters({
   cities,
   months,
   types,
+  emptyState,
   perPage = 6,
 }: {
   events: PinkFlyEvent[];
@@ -36,6 +37,8 @@ export function EventFilters({
   cities: string[];
   months: string[];
   types: string[];
+  /** Shown when no event matches the filters. Edited in Sanity. */
+  emptyState: string;
   perPage?: number;
 }) {
   const [draft, setDraft] = useState<Filters>(EMPTY);
@@ -174,7 +177,7 @@ export function EventFilters({
             <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)]">
               <CalendarX2 size={24} />
             </span>
-            <h3 className="text-lg">Nothing scheduled for that combination.</h3>
+            <h3 className="text-lg">{emptyState}</h3>
             <p className="max-w-md text-sm leading-relaxed text-[var(--pf-text)]">
               Try a wider month range or a different location — or join the
               community and we&apos;ll tell you the moment something is announced

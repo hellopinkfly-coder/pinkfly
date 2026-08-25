@@ -1,26 +1,34 @@
 import { Mail, MapPin, Phone } from "lucide-react";
-import { about } from "@/config/content";
-import { siteConfig } from "@/config/site";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
 import { ContactForm } from "@/features/contact/ContactForm";
 import type { Region } from "@/lib/region";
+import type { AboutContent } from "@/lib/cms/content";
 
 /**
  * Contact block. Details come from the active region, so switching region
  * updates the address, phone and inbox shown here.
  */
-export function ContactSection({ region }: { region: Region }) {
-  const email = region.email ?? siteConfig.contactEmail;
+export function ContactSection({
+  region,
+  content,
+  fallbackEmail,
+}: {
+  region: Region;
+  content: AboutContent["contact"];
+  /** The global inbox, used when the region has none of its own. */
+  fallbackEmail: string;
+}) {
+  const email = region.email ?? fallbackEmail;
 
   return (
     <Section id="contact" className="bg-[var(--pf-surface)]">
       <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <Reveal>
-          <span className="pf-eyebrow">{about.contact.eyebrow}</span>
-          <h2 className="pf-h2 mt-4">{about.contact.headline}</h2>
+          <span className="pf-eyebrow">{content.heading.eyebrow}</span>
+          <h2 className="pf-h2 mt-4">{content.heading.headline}</h2>
           <p className="mt-5 text-base leading-relaxed text-[var(--pf-text)]">
-            {about.contact.intro}
+            {content.heading.intro}
           </p>
 
           <ul className="mt-8 flex flex-col gap-5 text-sm">
