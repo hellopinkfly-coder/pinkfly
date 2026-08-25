@@ -5,7 +5,7 @@
  */
 import { notFound } from "next/navigation";
 import { EventDetailPage } from "@/components/pages/EventDetailPage";
-import { events, findEvent } from "@/data/events";
+import { findEvent } from "@/data/events";
 import { getEvents } from "@/lib/cms/collections";
 import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion } from "@/lib/region";
@@ -13,8 +13,11 @@ import { buildMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return events.map((event) => ({ slug: event.slug }));
+// Built from the CMS so a newly published event is prerendered and an
+// unpublished one stops being. `getEvents` falls back to the seed only when
+// Sanity is unreachable, which keeps the build working during an outage.
+export async function generateStaticParams() {
+  return (await getEvents()).map((event) => ({ slug: event.slug }));
 }
 
 export async function generateMetadata({ params }: Params) {

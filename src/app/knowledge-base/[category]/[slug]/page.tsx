@@ -5,7 +5,7 @@
  */
 import { notFound } from "next/navigation";
 import { EntryPage } from "@/components/pages/EntryPage";
-import { getAllEntryPaths, findEntry, isKbCategory } from "@/data/knowledge-base";
+import { findEntry, isKbCategory } from "@/data/knowledge-base";
 import { getKbEntries } from "@/lib/cms/collections";
 import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion } from "@/lib/region";
@@ -13,8 +13,11 @@ import { buildMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ category: string; slug: string }> };
 
-export function generateStaticParams() {
-  return getAllEntryPaths();
+// Built from the CMS, so publishing an article prerenders it and
+// unpublishing one stops it being built. Falls back to the seed only when
+// Sanity is unreachable.
+export async function generateStaticParams() {
+  return (await getKbEntries()).map(({ category, slug }) => ({ category, slug }));
 }
 
 export async function generateMetadata({ params }: Params) {

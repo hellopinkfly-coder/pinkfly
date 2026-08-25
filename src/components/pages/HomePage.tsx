@@ -26,8 +26,12 @@ export async function HomePage({ region }: { region: Region }) {
     <>
       <Hero region={region} slides={content.hero.slides} />
       <FinalCTA region={region} content={content.finalCta} formUrl={formUrl} />
-      {content.impact.visible && <Impact content={content.impact} />}
-      {content.community.visible && <Community content={content.community} />}
+      {content.impact.visible && content.impact.stats.length > 0 && (
+        <Impact content={content.impact} />
+      )}
+      {content.community.visible && content.community.cards.length > 0 && (
+        <Community content={content.community} />
+      )}
       {content.testimonials.visible && (
         <Testimonials content={content.testimonials} />
       )}

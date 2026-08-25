@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
@@ -22,6 +23,9 @@ export async function PolicyPage({
     getPolicyContent(slug),
     getSiteContent(),
   ]);
+  // Unpublished in Sanity means gone, not "fall back to the shipped copy".
+  if (!policy) notFound();
+
   const email = region.email ?? site.contactEmail;
 
   return (

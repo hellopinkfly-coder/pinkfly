@@ -5,7 +5,7 @@
  */
 import { notFound } from "next/navigation";
 import { EventDetailPage } from "@/components/pages/EventDetailPage";
-import { events, findEvent } from "@/data/events";
+import { findEvent } from "@/data/events";
 import { getEvents } from "@/lib/cms/collections";
 import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion, isRegionSlug } from "@/lib/region";
@@ -14,9 +14,11 @@ import { buildMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ region: string; slug: string }> };
 
-export function generateStaticParams() {
+// Built from the CMS — see the note on the global route.
+export async function generateStaticParams() {
+  const published = await getEvents();
   return regionalSlugs.flatMap((region) =>
-    events
+    published
       .filter((event) => event.regions.includes(region))
       .map((event) => ({ region, slug: event.slug }))
   );

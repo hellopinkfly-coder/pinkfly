@@ -5,7 +5,7 @@
  */
 import { notFound } from "next/navigation";
 import { EntryPage } from "@/components/pages/EntryPage";
-import { getAllEntryPaths, findEntry, isKbCategory } from "@/data/knowledge-base";
+import { findEntry, isKbCategory } from "@/data/knowledge-base";
 import { getKbEntries } from "@/lib/cms/collections";
 import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion, isRegionSlug } from "@/lib/region";
@@ -14,9 +14,11 @@ import { buildMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ region: string; category: string; slug: string }> };
 
-export function generateStaticParams() {
+// Built from the CMS — see the note on the global route.
+export async function generateStaticParams() {
+  const published = await getKbEntries();
   return regionalSlugs.flatMap((region) =>
-    getAllEntryPaths().map((entry) => ({ region, ...entry }))
+    published.map(({ category, slug }) => ({ region, category, slug }))
   );
 }
 

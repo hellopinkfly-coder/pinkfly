@@ -38,11 +38,13 @@ export async function AboutPage({ region }: { region: Region }) {
       )}
       {content.banner.visible && <AboutBanner image={content.banner.image} />}
       {content.founder.visible && <FounderStory founder={content.founder} />}
-      {content.guidelines.visible && (
+      {content.guidelines.visible && content.guidelines.items.length > 0 && (
         <CommunityGuidelines guidelines={content.guidelines} />
       )}
-      {content.initiatives.visible && <Initiatives content={content.initiatives} />}
-      {content.team.visible && (
+      {content.initiatives.visible && content.initiatives.items.length > 0 && (
+        <Initiatives content={content.initiatives} />
+      )}
+      {content.team.visible && content.team.members.length > 0 && (
         <ExecutiveTeam
           members={content.team.members}
           heading={content.team.heading}

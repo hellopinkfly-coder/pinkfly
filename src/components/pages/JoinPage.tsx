@@ -25,10 +25,14 @@ export async function JoinPage({ region }: { region: Region }) {
         intro={`${content.hero.intro} ${region.copy.joinIntro}`}
         banner={content.hero.banner}
       />
-      {content.whyJoin.visible && <WhyJoinUs content={content.whyJoin} />}
+      {content.whyJoin.visible && content.whyJoin.benefits.length > 0 && (
+        <WhyJoinUs content={content.whyJoin} />
+      )}
       {content.editorial.visible && <EditorialBlock content={content.editorial} />}
       <JoinNowCTA region={region} content={content.cta} formUrl={formUrl} />
-      {content.faqs.visible && <Faqs items={content.faqs.items} />}
+      {content.faqs.visible && content.faqs.items.length > 0 && (
+        <Faqs items={content.faqs.items} />
+      )}
     </>
   );
 }

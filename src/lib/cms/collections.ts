@@ -42,8 +42,10 @@ type CmsEvent = {
 };
 
 export async function getEvents(): Promise<PinkFlyEvent[]> {
-  const cms = await cmsFetch<CmsEvent[]>(eventsQuery);
-  if (!cms || cms.length === 0) return seedEvents;
+  const { live, data: cms } = await cmsFetch<CmsEvent[]>(eventsQuery);
+  // Sanity answered with an empty list: every event is unpublished, so the
+  // site has no events. Only an outage falls back to the seed.
+  if (!cms || cms.length === 0) return live ? [] : seedEvents;
 
   return cms.map((e) => ({
     slug: e.slug ?? "",
@@ -89,8 +91,8 @@ type CmsKbEntry = {
 };
 
 export async function getKbEntries(): Promise<KbEntry[]> {
-  const cms = await cmsFetch<CmsKbEntry[]>(kbEntriesQuery);
-  if (!cms || cms.length === 0) return seedKbEntries;
+  const { live, data: cms } = await cmsFetch<CmsKbEntry[]>(kbEntriesQuery);
+  if (!cms || cms.length === 0) return live ? [] : seedKbEntries;
 
   return cms.map((e) => ({
     slug: e.slug ?? "",
@@ -141,7 +143,7 @@ type CmsRegion = {
  * rendering rather than update a message.
  */
 export async function getRegionContent(region: Region): Promise<Region> {
-  const all = await cmsFetch<CmsRegion[]>(regionsQuery);
+  const { data: all } = await cmsFetch<CmsRegion[]>(regionsQuery);
   const cms = all?.find((r) => r.slug === region.slug);
   if (!cms) return region;
 
