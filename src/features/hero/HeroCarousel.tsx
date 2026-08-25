@@ -173,9 +173,16 @@ export function HeroCarousel({ region }: { region: Region }) {
             </Line>
 
             <Line>
-              <Button href={regionPath(region, active.cta.href)} size="lg">
+              {/* The label is long enough to overrun a 320px screen, and the
+                  button is nowrap by default. Below `sm` it steps down a size
+                  and is allowed to wrap rather than being clipped. */}
+              <Button
+                href={regionPath(region, active.cta.href)}
+                size="lg"
+                className="h-auto min-h-13 whitespace-normal px-5 py-3 text-left text-sm leading-snug sm:whitespace-nowrap sm:px-8 sm:py-3.5 sm:text-base"
+              >
                 {active.cta.label}
-                <ArrowRight size={18} />
+                <ArrowRight size={18} className="shrink-0" />
               </Button>
             </Line>
           </motion.div>
