@@ -89,7 +89,12 @@ export function Navbar({
               : "border border-transparent"
           )}
         >
-          <Logo href={regionPath(region, "/")} onDark={onDark} />
+          <Logo
+            href={regionPath(region, "/")}
+            onDark={onDark}
+            size="md"
+            withTagline
+          />
 
           {items.length > 0 && (
             <ul className="hidden items-center gap-7 lg:flex">
