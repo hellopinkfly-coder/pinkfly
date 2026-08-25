@@ -1,0 +1,18 @@
+{
+  "name": "pinkfly-studio",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Sanity Studio for Pink Fly. Dependencies are installed once at the repository root and resolved from there; this manifest exists so the Sanity CLI can treat this folder as the Studio root.",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "sanity": "^3.99.0",
+    "@sanity/vision": "^3.99.0",
+    "styled-components": "^6.5.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

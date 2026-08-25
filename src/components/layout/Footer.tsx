@@ -47,7 +47,7 @@ export function Footer({
           {/* Brand, socials, address */}
           <div className="max-w-sm">
             <Link href={regionPath(region, "/")} aria-label={`${site.name} — home`}>
-              <LogoMark size="md" />
+              <LogoMark size="md" withTagline />
             </Link>
 
             <div className="mt-5 flex gap-2.5">

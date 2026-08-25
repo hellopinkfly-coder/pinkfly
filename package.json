@@ -6,6 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "studio": "npm --prefix sanity run dev -- --port 3333",
+    "studio:build": "npm --prefix sanity run build",
+    "studio:deploy": "npm --prefix sanity run deploy",
     "lint": "next lint",
     "seed:sanity": "tsx scripts/seed-sanity.ts",
     "typecheck": "tsc --noEmit"

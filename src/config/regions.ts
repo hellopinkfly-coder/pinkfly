@@ -74,7 +74,7 @@ const GLOBAL: Region = {
     "Hinjawadi, Pune, Maharashtra 411057",
   ],
   phone: null,
-  email: "hello@pinkfly.community",
+  email: "hello.pinkfly@gmail.com",
   timezone: "UTC",
   copy: {
     heroEyebrow: "The Pink Fly community",
@@ -87,7 +87,7 @@ const GLOBAL: Region = {
     crmSegment: "global",
   },
   seo: {
-    title: "Pink Fly — Where ambitious women build what's next",
+    title: "Pink Fly — Building Dreams",
     description:
       "Pink Fly is a global community for ambitious women entrepreneurs — mentorship, networking, events and education to help you launch, scale and conquer.",
   },

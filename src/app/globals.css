@@ -428,3 +428,27 @@
     display: none;
   }
 }
+
+/* ==========================================================================
+   Logo variant switching
+
+   The logo artwork is a raster, so it can't inherit the theme tokens. Two
+   cuts ship instead — dark-ink neutrals for light surfaces, light neutrals
+   for dark ones — and this picks between them the same way the tokens above
+   do: off `data-theme`. `.pf-logo--on-dark` forces the dark-surface cut for
+   placements over a dark full-bleed hero, whatever the theme.
+   ========================================================================== */
+
+.pf-logo__on-dark {
+  display: none;
+}
+
+:root[data-theme="dark"] .pf-logo__on-light,
+.pf-logo--on-dark .pf-logo__on-light {
+  display: none;
+}
+
+:root[data-theme="dark"] .pf-logo__on-dark,
+.pf-logo--on-dark .pf-logo__on-dark {
+  display: block;
+}

@@ -7,13 +7,13 @@
 
 export const siteConfig = {
   name: "Pink Fly",
-  tagline: "Where ambitious women build what's next",
+  tagline: "Building Dreams",
   description:
     "Pink Fly is a community for ambitious women founders — mentorship, network, events and education to help you launch, scale and conquer.",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   parent: "Noboru World",
   parentUrl: "https://noboruworld.com",
-  contactEmail: "hello@pinkfly.community",
+  contactEmail: "hello.pinkfly@gmail.com",
   address: [
     "919, Gera's Imperium Rise",
     "Hinjawadi Phase II, Rajiv Gandhi Infotech Park",

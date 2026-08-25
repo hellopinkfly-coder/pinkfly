@@ -26,6 +26,12 @@ export function languageAlternates(path: string): Record<string, string> {
   return alternates;
 }
 
+/**
+ * Share image used when a page supplies none: the Pink Fly logo lockup.
+ * Resolved against `metadataBase`, so a bare path is enough.
+ */
+const DEFAULT_OG_IMAGE = "/brand/og-image.png";
+
 export function buildMetadata({
   region,
   path,
@@ -64,13 +70,13 @@ export function buildMetadata({
       title: suffixed,
       description,
       locale: region.locale.replace("-", "_"),
-      ...(images ? { images } : {}),
+      images: images ?? [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title: suffixed,
       description,
-      ...(images ? { images } : {}),
+      images: images ?? [DEFAULT_OG_IMAGE],
     },
   };
 }
