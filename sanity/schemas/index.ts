@@ -4,6 +4,7 @@ import { figure } from "./objects/figure";
 import { cta } from "./objects/cta";
 import { navLink } from "./objects/navLink";
 import { seo } from "./objects/seo";
+import { socialPost } from "./objects/socialPost";
 import { iconPicker } from "./objects/iconPicker";
 import {
   titledItem,
@@ -39,6 +40,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   statItem,
   faqItem,
   imageCard,
+  socialPost,
 
   // Pages.
   homePage,

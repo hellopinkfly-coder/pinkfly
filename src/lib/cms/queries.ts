@@ -29,6 +29,9 @@ export const homePageQuery = groq`*[_type == "homePage"][0]{
   missionVisible,
   finalCta,
   joinCta,
+  socialHeading ${HEADING},
+  socialPosts[]{ url, caption, image ${FIGURE} },
+  socialVisible,
   seo ${SEO}
 }`;
 

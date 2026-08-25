@@ -43,6 +43,7 @@ import { executiveTeam, initiatives as seedInitiatives, type Initiative, type Te
 import { kbCategories } from "@/data/knowledge-base";
 import type { FrameShape } from "@/components/shared/ImageFrame";
 import type { CommunityCard } from "@/config/content";
+import { platformFromUrl, thumbnailFromUrl, type SocialPlatform } from "@/lib/social";
 
 /* ============================================================ shared types */
 
@@ -83,6 +84,27 @@ export type HeroSlideContent = {
   image: { src?: string; alt: string; focal?: string };
 };
 
+/**
+ * The seed wall, in the shape the section renders. The platform is derived
+ * rather than stored, so a seed entry is just a link, a caption and a picture.
+ */
+function seedSocialPosts(): SocialPost[] {
+  return seed.social.posts.map((post) => ({
+    url: post.url,
+    platform: platformFromUrl(post.url),
+    caption: post.caption,
+    image: { src: post.image.src, alt: post.image.alt },
+  }));
+}
+
+/** One card in the homepage social wall. */
+export type SocialPost = {
+  url: string;
+  platform: SocialPlatform;
+  caption: string;
+  image: ResolvedImage;
+};
+
 export type HomeContent = {
   hero: { slides: HeroSlideContent[] };
   impact: {
@@ -106,6 +128,11 @@ export type HomeContent = {
     items: { quote: string; name: string; role: string; company: string }[];
   };
   mission: MissionContent;
+  social: {
+    visible: boolean;
+    heading: Heading;
+    posts: SocialPost[];
+  };
   finalCta: FinalCtaContent;
   joinCta: {
     eyebrow: string;
@@ -177,6 +204,9 @@ type CmsHome = {
     cta?: string;
     success?: string;
   };
+  socialHeading?: CmsHeading;
+  socialPosts?: { url?: string; caption?: string; image?: CmsFigure }[];
+  socialVisible?: boolean;
 } | null;
 
 function missionFrom(
@@ -302,6 +332,33 @@ export async function getHomeContent(): Promise<HomeContent> {
     },
 
     mission: missionFrom(cms),
+
+    social: {
+      visible: pickBool(cms?.socialVisible, true),
+      heading: heading(cms?.socialHeading, {
+        eyebrow: seed.social.eyebrow,
+        headline: seed.social.headline,
+        intro: seed.social.intro,
+      }),
+      // A post with no link is not a card — it has nowhere to go.
+      posts: pickList(cms?.socialPosts, seedSocialPosts(), (post, i) => {
+        const fallback = seedSocialPosts()[i];
+        const url = pick(post.url, fallback?.url ?? "");
+        const image = resolveImage(post.image, {
+          src: thumbnailFromUrl(url) ?? fallback?.image.src ?? "",
+          alt: fallback?.image.alt ?? "",
+        });
+        return {
+          url,
+          platform: platformFromUrl(url),
+          caption: pick(post.caption, fallback?.caption ?? ""),
+          // A YouTube link carries its own still, so it needs no upload —
+          // but an upload, when there is one, still wins.
+          image: image.src ? image : { ...image, src: thumbnailFromUrl(url) ?? "" },
+        };
+      }).filter((post) => post.url && post.image.src),
+    },
+
     finalCta: finalCtaFrom(cms?.finalCta),
     joinCta: {
       eyebrow: pick(cms?.joinCta?.eyebrow, seed.joinCta.eyebrow),
