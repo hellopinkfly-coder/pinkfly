@@ -1,0 +1,37 @@
+# Pushes the site's shipped content into the Sanity dataset.
+#
+# Run this from the Actions tab (Run workflow) — it is never automatic, because
+# it overwrites the seeded documents and would undo editor changes to them.
+#
+# Requires one repository secret: SANITY_API_WRITE_TOKEN, a token with write
+# access to the project. Add it under Settings → Secrets and variables →
+# Actions. The project id and dataset default to the values in sanity/env.ts;
+# override them here only if you are seeding a different dataset.
+name: Seed Sanity
+
+on:
+  workflow_dispatch:
+    inputs:
+      dataset:
+        description: "Dataset to seed"
+        required: false
+        default: "production"
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Seed
+        env:
+          NEXT_PUBLIC_SANITY_DATASET: ${{ inputs.dataset }}
+          SANITY_API_WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+        run: npm run seed:sanity
