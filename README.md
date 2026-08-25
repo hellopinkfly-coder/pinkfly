@@ -68,7 +68,15 @@ Join Community, Events, the Knowledge Base, every article and event, every
 policy page, the header, the footer and each regional site. If a Pink Fly
 admin could reasonably want to change it, it is a field in the Studio.
 
-The Studio ships with the site at **`/studio`** — no separate deployment.
+The Studio ships with the site at **`/studio`** — no separate deployment. It
+also runs standalone for local editing:
+
+```bash
+npm run studio      # http://localhost:3333
+```
+
+A fresh dataset is empty until it is seeded — see *Seed content* below. Until
+then the site renders its shipped seed content and the Studio looks bare.
 
 ### What is editable
 
@@ -109,12 +117,31 @@ serve two purposes and neither is a second place to edit:
    a blank section. With `NEXT_PUBLIC_SANITY_PROJECT_ID` unset the whole site
    builds and runs from the seed.
 
+The project id and dataset default to the Pink Fly project, so in practice the
+only thing the seed needs is a write token in `.env.local`:
+
+```bash
+# .env.local (gitignored — never commit the token)
+SANITY_API_WRITE_TOKEN=sk...
+```
+
+```bash
+npm run seed:sanity
+```
+
+Both are overridable if you are pointing at a different project or dataset:
+
 ```bash
 NEXT_PUBLIC_SANITY_PROJECT_ID=xxx \
-NEXT_PUBLIC_SANITY_DATASET=production \
+NEXT_PUBLIC_SANITY_DATASET=staging \
 SANITY_API_WRITE_TOKEN=sk... \
 npm run seed:sanity
 ```
+
+Without a local checkout, the **Seed Sanity** workflow under the repository's
+Actions tab does the same thing — it needs the token as the
+`SANITY_API_WRITE_TOKEN` repository secret, and only ever runs when you start
+it by hand.
 
 Re-running restores the seed over those documents, so treat it as a reset, not
 a sync.
@@ -177,8 +204,10 @@ shoot spec; the fix is now an upload per image rather than a code change.
 ## Structure
 
 ```
-sanity.config.ts         Studio configuration (mounted at /studio)
 sanity/
+├── sanity.config.ts     Studio configuration (mounted at /studio, and the
+│                        config the standalone Studio runs on)
+├── sanity.cli.ts        Sanity CLI configuration
 ├── schemas/             documents (pages, collections) + reusable objects
 ├── structure.ts         Studio navigation — pages as singletons
 scripts/seed-sanity.ts   one-time import of the seed content
