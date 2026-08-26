@@ -88,6 +88,27 @@ export function pickBool(cms: boolean | null | undefined, seed: boolean): boolea
   return typeof cms === "boolean" ? cms : seed;
 }
 
+/**
+ * The seed list to fall back to.
+ *
+ * When Sanity answered (`live`), an absent or empty list is a real answer —
+ * every item was unpublished or removed — so there is nothing to render and
+ * the seed must not stand in for it. The seed is only for an outage.
+ */
+export function fallback<T>(items: T[], live: boolean): T[] {
+  return live ? [] : items;
+}
+
+/**
+ * The seed default for a section's visibility switch.
+ *
+ * When Sanity answered but the page document is gone, its sections have no
+ * content behind them and stay hidden rather than reverting to the seed.
+ */
+export function fallbackFlag(value: boolean, live: boolean, doc: unknown): boolean {
+  return live && !doc ? false : value;
+}
+
 /** Map a CMS list onto the seed's shape, keeping the seed when the list is empty. */
 export function pickList<C, T>(
   cms: C[] | null | undefined,

@@ -105,6 +105,30 @@ Components hold layout, styling, motion and interaction only — no editable
 copy. Each page component fetches its own document once and hands every
 section its slice.
 
+### Publishing, unpublishing and the cache
+
+Sanity is the source of truth whenever it answers. `cmsFetch` reports whether
+the query reached Sanity, and the loaders read that:
+
+| | |
+|---|---|
+| Sanity answers with a document | rendered |
+| Sanity answers "no such document" (unpublished or deleted) | **not rendered** — the list is empty, the section hides, a detail route 404s |
+| Sanity cannot be reached | seed content, so an outage never takes the site down |
+
+Those last two used to be indistinguishable, which is why an unpublished
+document kept appearing: a missing document looked like an outage, so the seed
+was rendered in its place. A reference to an unpublished document also
+dereferences to `null`, and those nulls are filtered out rather than rendered
+as empty cards.
+
+Freshness has two layers. Every query is cached by Next for 60 seconds and
+tagged `sanity`, which bounds staleness even if nothing else is configured.
+`POST /api/revalidate` purges that tag on demand, so a publish appears
+immediately — point a Sanity webhook at it and set `SANITY_REVALIDATE_SECRET`
+to the same secret. The route verifies the signature and refuses unsigned
+requests. Setup steps are in the file's own comment.
+
 ### Seed content and the fallback
 
 `src/config/*` and `src/data/*` still hold the site's shipped content. They

@@ -22,6 +22,8 @@ import {
   resolveImage,
   type CmsFigure,
   type ResolvedImage,
+  fallback,
+  fallbackFlag,
 } from "./resolve";
 import {
   homePageQuery,
@@ -43,6 +45,7 @@ import { executiveTeam, initiatives as seedInitiatives, type Initiative, type Te
 import { kbCategories } from "@/data/knowledge-base";
 import type { FrameShape } from "@/components/shared/ImageFrame";
 import type { CommunityCard } from "@/config/content";
+import { platformFromUrl, thumbnailFromUrl, type SocialPlatform } from "@/lib/social";
 
 /* ============================================================ shared types */
 
@@ -83,6 +86,27 @@ export type HeroSlideContent = {
   image: { src?: string; alt: string; focal?: string };
 };
 
+/**
+ * The seed wall, in the shape the section renders. The platform is derived
+ * rather than stored, so a seed entry is just a link, a caption and a picture.
+ */
+function seedSocialPosts(): SocialPost[] {
+  return seed.social.posts.map((post) => ({
+    url: post.url,
+    platform: platformFromUrl(post.url),
+    caption: post.caption,
+    image: { src: post.image.src, alt: post.image.alt },
+  }));
+}
+
+/** One card in the homepage social wall. */
+export type SocialPost = {
+  url: string;
+  platform: SocialPlatform;
+  caption: string;
+  image: ResolvedImage;
+};
+
 export type HomeContent = {
   hero: { slides: HeroSlideContent[] };
   impact: {
@@ -106,6 +130,11 @@ export type HomeContent = {
     items: { quote: string; name: string; role: string; company: string }[];
   };
   mission: MissionContent;
+  social: {
+    visible: boolean;
+    heading: Heading;
+    posts: SocialPost[];
+  };
   finalCta: FinalCtaContent;
   joinCta: {
     eyebrow: string;
@@ -154,7 +183,7 @@ type CmsHome = {
   }[];
   communityVisible?: boolean;
   testimonialsHeading?: CmsHeading;
-  testimonials?: { quote?: string; name?: string; role?: string; company?: string }[];
+  testimonials?: ({ quote?: string; name?: string; role?: string; company?: string } | null)[];
   testimonialsVisible?: boolean;
   missionHeading?: CmsHeading;
   missionBody?: string[];
@@ -177,6 +206,9 @@ type CmsHome = {
     cta?: string;
     success?: string;
   };
+  socialHeading?: CmsHeading;
+  socialPosts?: { url?: string; caption?: string; image?: CmsFigure }[];
+  socialVisible?: boolean;
 } | null;
 
 function missionFrom(
@@ -221,11 +253,11 @@ function seedHeroSlides(): HeroSlideContent[] {
 }
 
 export async function getHomeContent(): Promise<HomeContent> {
-  const cms = await cmsFetch<CmsHome>(homePageQuery);
+  const { live, data: cms } = await cmsFetch<CmsHome>(homePageQuery);
 
   return {
     hero: {
-      slides: pickList(cms?.heroSlides, seedHeroSlides(), (slide, i) => {
+      slides: pickList(cms?.heroSlides, fallback(seedHeroSlides(), live), (slide, i) => {
         const fallback = seedHeroSlides()[i];
         const image = resolveImage(slide.image, {
           src: fallback?.image.src ?? "",
@@ -251,12 +283,12 @@ export async function getHomeContent(): Promise<HomeContent> {
     },
 
     impact: {
-      visible: pickBool(cms?.impactVisible, true),
+      visible: pickBool(cms?.impactVisible, fallbackFlag(true, live, cms)),
       heading: heading(cms?.impactHeading, {
         eyebrow: seed.impact.eyebrow,
         headline: seed.impact.headline,
       }),
-      stats: pickList(cms?.impactStats, seed.impact.stats, (stat) => ({
+      stats: pickList(cms?.impactStats, fallback(seed.impact.stats, live), (stat) => ({
         icon: iconFor(stat.icon),
         value: stat.value ?? 0,
         suffix: stat.suffix ?? "",
@@ -265,13 +297,13 @@ export async function getHomeContent(): Promise<HomeContent> {
     },
 
     community: {
-      visible: pickBool(cms?.communityVisible, true),
+      visible: pickBool(cms?.communityVisible, fallbackFlag(true, live, cms)),
       heading: heading(cms?.communityHeading, {
         eyebrow: seed.community.eyebrow,
         headline: seed.community.headline,
         intro: seed.community.intro,
       }),
-      cards: pickList(cms?.communityCards, seed.community.cards as CommunityCard[], (card, i) => {
+      cards: pickList(cms?.communityCards, fallback(seed.community.cards as CommunityCard[], live), (card, i) => {
         const fallback = seed.community.cards[i];
         return {
           title: pick(card.title, fallback?.title ?? ""),
@@ -285,7 +317,7 @@ export async function getHomeContent(): Promise<HomeContent> {
     testimonials: {
       // The seed flag stays the default so nothing changes until an editor
       // flips the switch in Sanity.
-      visible: pickBool(cms?.testimonialsVisible, flags.testimonials),
+      visible: pickBool(cms?.testimonialsVisible, fallbackFlag(flags.testimonials, live, cms)),
       heading: heading(cms?.testimonialsHeading, {
         eyebrow: seed.testimonials.eyebrow,
         headline: seed.testimonials.headline,
@@ -293,7 +325,7 @@ export async function getHomeContent(): Promise<HomeContent> {
         // an editor removes it by clearing the field once real quotes land.
         intro: seed.testimonials.note,
       }),
-      items: pickList(cms?.testimonials, seed.testimonials.items, (item) => ({
+      items: pickList(published(cms?.testimonials), fallback(seed.testimonials.items, live), (item) => ({
         quote: item.quote ?? "",
         name: item.name ?? "",
         role: item.role ?? "",
@@ -302,6 +334,33 @@ export async function getHomeContent(): Promise<HomeContent> {
     },
 
     mission: missionFrom(cms),
+
+    social: {
+      visible: pickBool(cms?.socialVisible, fallbackFlag(true, live, cms)),
+      heading: heading(cms?.socialHeading, {
+        eyebrow: seed.social.eyebrow,
+        headline: seed.social.headline,
+        intro: seed.social.intro,
+      }),
+      // A post with no link is not a card — it has nowhere to go.
+      posts: pickList(cms?.socialPosts, fallback(seedSocialPosts(), live), (post, i) => {
+        const fallback = seedSocialPosts()[i];
+        const url = pick(post.url, fallback?.url ?? "");
+        const image = resolveImage(post.image, {
+          src: thumbnailFromUrl(url) ?? fallback?.image.src ?? "",
+          alt: fallback?.image.alt ?? "",
+        });
+        return {
+          url,
+          platform: platformFromUrl(url),
+          caption: pick(post.caption, fallback?.caption ?? ""),
+          // A YouTube link carries its own still, so it needs no upload —
+          // but an upload, when there is one, still wins.
+          image: image.src ? image : { ...image, src: thumbnailFromUrl(url) ?? "" },
+        };
+      }).filter((post) => post.url && post.image.src),
+    },
+
     finalCta: finalCtaFrom(cms?.finalCta),
     joinCta: {
       eyebrow: pick(cms?.joinCta?.eyebrow, seed.joinCta.eyebrow),
@@ -319,7 +378,7 @@ export async function getHomeContent(): Promise<HomeContent> {
  * not otherwise load the homepage document.
  */
 export async function getFinalCta(): Promise<FinalCtaContent> {
-  const cms = await cmsFetch<CmsHome>(homePageQuery);
+  const { live, data: cms } = await cmsFetch<CmsHome>(homePageQuery);
   return finalCtaFrom(cms?.finalCta);
 }
 
@@ -371,30 +430,43 @@ type CmsAbout = {
   guidelines?: { title?: string; description?: string }[];
   guidelinesVisible?: boolean;
   initiativesHeading?: CmsHeading;
-  initiatives?: {
+  initiatives?: ({
     slug?: string;
     title?: string;
     period?: string;
     summary?: string;
     highlights?: string[];
     image?: CmsFigure;
-  }[];
+  } | null)[];
   initiativesVisible?: boolean;
   teamHeading?: CmsHeading;
-  team?: {
+  team?: ({
     name?: string;
     role?: string;
     bio?: string;
     linkedin?: string;
     image?: CmsFigure;
-  }[];
+  } | null)[];
   teamVisible?: boolean;
   contactHeading?: CmsHeading;
   contactVisible?: boolean;
 } | null;
 
+/**
+ * A reference to an unpublished document dereferences to `null`, and those
+ * nulls stay in the array. Dropping them here is what keeps an unpublished
+ * team member or initiative from rendering as a blank card — and from
+ * crashing the render outright when the mapper reads a field off it.
+ */
+function published<T>(items: (T | null)[] | null | undefined): T[] | undefined {
+  if (!items) return undefined;
+  return items.filter((item): item is T => item !== null);
+}
+
 export async function getAboutContent(): Promise<AboutContent> {
-  const cms = await cmsFetch<CmsAbout>(aboutPageQuery);
+  const { live, data: cms } = await cmsFetch<CmsAbout>(aboutPageQuery);
+  const initiativeDocs = published(cms?.initiatives);
+  const teamDocs = published(cms?.team);
 
   return {
     hero: {
@@ -404,11 +476,11 @@ export async function getAboutContent(): Promise<AboutContent> {
     },
     mission: missionFrom(cms),
     banner: {
-      visible: pickBool(cms?.bannerVisible, true),
+      visible: pickBool(cms?.bannerVisible, fallbackFlag(true, live, cms)),
       image: resolveImage(cms?.bannerImage, seed.about.hero.image),
     },
     founder: {
-      visible: pickBool(cms?.founderVisible, true),
+      visible: pickBool(cms?.founderVisible, fallbackFlag(true, live, cms)),
       eyebrow: pick(cms?.founder?.eyebrow, seed.about.founder.eyebrow),
       name: pick(cms?.founder?.name, seed.about.founder.name),
       role: pick(cms?.founder?.role, seed.about.founder.role),
@@ -416,14 +488,14 @@ export async function getAboutContent(): Promise<AboutContent> {
       body: pick(cms?.founder?.body, seed.about.founder.body),
     },
     guidelines: {
-      visible: pickBool(cms?.guidelinesVisible, true),
+      visible: pickBool(cms?.guidelinesVisible, fallbackFlag(true, live, cms)),
       heading: heading(cms?.guidelinesHeading, {
         eyebrow: seed.about.guidelines.eyebrow,
         headline: seed.about.guidelines.headline,
         intro: seed.about.guidelines.intro,
       }),
       image: resolveImage(cms?.guidelinesImage, seed.about.guidelines.image),
-      items: pickList(cms?.guidelines, seed.about.guidelines.items, (item, i) => ({
+      items: pickList(cms?.guidelines, fallback(seed.about.guidelines.items, live), (item, i) => ({
         title: pick(item.title, seed.about.guidelines.items[i]?.title ?? ""),
         description: pick(
           item.description,
@@ -432,13 +504,13 @@ export async function getAboutContent(): Promise<AboutContent> {
       })),
     },
     initiatives: {
-      visible: pickBool(cms?.initiativesVisible, flags.initiatives),
+      visible: pickBool(cms?.initiativesVisible, fallbackFlag(flags.initiatives, live, cms)),
       heading: heading(cms?.initiativesHeading, {
         eyebrow: "Our work",
         headline: "Previous activities and initiatives.",
         intro: "A look at what the community has built so far.",
       }),
-      items: pickList(cms?.initiatives, seedInitiatives, (item, i) => ({
+      items: pickList(initiativeDocs, fallback(seedInitiatives, live), (item, i) => ({
         slug: pick(item.slug, seedInitiatives[i]?.slug ?? `initiative-${i}`),
         title: pick(item.title, seedInitiatives[i]?.title ?? ""),
         period: pick(item.period, seedInitiatives[i]?.period ?? ""),
@@ -448,13 +520,13 @@ export async function getAboutContent(): Promise<AboutContent> {
       })),
     },
     team: {
-      visible: pickBool(cms?.teamVisible, true),
+      visible: pickBool(cms?.teamVisible, fallbackFlag(true, live, cms)),
       heading: heading(cms?.teamHeading, {
         eyebrow: "The team",
         headline: "Executive team.",
         intro: "The people building Pink Fly.",
       }),
-      members: pickList(cms?.team, executiveTeam, (member, i) => ({
+      members: pickList(teamDocs, fallback(executiveTeam, live), (member, i) => ({
         name: pick(member.name, executiveTeam[i]?.name ?? ""),
         role: pick(member.role, executiveTeam[i]?.role ?? ""),
         bio: pick(member.bio, executiveTeam[i]?.bio),
@@ -467,7 +539,7 @@ export async function getAboutContent(): Promise<AboutContent> {
       })),
     },
     contact: {
-      visible: pickBool(cms?.contactVisible, true),
+      visible: pickBool(cms?.contactVisible, fallbackFlag(true, live, cms)),
       heading: heading(cms?.contactHeading, {
         eyebrow: seed.about.contact.eyebrow,
         headline: seed.about.contact.headline,
@@ -528,7 +600,7 @@ type CmsJoin = {
 } | null;
 
 export async function getJoinContent(): Promise<JoinContent> {
-  const cms = await cmsFetch<CmsJoin>(joinPageQuery);
+  const { live, data: cms } = await cmsFetch<CmsJoin>(joinPageQuery);
 
   return {
     hero: {
@@ -538,12 +610,12 @@ export async function getJoinContent(): Promise<JoinContent> {
       banner: resolveImage(cms?.bannerImage, joinImages.banner),
     },
     whyJoin: {
-      visible: pickBool(cms?.whyJoinVisible, true),
+      visible: pickBool(cms?.whyJoinVisible, fallbackFlag(true, live, cms)),
       heading: heading(cms?.whyJoinHeading, {
         eyebrow: seed.join.whyJoin.eyebrow,
         headline: seed.join.whyJoin.headline,
       }),
-      benefits: pickList(cms?.benefits, seed.join.whyJoin.benefits, (item, i) => ({
+      benefits: pickList(cms?.benefits, fallback(seed.join.whyJoin.benefits, live), (item, i) => ({
         title: pick(item.title, seed.join.whyJoin.benefits[i]?.title ?? ""),
         description: pick(
           item.description,
@@ -552,7 +624,7 @@ export async function getJoinContent(): Promise<JoinContent> {
       })),
     },
     editorial: {
-      visible: pickBool(cms?.editorialVisible, true),
+      visible: pickBool(cms?.editorialVisible, fallbackFlag(true, live, cms)),
       eyebrow: pick(cms?.editorial?.eyebrow, seed.join.editorial.eyebrow),
       headline: pick(cms?.editorial?.headline, seed.join.editorial.headline),
       body: pick(cms?.editorial?.body, seed.join.editorial.body),
@@ -567,8 +639,8 @@ export async function getJoinContent(): Promise<JoinContent> {
       steps: pick(cms?.cta?.steps, [...seed.join.cta.steps]),
     },
     faqs: {
-      visible: pickBool(cms?.faqsVisible, true),
-      items: pickList(cms?.faqs, seed.join.faqs, (item, i) => ({
+      visible: pickBool(cms?.faqsVisible, fallbackFlag(true, live, cms)),
+      items: pickList(cms?.faqs, fallback(seed.join.faqs, live), (item, i) => ({
         q: pick(item.question, seed.join.faqs[i]?.q ?? ""),
         a: pick(item.answer, seed.join.faqs[i]?.a ?? ""),
       })),
@@ -587,7 +659,7 @@ export type EventsPageContent = {
 };
 
 export async function getEventsPageContent(): Promise<EventsPageContent> {
-  const cms = await cmsFetch<{
+  const { live, data: cms } = await cmsFetch<{
     eyebrow?: string;
     title?: string;
     intro?: string;
@@ -619,7 +691,7 @@ export type KnowledgeBaseContent = {
 };
 
 export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
-  const cms = await cmsFetch<{
+  const { live, data: cms } = await cmsFetch<{
     eyebrow?: string;
     title?: string;
     intro?: string;
@@ -666,20 +738,27 @@ export type PolicyContent = {
   sections: { heading: string; body: string }[];
 };
 
-export async function getPolicyContent(slug: PolicySlug): Promise<PolicyContent> {
-  const all = await cmsFetch<
+export async function getPolicyContent(
+  slug: PolicySlug
+): Promise<PolicyContent | null> {
+  const { live, data: all } = await cmsFetch<
     { slug?: string; title?: string; intro?: string; sections?: { heading?: string; body?: string }[] }[]
   >(policyPagesQuery);
   const cms = all?.find((p) => p.slug === slug);
-  const fallback = policies[slug];
+  const seedPolicy = policies[slug];
+
+  // Sanity answered and this policy is not among the published documents:
+  // it has been unpublished or deleted, and the route 404s rather than
+  // quietly serving the shipped copy.
+  if (live && !cms) return null;
 
   return {
     slug,
-    title: pick(cms?.title, fallback.title),
-    intro: pick(cms?.intro, fallback.intro),
-    sections: pickList(cms?.sections, [...fallback.sections], (section, i) => ({
-      heading: pick(section.heading, fallback.sections[i]?.heading ?? ""),
-      body: pick(section.body, fallback.sections[i]?.body ?? ""),
+    title: pick(cms?.title, seedPolicy.title),
+    intro: pick(cms?.intro, seedPolicy.intro),
+    sections: pickList(cms?.sections, fallback([...seedPolicy.sections], live), (section, i) => ({
+      heading: pick(section.heading, seedPolicy.sections[i]?.heading ?? ""),
+      body: pick(section.body, seedPolicy.sections[i]?.body ?? ""),
     })),
   };
 }
@@ -718,7 +797,7 @@ function links(cms: CmsLinks, seedLinks: readonly { label: string; href: string 
 }
 
 export async function getSiteContent(): Promise<SiteContent> {
-  const cms = await cmsFetch<{
+  const { live, data: cms } = await cmsFetch<{
     name?: string;
     tagline?: string;
     description?: string;
@@ -783,7 +862,7 @@ export async function getSiteContent(): Promise<SiteContent> {
 export async function getPartners(): Promise<
   { name: string; url?: string; logo?: ResolvedImage }[]
 > {
-  const cms = await cmsFetch<{ name?: string; url?: string; logo?: CmsFigure }[]>(
+  const { live, data: cms } = await cmsFetch<{ name?: string; url?: string; logo?: CmsFigure }[]>(
     partnersQuery
   );
   return pickList(
@@ -820,7 +899,7 @@ export async function getPageSeo(
   page: keyof typeof SEO_QUERIES,
   seedSeo: PageSeo
 ): Promise<PageSeo> {
-  const doc = await cmsFetch<{ seo?: { title?: string; description?: string } } | null>(
+  const { data: doc } = await cmsFetch<{ seo?: { title?: string; description?: string } } | null>(
     SEO_QUERIES[page]
   );
   return {

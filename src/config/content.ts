@@ -12,6 +12,7 @@ import {
   heroSlides as heroPhotos,
   type StockImage,
 } from "@/config/images";
+import { siteConfig } from "@/config/site";
 import type { FrameShape } from "@/components/shared/ImageFrame";
 import {
   Users,
@@ -488,4 +489,43 @@ export const joinCta = {
   placeholder: "you@yourbrand.com",
   cta: "Join Pink Fly",
   success: "You're in. Welcome to Pink Fly.",
+};
+
+/* --------------------------------------------------------- Social wall -- */
+
+/**
+ * The homepage social wall: a row of link cards that open the real post.
+ *
+ * These four are placeholders pointing at the profiles themselves, so the
+ * section renders correctly from the first build. Replace them in Sanity with
+ * links to actual posts — paste the post URL, add the picture you posted, and
+ * the card is done. YouTube links bring their own still.
+ */
+export const social = {
+  eyebrow: "Follow along",
+  headline: "What Pink Fly is up to.",
+  intro:
+    "Posts, reels and sessions from the community. Tap any of them to open the post.",
+  posts: [
+    {
+      url: siteConfig.socials.instagram,
+      caption: "Pink Fly on Instagram",
+      image: communityImages.meetups,
+    },
+    {
+      url: siteConfig.socials.youtube,
+      caption: "Sessions and talks on YouTube",
+      image: communityImages.webinars,
+    },
+    {
+      url: siteConfig.socials.linkedin,
+      caption: "Pink Fly on LinkedIn",
+      image: communityImages.networking,
+    },
+    {
+      url: siteConfig.socials.twitter,
+      caption: "Pink Fly on X",
+      image: communityImages.coffeeChats,
+    },
+  ],
 };

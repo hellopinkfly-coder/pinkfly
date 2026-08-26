@@ -17,6 +17,7 @@ export const homePage = defineType({
     { name: "testimonials", title: "Testimonials" },
     { name: "mission", title: "Why Pink Fly exists" },
     { name: "join", title: "Join + newsletter" },
+    { name: "social", title: "Social wall" },
     { name: "seo", title: "SEO" },
   ],
   fields: [
@@ -135,6 +136,27 @@ export const homePage = defineType({
         defineField({ name: "cta", title: "Button text", type: "string" }),
         defineField({ name: "success", title: "Success message", type: "string" }),
       ],
+    }),
+
+    defineField({
+      name: "socialHeading",
+      title: "Heading",
+      type: "sectionHeading",
+      group: "social",
+    }),
+    defineField({
+      name: "socialPosts",
+      title: "Posts",
+      type: "array",
+      of: [{ type: "socialPost" }],
+      group: "social",
+      description:
+        "Paste the link to a post and it appears here, opening that post when clicked. Newest first — the order in this list is the order on the page.",
+    }),
+    defineField({
+      ...visibleField,
+      name: "socialVisible",
+      group: "social",
     }),
 
     defineField({ name: "seo", type: "seo", group: "seo" }),

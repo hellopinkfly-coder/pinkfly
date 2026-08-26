@@ -281,6 +281,21 @@ async function seed() {
       note: content.finalCta.note,
     },
     joinCta: { ...content.joinCta },
+    socialHeading: {
+      eyebrow: content.social.eyebrow,
+      headline: content.social.headline,
+      intro: content.social.intro,
+    },
+    socialPosts: keyed(
+      content.social.posts.map((post) => ({
+        _type: "socialPost",
+        url: post.url,
+        caption: post.caption,
+        image: figure(post.image),
+      })),
+      "social"
+    ),
+    socialVisible: true,
   });
 
   /* ----------------------------------------------------------- about page */

@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       // Images uploaded in the Sanity Studio.
       { protocol: "https", hostname: "cdn.sanity.io" },
+      // YouTube video stills, derived from a pasted link in the social wall.
+      { protocol: "https", hostname: "i.ytimg.com" },
       // Seed stock photography, and any external URL an editor pastes into a
       // figure's "External image URL" field. Uploads are preferred — see
       // src/config/images.ts and sanity/schemas/objects/figure.ts.
