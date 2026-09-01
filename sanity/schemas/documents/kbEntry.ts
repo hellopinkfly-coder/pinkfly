@@ -64,7 +64,7 @@ export const kbEntry = defineType({
       description:
         "Add paragraphs, and drop an image, a video or a file to download anywhere between them — they render in the order you arrange them here.",
       of: [
-        { type: "text", title: "Paragraph" },
+        { type: "paragraph" },
         { type: "figure", title: "Image" },
         { type: "videoEmbed" },
         { type: "fileAttachment" },
