@@ -40,7 +40,7 @@ import * as seed from "@/config/content";
 import { flags } from "@/config/flags";
 import { policies, type PolicySlug } from "@/config/policies";
 import { siteConfig, integrations, mainNav, knowledgeBaseNav, footerNav, policyNav } from "@/config/site";
-import { aboutImages, joinImages, eventImages, knowledgeImages, teamPlaceholder } from "@/config/images";
+import { aboutImages, joinImages, eventImages, teamPlaceholder } from "@/config/images";
 import { executiveTeam, initiatives as seedInitiatives, type Initiative, type TeamMember } from "@/data/team";
 import { kbCategories } from "@/data/knowledge-base";
 import type { FrameShape } from "@/components/shared/ImageFrame";
@@ -685,17 +685,8 @@ export async function getEventsPageContent(): Promise<EventsPageContent> {
 /* ====================================================== knowledge base page */
 
 export type KnowledgeBaseContent = {
-  hero: {
-    eyebrow: string;
-    title: string;
-    intro: string;
-    /**
-     * Absent when no banner image is set in Sanity, and the page then opens on
-     * its heading and copy. Editors control the banner entirely: clearing the
-     * image removes it, setting one brings it back, neither needing a deploy.
-     */
-    banner?: ResolvedImage;
-  };
+  // The page opens on its heading and copy — it carries no banner.
+  hero: { eyebrow: string; title: string; intro: string };
   categories: { id: string; title: string; intro: string; anchor: string }[];
   commentsClosedMessage: string;
 };
@@ -705,7 +696,6 @@ export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
     eyebrow?: string;
     title?: string;
     intro?: string;
-    bannerImage?: CmsFigure;
     categories?: { id?: string; title?: string; description?: string }[];
     commentsClosedMessage?: string;
   } | null>(knowledgeBasePageQuery);
@@ -715,13 +705,6 @@ export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
       eyebrow: pick(cms?.eyebrow, seed.knowledgeBase.hero.eyebrow),
       title: pick(cms?.title, seed.knowledgeBase.hero.title),
       intro: pick(cms?.intro, seed.knowledgeBase.hero.intro),
-      // No seed fallback while Sanity is answering: an editor who clears the
-      // banner means it gone, and falling back would put it straight back. The
-      // seed still covers an outage, so the page never renders bannerless
-      // just because Sanity was unreachable.
-      banner: live
-        ? resolveImage(cms?.bannerImage)
-        : knowledgeImages.banner,
     },
     // The anchor stays in code: it is a URL contract the navigation links to,
     // not copy, so an editor cannot break the in-page links by retitling a rail.

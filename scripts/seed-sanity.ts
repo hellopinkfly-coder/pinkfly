@@ -38,7 +38,7 @@ import {
   policyNav,
 } from "../src/config/site";
 import { regions } from "../src/config/regions";
-import { joinImages, eventImages, knowledgeImages } from "../src/config/images";
+import { joinImages, eventImages } from "../src/config/images";
 import { events } from "../src/data/events";
 import { kbEntries } from "../src/data/knowledge-base";
 import { executiveTeam, initiatives } from "../src/data/team";
@@ -424,7 +424,6 @@ async function seed() {
     eyebrow: content.knowledgeBase.hero.eyebrow,
     title: content.knowledgeBase.hero.title,
     intro: content.knowledgeBase.hero.intro,
-    bannerImage: figure(knowledgeImages.banner),
     categories: keyed(
       kbCategories.map((c) => ({
         _type: "kbCategoryRail",

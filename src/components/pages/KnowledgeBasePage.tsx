@@ -29,7 +29,6 @@ export async function KnowledgeBasePage({ region }: { region: Region }) {
         eyebrow={content.hero.eyebrow}
         title={content.hero.title}
         intro={content.hero.intro}
-        banner={content.hero.banner}
       />
 
       {content.categories.map((category, i) => (

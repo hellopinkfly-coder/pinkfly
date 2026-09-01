@@ -167,14 +167,5 @@ export const eventImages = {
   } satisfies StockImage,
 };
 
-/** Knowledge Base editorial imagery. */
-export const knowledgeImages = {
-  banner: {
-    src: u("1544717297-fa95b6ee9643", 2000),
-    alt: "A woman reading and taking notes at her desk",
-    label: "Knowledge Base",
-  } satisfies StockImage,
-};
-
 /** Neutral portrait for team members and speakers with no photo yet. */
 export const teamPlaceholder = u("1573496359142-b8d87734a5a2", 900);

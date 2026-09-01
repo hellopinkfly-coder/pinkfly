@@ -8,7 +8,6 @@ export const knowledgeBasePage = defineType({
     defineField({ name: "eyebrow", type: "string" }),
     defineField({ name: "title", title: "Page headline", type: "string", validation: (r) => r.required() }),
     defineField({ name: "intro", type: "text", rows: 2 }),
-    defineField({ name: "bannerImage", title: "Banner image", type: "figure" }),
     defineField({
       name: "categories",
       title: "Category rails",
