@@ -98,6 +98,49 @@ async function main() {
 
   const events = await client.fetch<number>(`count(*[_type == "event"])`);
   console.log(`\n=== events ===\n    published events       ${events}\n`);
+
+  await reportLivePage();
+}
+
+/**
+ * What the deployed site is actually serving.
+ *
+ * The dataset being right does not prove the page is right, and a developer
+ * sandbox often cannot reach the deployment. CI can, so the check runs here.
+ */
+async function reportLivePage() {
+  const base = process.env.SITE_URL ?? "https://pinkfly.vercel.app";
+  const url = `${base}/knowledge-base`;
+
+  let html: string;
+  try {
+    const response = await fetch(url, { headers: { "cache-control": "no-cache" } });
+    console.log(`\n=== live page: ${url} ===`);
+    console.log(`    HTTP ${response.status}`);
+    if (!response.ok) return;
+    html = await response.text();
+  } catch (error) {
+    console.log(`\n=== live page: ${url} ===`);
+    console.log(`  ⚠ could not be fetched: ${(error as Error).message}`);
+    return;
+  }
+
+  const title = /<title>([^<]*)<\/title>/.exec(html)?.[1] ?? "(none)";
+  console.log(`    <title>                ${title}`);
+
+  for (const heading of ["Recent Articles", "Business News", "Government Policies"]) {
+    const count = html.split(heading).length - 1;
+    console.log(
+      `${count === 0 ? "  ⚠ " : "    "}${heading.padEnd(22)} ${count} occurrence(s) in the HTML`
+    );
+  }
+
+  const links = new Set(
+    [...html.matchAll(/href="(?:\/[a-z]+)?\/knowledge-base\/[a-z-]+\/[a-z0-9-]+"/g)].map(
+      (match) => match[0]
+    )
+  );
+  console.log(`    article links          ${links.size}`);
 }
 
 main().catch((error) => {
