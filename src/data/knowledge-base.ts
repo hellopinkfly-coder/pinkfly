@@ -9,6 +9,25 @@
 
 export type KbCategory = "articles" | "business-news" | "government-policies";
 
+/** One block of an entry's body. */
+export type KbBlock =
+  | { kind: "paragraph"; text: string }
+  | { kind: "image"; src: string; alt: string; caption?: string }
+  | { kind: "video"; url: string; title?: string }
+  | {
+      kind: "file";
+      url: string;
+      title: string;
+      description?: string;
+      /** Human-readable size, e.g. "1.2 MB". Absent when Sanity did not report one. */
+      sizeLabel?: string;
+    };
+
+/** Plain copy as body blocks — what the seed and any string CMS body become. */
+export function paragraphs(lines: string[]): KbBlock[] {
+  return lines.map((text) => ({ kind: "paragraph", text }) as const);
+}
+
 export type KbEntry = {
   slug: string;
   category: KbCategory;
@@ -22,8 +41,12 @@ export type KbEntry = {
   image: { src: string; alt: string };
   /** Small label rendered in the corner of the card image. */
   tag: string;
-  /** Paragraphs of body copy. A CMS would supply rich text here instead. */
-  body: string[];
+  /**
+   * The article, in the order it reads. Paragraphs carry the copy; the other
+   * three blocks are what an editor drops between them in the Studio — a
+   * picture, a video, or a file to download.
+   */
+  body: KbBlock[];
   /** Business news only — the source the story is drawn from. */
   source?: { name: string; url?: string };
   /** Government policies only — the structured summary the wireframe shows. */
@@ -60,7 +83,7 @@ export const kbEntries: KbEntry[] = [
     readingTime: "10 min read",
     image: img("1554224155-6726b3ff858f", "A notebook with pricing calculations"),
     tag: "Playbook",
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
   {
     slug: "your-first-ten-hires",
@@ -73,7 +96,7 @@ export const kbEntries: KbEntry[] = [
     readingTime: "10 min read",
     image: img("1521737604893-d14cc237f11d", "A small team in a hiring conversation"),
     tag: "Hiring",
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
   {
     slug: "the-quiet-work-of-retention",
@@ -86,7 +109,7 @@ export const kbEntries: KbEntry[] = [
     readingTime: "8 min read",
     image: img("1460925895917-afdab827c52f", "An analytics dashboard on a laptop"),
     tag: "Growth",
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
   {
     slug: "raising-without-a-warm-intro",
@@ -99,7 +122,7 @@ export const kbEntries: KbEntry[] = [
     readingTime: "12 min read",
     image: img("1454165804606-c3d57bc86b40", "A founder preparing a pitch deck"),
     tag: "Funding",
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
   {
     slug: "building-in-a-slow-quarter",
@@ -112,7 +135,7 @@ export const kbEntries: KbEntry[] = [
     readingTime: "9 min read",
     image: img("1531482615713-2afd69097998", "A founder working late at a desk"),
     tag: "Community",
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
 
   /* ---------------------------------------------------------- Business news */
@@ -128,7 +151,7 @@ export const kbEntries: KbEntry[] = [
     image: img("1611974789855-9c2a0a7236a3", "A city skyline of business districts"),
     tag: "Funding",
     source: { name: "Placeholder source" },
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
   {
     slug: "small-business-lending-shifts",
@@ -142,7 +165,7 @@ export const kbEntries: KbEntry[] = [
     image: img("1454165833767-8ce7c7c0e6ec", "Financial charts on a desk"),
     tag: "Finance",
     source: { name: "Placeholder source" },
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
   {
     slug: "retail-and-d2c-outlook",
@@ -156,7 +179,7 @@ export const kbEntries: KbEntry[] = [
     image: img("1441986300917-64674bd600d8", "A retail storefront"),
     tag: "Retail",
     source: { name: "Placeholder source" },
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
   {
     slug: "ai-tooling-in-small-teams",
@@ -169,7 +192,7 @@ export const kbEntries: KbEntry[] = [
     image: img("1518770660439-4636190af475", "Circuit board close-up"),
     tag: "Technology",
     source: { name: "Placeholder source" },
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
 
   /* ---------------------------------------------------- Government policies */
@@ -195,7 +218,7 @@ export const kbEntries: KbEntry[] = [
         "Placeholder application window and process.",
       ],
     },
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
   {
     slug: "small-business-tax-changes",
@@ -219,7 +242,7 @@ export const kbEntries: KbEntry[] = [
         "Placeholder compliance deadline.",
       ],
     },
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
   {
     slug: "export-incentives-for-small-exporters",
@@ -243,7 +266,7 @@ export const kbEntries: KbEntry[] = [
         "Placeholder registration requirement.",
       ],
     },
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
   {
     slug: "digital-compliance-for-online-sellers",
@@ -267,7 +290,7 @@ export const kbEntries: KbEntry[] = [
         "Placeholder penalty for non-compliance.",
       ],
     },
-    body: PLACEHOLDER_BODY,
+    body: paragraphs(PLACEHOLDER_BODY),
   },
 ];
 

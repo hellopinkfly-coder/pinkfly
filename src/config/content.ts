@@ -153,9 +153,10 @@ export const trust = {
 /* --------------------------------------------------- Why PinkFly exists -- */
 export const mission = {
   eyebrow: "Why PinkFly exists",
-  headline: "The room every founder wishes she'd found sooner.",
+  headline: "Building a business is hard enough on your own.",
   body: [
-    "Too many women build brilliant businesses alone. PinkFly is the mentors, the peers and the network that changes that.",
+    "PinkFly connects women founders with mentors who have built companies before, peers at the same stage, and the introductions that are otherwise hard to come by.",
+    "Meetups, masterclasses and one-to-one conversations — in person across India, the UAE and the United States, and online wherever you are.",
   ],
   cta: { label: "Join the community", href: "/join" },
 };

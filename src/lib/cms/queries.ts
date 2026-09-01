@@ -97,7 +97,9 @@ export const regionsQuery = groq`*[_type == "region"]{
   seo ${SEO}
 }`;
 
-export const eventsQuery = groq`*[_type == "event"] | order(startsAt asc){
+// `hidden != true` rather than `!hidden`: the field is absent on every event
+// created before the toggle existed, and absent must mean visible.
+export const eventsQuery = groq`*[_type == "event" && hidden != true] | order(startsAt asc){
   "slug": slug.current, title, excerpt, regions, city, venue, type,
   startsAt, durationMinutes, format, price, registrationUrl,
   whoShouldJoin, whyJoin, description,
@@ -105,10 +107,20 @@ export const eventsQuery = groq`*[_type == "event"] | order(startsAt asc){
   image ${FIGURE}
 }`;
 
-export const kbEntriesQuery = groq`*[_type == "kbEntry"] | order(publishedAt desc){
+export const kbEntriesQuery = groq`*[_type == "kbEntry" && hidden != true] | order(publishedAt desc){
   "slug": slug.current, category, title, excerpt, tag,
   author, publishedAt, readingTime, body, source, policy,
-  image ${FIGURE}
+  image ${FIGURE},
+  // Files are the one body block needing a dereference: the image builder
+  // resolves a figure from its reference alone, but a download needs the
+  // asset's real URL, name and size. Keyed so the body can be stitched back
+  // together in order without projecting over the plain-text paragraphs.
+  "bodyFiles": body[_type == "fileAttachment"]{
+    _key, title, description,
+    "url": file.asset->url,
+    "name": file.asset->originalFilename,
+    "size": file.asset->size
+  }
 }`;
 
 export const partnersQuery = groq`*[_type == "partner"] | order(order asc){

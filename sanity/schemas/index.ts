@@ -5,6 +5,7 @@ import { cta } from "./objects/cta";
 import { navLink } from "./objects/navLink";
 import { seo } from "./objects/seo";
 import { socialPost } from "./objects/socialPost";
+import { videoEmbed, fileAttachment } from "./objects/articleBlocks";
 import { iconPicker } from "./objects/iconPicker";
 import {
   titledItem,
@@ -41,6 +42,8 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   faqItem,
   imageCard,
   socialPost,
+  videoEmbed,
+  fileAttachment,
 
   // Pages.
   homePage,

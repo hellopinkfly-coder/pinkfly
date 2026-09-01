@@ -6,6 +6,7 @@ import { Reveal } from "@/components/shared/Reveal";
 import { ImageFrame } from "@/components/shared/ImageFrame";
 import { Rail } from "@/components/shared/Rail";
 import { Badge } from "@/components/ui/badge";
+import { ArticleBody } from "@/features/knowledge-base/ArticleBody";
 import { ArticleCard } from "@/features/knowledge-base/ArticleCard";
 import { FinalCTA } from "@/features/final-cta/FinalCTA";
 import { flags } from "@/config/flags";
@@ -111,9 +112,7 @@ export async function EntryPage({
 
           <Reveal className="pf-prose mt-9 text-[var(--pf-text)]">
             <p className="text-[var(--pf-heading)]">{entry.excerpt}</p>
-            {entry.body.map((paragraph) => (
-              <p key={paragraph.slice(0, 32)}>{paragraph}</p>
-            ))}
+            <ArticleBody blocks={entry.body} />
           </Reveal>
 
           {entry.source && (

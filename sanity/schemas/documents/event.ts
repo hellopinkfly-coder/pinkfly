@@ -11,6 +11,15 @@ export const event = defineType({
     { name: "content", title: "Content" },
   ],
   fields: [
+    defineField({
+      name: "hidden",
+      title: "Hide from the website",
+      type: "boolean",
+      group: "main",
+      initialValue: false,
+      description:
+        "Keeps the event here but takes it off the site — it disappears from the events list and its page stops resolving. Uncheck to put it back.",
+    }),
     defineField({ name: "title", type: "string", group: "main", validation: (r) => r.required() }),
     defineField({
       name: "slug",
@@ -92,5 +101,12 @@ export const event = defineType({
       ],
     }),
   ],
-  preview: { select: { title: "title", subtitle: "startsAt", media: "image.asset" } },
+  preview: {
+    select: { title: "title", subtitle: "startsAt", media: "image.asset", hidden: "hidden" },
+    prepare: ({ title, subtitle, media, hidden }) => ({
+      title: hidden ? `${title} — hidden` : title,
+      subtitle,
+      media,
+    }),
+  },
 });
