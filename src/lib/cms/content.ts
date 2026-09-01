@@ -136,6 +136,9 @@ export type HomeContent = {
     posts: SocialPost[];
   };
   finalCta: FinalCtaContent;
+  /** The CTA band under the hero, and the join block at the foot of the page. */
+  finalCtaVisible: boolean;
+  joinCtaVisible: boolean;
   joinCta: {
     eyebrow: string;
     headline: string;
@@ -189,6 +192,8 @@ type CmsHome = {
   missionBody?: string[];
   missionCta?: CmsCta;
   missionVisible?: boolean;
+  finalCtaVisible?: boolean;
+  joinCtaVisible?: boolean;
   finalCta?: {
     eyebrow?: string;
     headline?: string;
@@ -362,6 +367,8 @@ export async function getHomeContent(): Promise<HomeContent> {
     },
 
     finalCta: finalCtaFrom(cms?.finalCta),
+    finalCtaVisible: pickBool(cms?.finalCtaVisible, fallbackFlag(true, live, cms)),
+    joinCtaVisible: pickBool(cms?.joinCtaVisible, fallbackFlag(true, live, cms)),
     joinCta: {
       eyebrow: pick(cms?.joinCta?.eyebrow, seed.joinCta.eyebrow),
       headline: pick(cms?.joinCta?.headline, seed.joinCta.headline),
@@ -687,7 +694,14 @@ export async function getEventsPageContent(): Promise<EventsPageContent> {
 export type KnowledgeBaseContent = {
   // The page opens on its heading and copy — it carries no banner.
   hero: { eyebrow: string; title: string; intro: string };
-  categories: { id: string; title: string; intro: string; anchor: string }[];
+  categories: {
+    id: string;
+    title: string;
+    intro: string;
+    anchor: string;
+    /** Set in Sanity to take the rail off the page without deleting it. */
+    hidden: boolean;
+  }[];
   commentsClosedMessage: string;
 };
 
@@ -696,7 +710,12 @@ export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
     eyebrow?: string;
     title?: string;
     intro?: string;
-    categories?: { id?: string; title?: string; description?: string }[];
+    categories?: {
+      id?: string;
+      title?: string;
+      description?: string;
+      hidden?: boolean;
+    }[];
     commentsClosedMessage?: string;
   } | null>(knowledgeBasePageQuery);
 
@@ -709,9 +728,12 @@ export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
     // The anchor stays in code: it is a URL contract the navigation links to,
     // not copy, so an editor cannot break the in-page links by retitling a rail.
     categories: pickList<
-      { id?: string; title?: string; description?: string },
-      { id: string; title: string; intro: string; anchor: string }
-    >(cms?.categories, [...kbCategories], (category, i) => {
+      { id?: string; title?: string; description?: string; hidden?: boolean },
+      { id: string; title: string; intro: string; anchor: string; hidden: boolean }
+    >(
+      cms?.categories,
+      kbCategories.map((c) => ({ ...c, hidden: false })),
+      (category, i) => {
       const fallback =
         kbCategories.find((c) => c.id === category.id) ?? kbCategories[i];
       return {
@@ -719,6 +741,7 @@ export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
         title: pick(category.title, fallback?.title ?? ""),
         intro: pick(category.description, fallback?.intro ?? ""),
         anchor: fallback?.anchor ?? "",
+        hidden: category.hidden === true,
       };
     }),
     commentsClosedMessage: pick(

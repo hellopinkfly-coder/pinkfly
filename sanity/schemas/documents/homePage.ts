@@ -101,6 +101,18 @@ export const homePage = defineType({
     defineField({ ...visibleField, name: "missionVisible", group: "mission" }),
 
     defineField({
+      ...visibleField,
+      name: "finalCtaVisible",
+      title: "Show the CTA band below the hero",
+      group: "hero",
+    }),
+    defineField({
+      ...visibleField,
+      name: "joinCtaVisible",
+      title: "Show the join block at the foot of the page",
+      group: "hero",
+    }),
+    defineField({
       name: "finalCta",
       title: "Your seat is waiting",
       type: "object",

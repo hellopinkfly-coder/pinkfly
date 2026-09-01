@@ -34,8 +34,22 @@ export const knowledgeBasePage = defineType({
             }),
             defineField({ name: "title", type: "string", validation: (r) => r.required() }),
             defineField({ name: "description", type: "text", rows: 2 }),
+            defineField({
+              name: "hidden",
+              title: "Hide this rail",
+              type: "boolean",
+              initialValue: false,
+              description:
+                "Takes the rail off the page without deleting it or its articles.",
+            }),
           ],
-          preview: { select: { title: "title", subtitle: "id" } },
+          preview: {
+            select: { title: "title", subtitle: "id", hidden: "hidden" },
+            prepare: ({ title, subtitle, hidden }) => ({
+              title: hidden ? `${title} — hidden` : title,
+              subtitle,
+            }),
+          },
         },
       ],
     }),

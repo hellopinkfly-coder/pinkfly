@@ -31,17 +31,19 @@ export async function KnowledgeBasePage({ region }: { region: Region }) {
         intro={content.hero.intro}
       />
 
-      {content.categories.map((category, i) => (
-        <CategoryRail
-          key={category.id}
-          id={category.anchor}
-          title={category.title}
-          intro={category.intro}
-          entries={entriesByCategory(entries, category.id as KbCategory)}
-          region={region}
-          muted={i % 2 === 1}
-        />
-      ))}
+      {content.categories
+        .filter((category) => !category.hidden)
+        .map((category, i) => (
+          <CategoryRail
+            key={category.id}
+            id={category.anchor}
+            title={category.title}
+            intro={category.intro}
+            entries={entriesByCategory(entries, category.id as KbCategory)}
+            region={region}
+            muted={i % 2 === 1}
+          />
+        ))}
 
       <FinalCTA
         region={region}

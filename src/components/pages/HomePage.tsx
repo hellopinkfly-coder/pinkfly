@@ -25,7 +25,9 @@ export async function HomePage({ region }: { region: Region }) {
   return (
     <>
       <Hero region={region} slides={content.hero.slides} />
-      <FinalCTA region={region} content={content.finalCta} formUrl={formUrl} />
+      {content.finalCtaVisible && (
+        <FinalCTA region={region} content={content.finalCta} formUrl={formUrl} />
+      )}
       {content.impact.visible && content.impact.stats.length > 0 && (
         <Impact content={content.impact} />
       )}
@@ -39,7 +41,7 @@ export async function HomePage({ region }: { region: Region }) {
         <Mission region={region} content={content.mission} />
       )}
       {content.social.visible && <SocialWall content={content.social} />}
-      <Join region={region} content={content.joinCta} />
+      {content.joinCtaVisible && <Join region={region} content={content.joinCta} />}
     </>
   );
 }
