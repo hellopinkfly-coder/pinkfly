@@ -524,7 +524,7 @@ export async function getAboutContent(): Promise<AboutContent> {
       heading: heading(cms?.teamHeading, {
         eyebrow: "The team",
         headline: "Executive team.",
-        intro: "The people building Pink Fly.",
+        intro: "The people building PinkFly.",
       }),
       members: pickList(teamDocs, fallback(executiveTeam, live), (member, i) => ({
         name: pick(member.name, executiveTeam[i]?.name ?? ""),
@@ -881,7 +881,7 @@ export async function getSiteContent(): Promise<SiteContent> {
       },
     },
     navCta: {
-      label: pick(cms?.navCta?.label, "Join Pink Fly"),
+      label: pick(cms?.navCta?.label, "Join PinkFly"),
       knowledgeLabel: pick(cms?.navCta?.knowledgeLabel, "Join Our Community"),
       href: pick(cms?.navCta?.href, "/join"),
     },

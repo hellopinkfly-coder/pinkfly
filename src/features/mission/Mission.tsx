@@ -6,7 +6,7 @@ import { regionPath, type Region } from "@/lib/region";
 import type { MissionContent } from "@/lib/cms/content";
 
 /**
- * "Why Pink Fly exists".
+ * "Why PinkFly exists".
  *
  * The text block is left-aligned but the block itself is centred in the
  * section and held to a comfortable measure, so the copy never stretches the

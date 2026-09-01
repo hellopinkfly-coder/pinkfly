@@ -13,7 +13,8 @@
     "seed:sanity": "tsx scripts/seed-sanity.ts",
     "typecheck": "tsc --noEmit",
     "report:sanity": "tsx scripts/report-sanity.ts",
-    "migrate:ids": "tsx scripts/migrate-doc-ids.ts"
+    "migrate:ids": "tsx scripts/migrate-doc-ids.ts",
+    "rename:brand": "tsx scripts/rename-brand.ts"
   },
   "dependencies": {
     "@sanity/client": "^7.26.2",

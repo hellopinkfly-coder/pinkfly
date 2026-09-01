@@ -1,6 +1,6 @@
-# Pink Fly
+# PinkFly
 
-Marketing site for Pink Fly — a community for ambitious women entrepreneurs.
+Marketing site for PinkFly — a community for ambitious women entrepreneurs.
 Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4, Framer Motion.
 
 ```bash
@@ -29,7 +29,7 @@ Join CTA              →  FinalCTA
 Impact                →  four figures, horizontal, one icon each
 How we gather         →  Community, four image cards
 Testimonials          →  hidden behind flags.testimonials
-Why Pink Fly exists   →  Mission
+Why PinkFly exists   →  Mission
 Join + newsletter     →  Join
 ```
 
@@ -65,7 +65,7 @@ regional URL stays crawlable.
 
 **Every page of this site is CMS-managed.** Not just the homepage: About,
 Join Community, Events, the Knowledge Base, every article and event, every
-policy page, the header, the footer and each regional site. If a Pink Fly
+policy page, the header, the footer and each regional site. If a PinkFly
 admin could reasonably want to change it, it is a field in the Studio.
 
 The Studio ships with the site at **`/studio`** — no separate deployment. It
@@ -141,7 +141,7 @@ serve two purposes and neither is a second place to edit:
    a blank section. With `NEXT_PUBLIC_SANITY_PROJECT_ID` unset the whole site
    builds and runs from the seed.
 
-The project id and dataset default to the Pink Fly project, so in practice the
+The project id and dataset default to the PinkFly project, so in practice the
 only thing the seed needs is a write token in `.env.local`:
 
 ```bash

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Pink Fly — Design Tokens
+   PinkFly — Design Tokens
    Typography: Space Mono for ALL text. Hierarchy comes from size + weight.
    Pink (#D8037D) is an ACCENT only. It is preserved as the primary highlight
    in both light and dark themes.
@@ -369,7 +369,7 @@
 }
 
 /* ==========================================================================
-   Pink Fly — brand mark and the flight motion language
+   PinkFly — brand mark and the flight motion language
    Everything lifts. One curve, three durations, no bounce.
    ========================================================================== */
 

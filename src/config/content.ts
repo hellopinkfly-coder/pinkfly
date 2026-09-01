@@ -66,7 +66,7 @@ export type HeroSlide = {
 export const hero = {
   slides: [
     {
-      eyebrow: "The Pink Fly community",
+      eyebrow: "The PinkFly community",
       headline: "For dreams that are ready to fly.",
       subhead:
         "A community for ambitious women, giving you the connections, confidence and support to take your ambition further.",
@@ -74,7 +74,7 @@ export const hero = {
         { icon: HeartHandshake, label: "Mentors who have already built it" },
         { icon: Network, label: "Introductions that open doors" },
       ],
-      cta: { label: "Take flight with Pink Fly", href: "/join" },
+      cta: { label: "Take flight with PinkFly", href: "/join" },
       image: {
         src: heroPhotos[0]?.src,
         alt: "A woman founder presenting to her team.",
@@ -89,7 +89,7 @@ export const hero = {
         { icon: Target, label: "What to build next, what to ignore" },
         { icon: Users, label: "Small circles that keep you moving" },
       ],
-      cta: { label: "Take flight with Pink Fly", href: "/join" },
+      cta: { label: "Take flight with PinkFly", href: "/join" },
       image: {
         src: heroPhotos[1]?.src,
         alt: "Two women in conversation across a desk.",
@@ -104,7 +104,7 @@ export const hero = {
         { icon: Calendar, label: "Curated gatherings across India" },
         { icon: Rocket, label: "Launches, live and in person" },
       ],
-      cta: { label: "Take flight with Pink Fly", href: "/join" },
+      cta: { label: "Take flight with PinkFly", href: "/join" },
       image: {
         src: heroPhotos[2]?.src,
         alt: "Women gathered in conversation at a community event.",
@@ -119,10 +119,10 @@ export const hero = {
         { icon: GraduationCap, label: "Masterclasses from women who shipped" },
         { icon: TrendingUp, label: "The policy changes that affect you" },
       ],
-      cta: { label: "Take flight with Pink Fly", href: "/join" },
+      cta: { label: "Take flight with PinkFly", href: "/join" },
       image: {
         src: heroPhotos[3]?.src,
-        alt: "A woman speaking to an audience at a Pink Fly event.",
+        alt: "A woman speaking to an audience at a PinkFly event.",
         focal: heroPhotos[3]?.focal,
       },
     },
@@ -138,7 +138,7 @@ export const hero = {
  */
 export const trust = {
   statement:
-    "Trusted by founders, mentors and partner organisations across the Pink Fly network.",
+    "Trusted by founders, mentors and partner organisations across the PinkFly network.",
   /** Placeholder names — replace with real logo assets before use. */
   logos: [
     "Partner name TBC",
@@ -150,12 +150,12 @@ export const trust = {
   ],
 };
 
-/* --------------------------------------------------- Why Pink Fly exists -- */
+/* --------------------------------------------------- Why PinkFly exists -- */
 export const mission = {
-  eyebrow: "Why Pink Fly exists",
+  eyebrow: "Why PinkFly exists",
   headline: "The room every founder wishes she'd found sooner.",
   body: [
-    "Too many women build brilliant businesses alone. Pink Fly is the mentors, the peers and the network that changes that.",
+    "Too many women build brilliant businesses alone. PinkFly is the mentors, the peers and the network that changes that.",
   ],
   cta: { label: "Join the community", href: "/join" },
 };
@@ -278,7 +278,7 @@ export const finalCta = {
 
 /* ------------------------------------------------------------ Newsletter -- */
 export const newsletter = {
-  headline: "Get the Pink Fly letter.",
+  headline: "Get the PinkFly letter.",
   subhead: "Stories, playbooks and invites. Never noise.",
   placeholder: "you@yourbrand.com",
   cta: "Subscribe",
@@ -287,7 +287,7 @@ export const newsletter = {
 /* ------------------------------------------------------------ About page -- */
 export const about = {
   hero: {
-    eyebrow: "About Pink Fly",
+    eyebrow: "About PinkFly",
     title: "A community built for the long climb.",
     intro:
       "Where ambitious women find the mentorship, network and belief to build.",
@@ -296,7 +296,7 @@ export const about = {
   founder: {
     eyebrow: "Founder story",
     name: "Anjan Prasad",
-    role: "Founder, Pink Fly",
+    role: "Founder, PinkFly",
     image: aboutImages.founder,
     body: [
       "The women building the most interesting businesses were almost always doing it alone. They had the ambition. What they lacked was a room.",
@@ -344,7 +344,7 @@ export const about = {
   },
   contact: {
     eyebrow: "Contact us",
-    headline: "Talk to the Pink Fly team.",
+    headline: "Talk to the PinkFly team.",
     intro: "Partnerships, press, speaking, or just a question. We read everything.",
   },
 };
@@ -428,11 +428,11 @@ export const join = {
     reassurance: "Free to join · Takes about a minute",
     successTitle: "You're in.",
     successBody:
-      "Welcome to Pink Fly. Your welcome pack is on its way, with the community links and the next events near you.",
+      "Welcome to PinkFly. Your welcome pack is on its way, with the community links and the next events near you.",
   },
   faqs: [
     {
-      q: "Who can join Pink Fly?",
+      q: "Who can join PinkFly?",
       a: "Any woman building, or seriously planning, a business. No revenue threshold, no stage requirement.",
     },
     {
@@ -487,8 +487,8 @@ export const joinCta = {
   headline: "Ready when you are.",
   body: "Founder stories, playbooks, and first access to every room we open.",
   placeholder: "you@yourbrand.com",
-  cta: "Join Pink Fly",
-  success: "You're in. Welcome to Pink Fly.",
+  cta: "Join PinkFly",
+  success: "You're in. Welcome to PinkFly.",
 };
 
 /* --------------------------------------------------------- Social wall -- */
@@ -503,13 +503,13 @@ export const joinCta = {
  */
 export const social = {
   eyebrow: "Follow along",
-  headline: "What Pink Fly is up to.",
+  headline: "What PinkFly is up to.",
   intro:
     "Posts, reels and sessions from the community. Tap any of them to open the post.",
   posts: [
     {
       url: siteConfig.socials.instagram,
-      caption: "Pink Fly on Instagram",
+      caption: "PinkFly on Instagram",
       image: communityImages.meetups,
     },
     {
@@ -519,12 +519,12 @@ export const social = {
     },
     {
       url: siteConfig.socials.linkedin,
-      caption: "Pink Fly on LinkedIn",
+      caption: "PinkFly on LinkedIn",
       image: communityImages.networking,
     },
     {
       url: siteConfig.socials.twitter,
-      caption: "Pink Fly on X",
+      caption: "PinkFly on X",
       image: communityImages.coffeeChats,
     },
   ],

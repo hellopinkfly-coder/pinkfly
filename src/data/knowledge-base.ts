@@ -281,7 +281,7 @@ export const kbCategories: {
   {
     id: "articles",
     title: "Recent Articles",
-    intro: "Playbooks and essays from the Pink Fly community.",
+    intro: "Playbooks and essays from the PinkFly community.",
     anchor: "recent-articles",
   },
   {

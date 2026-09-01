@@ -87,7 +87,7 @@ export function HeroCarousel({
       className="relative isolate flex min-h-[38rem] items-center overflow-hidden bg-[var(--pf-heading)] pt-28 pb-16 sm:min-h-[42rem] sm:pt-32 lg:min-h-[44rem]"
       role="group"
       aria-roledescription="carousel"
-      aria-label="Pink Fly"
+      aria-label="PinkFly"
       // Hold for KEYBOARD focus only. A mouse click on a control also focuses
       // it, and treating that as a hold left autoplay stopped for good after
       // the first click — `:focus-visible` is exactly the distinction.

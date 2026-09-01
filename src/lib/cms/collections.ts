@@ -4,7 +4,7 @@
  * Each loader returns the exact type the rest of the app already uses, so the
  * filtering, sorting and routing helpers in `src/data` keep working unchanged.
  * An empty CMS list means "not populated yet" and falls back to the seed data;
- * once Pink Fly adds a document in the Studio the whole list comes from there.
+ * once PinkFly adds a document in the Studio the whole list comes from there.
  */
 import { cmsFetch } from "./fetch";
 import { pick, resolveImage, type CmsFigure } from "./resolve";
@@ -100,7 +100,7 @@ export async function getKbEntries(): Promise<KbEntry[]> {
     title: e.title ?? "",
     excerpt: e.excerpt ?? "",
     author: {
-      name: e.author?.name ?? "Pink Fly",
+      name: e.author?.name ?? "PinkFly",
       role: e.author?.role ?? "Contributor",
     },
     publishedAt: e.publishedAt ?? "",

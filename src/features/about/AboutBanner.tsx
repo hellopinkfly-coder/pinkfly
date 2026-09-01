@@ -4,7 +4,7 @@ import { ImageFrame } from "@/components/shared/ImageFrame";
 import type { AboutContent } from "@/lib/cms/content";
 
 /**
- * The large contextual banner that sits between "Why Pink Fly exists" and
+ * The large contextual banner that sits between "Why PinkFly exists" and
  * the founder story, as the About wireframe lays it out. It breaks out past
  * the text container on wide screens so it reads as a full-bleed moment.
  */
