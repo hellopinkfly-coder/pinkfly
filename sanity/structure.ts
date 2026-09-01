@@ -15,6 +15,24 @@ const SINGLETONS: [type: string, title: string][] = [
   ["knowledgeBasePage", "Knowledge Base"],
 ];
 
+/**
+ * Collection lists hide the documents left behind by the id migration.
+ *
+ * Those ids contain a dot, which Sanity reads as a path — and documents in a
+ * path are private, so the site cannot see them. They were copied to
+ * dot-free ids; the originals remain only because deleting a document inside
+ * a path needs a higher-privileged token than the one that ran the migration.
+ * They are dead weight, not content, so the Studio does not list them.
+ */
+const VISIBLE = 'count(string::split(_id, ".")) == 1';
+
+const collection = (S: Parameters<StructureResolver>[0], type: string, title: string) =>
+  S.listItem()
+    .title(title)
+    .id(type)
+    .schemaType(type)
+    .child(S.documentTypeList(type).title(title).filter(`_type == $type && ${VISIBLE}`).params({ type }));
+
 export const structure: StructureResolver = (S) =>
   S.list()
     .title("Pink Fly")
@@ -34,15 +52,15 @@ export const structure: StructureResolver = (S) =>
             )
         ),
       S.divider(),
-      S.documentTypeListItem("event").title("Events"),
-      S.documentTypeListItem("kbEntry").title("Knowledge Base entries"),
-      S.documentTypeListItem("teamMember").title("Team"),
-      S.documentTypeListItem("testimonial").title("Testimonials"),
-      S.documentTypeListItem("initiative").title("Initiatives"),
+      collection(S, "event", "Events"),
+      collection(S, "kbEntry", "Knowledge Base entries"),
+      collection(S, "teamMember", "Team"),
+      collection(S, "testimonial", "Testimonials"),
+      collection(S, "initiative", "Initiatives"),
       S.documentTypeListItem("partner").title("Partners"),
       S.divider(),
-      S.documentTypeListItem("policyPage").title("Policy pages"),
-      S.documentTypeListItem("region").title("Regions"),
+      collection(S, "policyPage", "Policy pages"),
+      collection(S, "region", "Regions"),
       S.listItem()
         .title("Site settings")
         .id("siteSettings")

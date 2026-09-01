@@ -77,10 +77,18 @@ async function main() {
   const apply = process.argv.includes("--apply");
   const docs = await client.fetch<Doc[]>(`*[!(_id in path("drafts.**"))]`);
 
+  const existing = new Set(docs.map((doc) => doc._id));
   const moved = new Map<string, string>();
   for (const doc of docs) {
     if (doc._id.includes(".")) moved.set(doc._id, doc._id.replaceAll(".", "-"));
   }
+
+  // A re-run must not undo work: where the renamed document already exists it
+  // is the live one, possibly edited since, and copying the original over it
+  // would throw those edits away. Only the removal of the original is left.
+  const alreadyRenamed = new Set(
+    [...moved].filter(([, to]) => existing.has(to)).map(([from]) => from)
+  );
 
   if (moved.size === 0) {
     console.log("Nothing to migrate: no document id contains a dot.");
@@ -88,7 +96,10 @@ async function main() {
   }
 
   console.log(`${moved.size} document(s) to rename:\n`);
-  for (const [from, to] of moved) console.log(`    ${from}  →  ${to}`);
+  for (const [from, to] of moved) {
+    const note = alreadyRenamed.has(from) ? "  (copy exists — only the original is removed)" : "";
+    console.log(`    ${from}  →  ${to}${note}`);
+  }
 
   if (!apply) {
     console.log("\nDry run. Re-run with --apply to perform it.");
@@ -99,9 +110,11 @@ async function main() {
   // then delete the originals — Sanity refuses to delete a document that is
   // still referenced.
   let tx = client.transaction();
+  let created = 0;
   for (const doc of docs) {
     const newId = moved.get(doc._id);
-    if (!newId) continue;
+    if (!newId || alreadyRenamed.has(doc._id)) continue;
+    created += 1;
     const { _id, _rev, _createdAt, _updatedAt, ...rest } = doc;
     void _id;
     void _rev;
@@ -109,8 +122,12 @@ async function main() {
     void _updatedAt;
     tx = tx.createOrReplace({ _id: newId, ...repoint(rest, moved) } as never);
   }
-  await tx.commit();
-  console.log(`\nCreated ${moved.size} renamed document(s).`);
+  if (created > 0) {
+    await tx.commit();
+    console.log(`\nCreated ${created} renamed document(s).`);
+  } else {
+    console.log("\nEvery renamed document already exists; none re-created.");
+  }
 
   let refTx = client.transaction();
   let referrers = 0;
