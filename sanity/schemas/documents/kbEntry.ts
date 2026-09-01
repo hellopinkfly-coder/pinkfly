@@ -56,19 +56,51 @@ export const kbEntry = defineType({
     defineField({ name: "publishedAt", type: "date", group: "main", validation: (r) => r.required() }),
     defineField({ name: "readingTime", type: "string", group: "main" }),
 
+    /*
+     * The article reads in the order these fields appear: the opening
+     * paragraphs, then the image, then the paragraphs after it, then any video
+     * and downloads. Separate fields rather than one mixed list, because
+     * Sanity cannot mix plain text with objects in a single array — the
+     * attempt to do so left the editor unable to add anything at all.
+     */
     defineField({
       name: "body",
-      title: "Article body",
+      title: "Paragraphs — before the image",
       type: "array",
       group: "body",
+      of: [{ type: "text" }],
+      description: "The opening of the article. One paragraph per item.",
+    }),
+    defineField({
+      name: "inlineImage",
+      title: "Image — between the paragraphs",
+      type: "figure",
+      group: "body",
       description:
-        "Add paragraphs, and drop an image, a video or a file to download anywhere between them — they render in the order you arrange them here.",
-      of: [
-        { type: "paragraph" },
-        { type: "figure", title: "Image" },
-        { type: "videoEmbed" },
-        { type: "fileAttachment" },
-      ],
+        "Sits between the paragraphs above and those below. Leave empty for an article with no picture in the middle.",
+    }),
+    defineField({
+      name: "bodyAfterImage",
+      title: "Paragraphs — after the image",
+      type: "array",
+      group: "body",
+      of: [{ type: "text" }],
+      description: "The rest of the article, below the image.",
+    }),
+    defineField({
+      name: "video",
+      title: "Video",
+      type: "videoEmbed",
+      group: "body",
+      description: "Plays below the article. Leave empty for no video.",
+    }),
+    defineField({
+      name: "attachments",
+      title: "Files to download",
+      type: "array",
+      group: "body",
+      of: [{ type: "fileAttachment" }],
+      description: "PDFs or other documents, offered at the end of the article.",
     }),
 
     defineField({

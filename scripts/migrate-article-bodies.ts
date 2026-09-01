@@ -1,15 +1,15 @@
 /**
- * Convert Knowledge Base bodies from plain strings to paragraph objects.
+ * Put Knowledge Base bodies back to plain paragraphs.
  *
- * Sanity cannot mix primitive and object members in one array. While a body
- * held plain strings, the Studio could not offer Image, Video or File beside
- * them — the whole point of the richer body. Converting each string to a
- * `paragraph` object makes every member an object, and the "Add item" menu
- * then offers all four.
+ * An earlier attempt made each paragraph a `paragraph` object so that images
+ * could sit beside them in one array. Sanity cannot mix plain text with
+ * objects in an array, and the result was a body the Studio refused to render
+ * at all: "Item of type paragraph not valid for this list".
  *
- * The copy is carried across unchanged; only its container changes. Blocks
- * that are already objects are left exactly as they are, so this is safe to
- * re-run and does nothing on a second pass.
+ * The article is now assembled from separate fields — paragraphs, then an
+ * image, then more paragraphs — so `body` holds plain strings again. This
+ * unwraps any paragraph object back to its text, carrying the copy across
+ * unchanged and leaving strings alone, so it is safe to re-run.
  *
  *   npm run migrate:bodies            # dry run
  *   npm run migrate:bodies -- --apply # performs it
@@ -85,24 +85,24 @@ async function main() {
 
   for (const entry of entries) {
     const body = entry.body ?? [];
-    const strings = body.filter((block) => typeof block === "string").length;
-    if (strings === 0) continue;
+    const objects = body.filter((block) => typeof block === "object" && block).length;
+    if (objects === 0) continue;
 
-    const next = body.map((block, i) =>
+    const next = body.map((block) =>
       typeof block === "string"
-        ? { _key: `body-${i}`, _type: "paragraph", text: block }
-        : block
+        ? block
+        : ((block as { text?: string })?.text ?? "")
     );
 
     touched += 1;
     console.log(
-      `${entry._id}  ${strings} paragraph(s) → objects  (${entry.title ?? "untitled"})`
+      `${entry._id}  ${objects} object(s) → plain paragraphs  (${entry.title ?? "untitled"})`
     );
     transaction.patch(entry._id, { set: { body: next } });
   }
 
   if (touched === 0) {
-    console.log("Every body is already made of objects — nothing to migrate.");
+    console.log("Every body is already plain paragraphs — nothing to migrate.");
     return;
   }
 
@@ -112,7 +112,7 @@ async function main() {
   }
 
   await transaction.commit();
-  console.log(`\nConverted the bodies of ${touched} entr(ies).`);
+  console.log(`\nUnwrapped the bodies of ${touched} entr(ies).`);
 }
 
 main().catch((error) => {

@@ -7,34 +7,13 @@ import { defineField, defineType } from "sanity";
  * other image on the site — upload or external URL, alt text, optional caption
  * chip.
  *
- * A paragraph is an object rather than a plain string because Sanity cannot
- * mix primitive and object members in one array: with `text` alongside
- * `figure`, the Studio offers no way to add the pictures at all. Making every
- * member an object is what puts Image, Video and File into the "Add item"
- * menu.
+ * Each lives in its own field on the entry rather than in one mixed array,
+ * because Sanity cannot mix plain text with objects in a single array — the
+ * attempt to do so left the editor unable to add anything at all.
  *
  * They are ordinary array members, so the order in the Studio is the order on
  * the page: text, picture, more text, a PDF at the end, or any other mix.
  */
-
-export const paragraph = defineType({
-  name: "paragraph",
-  title: "Paragraph",
-  type: "object",
-  fields: [
-    defineField({
-      name: "text",
-      title: "Text",
-      type: "text",
-      rows: 5,
-      validation: (r) => r.required(),
-    }),
-  ],
-  preview: {
-    select: { text: "text" },
-    prepare: ({ text }) => ({ title: text || "Empty paragraph" }),
-  },
-});
 
 export const videoEmbed = defineType({
   name: "videoEmbed",
