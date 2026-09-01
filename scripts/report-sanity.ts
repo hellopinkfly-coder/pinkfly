@@ -101,6 +101,7 @@ async function main() {
 
   await reportAnonymous();
   await reportLivePage();
+  await reportFreshness();
 }
 
 /**
@@ -194,6 +195,108 @@ async function reportLivePage() {
     )
   );
   console.log(`    article links          ${links.size}`);
+}
+
+/**
+ * Is the deployment serving what Sanity currently holds?
+ *
+ * Reads a handful of fields anonymously — exactly as the site does — and then
+ * checks whether the live HTML contains them. A value present in Sanity but
+ * absent from the page means the deployment is serving a cached render, which
+ * is a caching problem rather than a content or permissions one.
+ *
+ * It also follows the first event and the first article through to their own
+ * detail pages, so a card that links nowhere shows up as an HTTP status.
+ */
+async function reportFreshness() {
+  const base = process.env.SITE_URL ?? "https://pinkfly.vercel.app";
+  const anon = createClient({
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "5t0hmzzq",
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
+    apiVersion: "2024-10-01",
+    useCdn: false,
+    perspective: "published",
+  });
+
+  console.log("\n=== is the live site serving what Sanity holds? ===");
+
+  const cms = await anon.fetch<{
+    siteTitle?: string;
+    homeSeoTitle?: string;
+    heroTitle?: string;
+    event?: { slug?: string; title?: string };
+    entry?: { category?: string; slug?: string; title?: string };
+  }>(`{
+    "siteTitle": *[_type == "siteSettings"][0].title,
+    "homeSeoTitle": *[_type == "homePage"][0].seo.title,
+    "heroTitle": *[_type == "homePage"][0].hero.title,
+    "event": *[_type == "event"][0]{ "slug": slug.current, title },
+    "entry": *[_type == "kbEntry"][0]{ category, "slug": slug.current, title }
+  }`);
+
+  const home = await get(base + "/");
+  console.log(`    GET /                  HTTP ${home.status}`);
+  console.log(`    <title> served         ${title(home.body)}`);
+
+  for (const [label, value] of [
+    ["siteSettings.title", cms.siteTitle],
+    ["homePage.seo.title", cms.homeSeoTitle],
+    ["homePage.hero.title", cms.heroTitle],
+  ] as const) {
+    if (!value) {
+      console.log(`    ${label.padEnd(22)} (not set in Sanity)`);
+      continue;
+    }
+    const present = home.body.includes(escapeHtml(value)) || home.body.includes(value);
+    console.log(
+      `${present ? "    " : "  ⚠ "}${label.padEnd(22)} ${present ? "on the page" : "NOT on the page"} — Sanity says ${JSON.stringify(value)}`
+    );
+  }
+
+  console.log("\n=== detail pages behind the cards ===");
+  if (cms.event?.slug) {
+    const res = await get(`${base}/events/${cms.event.slug}`);
+    console.log(
+      `${res.status === 200 ? "    " : "  ⚠ "}/events/${cms.event.slug} → HTTP ${res.status}` +
+        (res.status === 200 ? `  title ${title(res.body)}` : "")
+    );
+  } else {
+    console.log("  ⚠ no published event to follow");
+  }
+  if (cms.entry?.slug) {
+    const path = `/knowledge-base/${cms.entry.category}/${cms.entry.slug}`;
+    const res = await get(base + path);
+    console.log(
+      `${res.status === 200 ? "    " : "  ⚠ "}${path} → HTTP ${res.status}` +
+        (res.status === 200 ? `  title ${title(res.body)}` : "")
+    );
+  } else {
+    console.log("  ⚠ no published article to follow");
+  }
+  console.log("");
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
+function title(html: string) {
+  return /<title>([^<]*)<\/title>/.exec(html)?.[1] ?? "(none)";
+}
+
+async function get(url: string) {
+  try {
+    const response = await fetch(url, { headers: { "cache-control": "no-cache" } });
+    return { status: response.status, body: await response.text() };
+  } catch (error) {
+    console.log(`  ⚠ ${url} could not be fetched: ${(error as Error).message}`);
+    return { status: 0, body: "" };
+  }
 }
 
 main().catch((error) => {
