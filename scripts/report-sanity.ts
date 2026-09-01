@@ -125,6 +125,22 @@ async function reportLivePage() {
     return;
   }
 
+  // What the deployment itself says it is reading — the decisive number when
+  // the dataset is healthy but the page is empty.
+  try {
+    const status = await fetch(`${base}/api/cms-status`, {
+      headers: { "cache-control": "no-cache" },
+    });
+    if (status.ok) {
+      const body = (await status.json()) as Record<string, unknown>;
+      console.log(`    /api/cms-status        ${JSON.stringify(body)}`);
+    } else {
+      console.log(`    /api/cms-status        HTTP ${status.status} (not deployed yet?)`);
+    }
+  } catch (error) {
+    console.log(`    /api/cms-status        unreachable: ${(error as Error).message}`);
+  }
+
   const title = /<title>([^<]*)<\/title>/.exec(html)?.[1] ?? "(none)";
   console.log(`    <title>                ${title}`);
 

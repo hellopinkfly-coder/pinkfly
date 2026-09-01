@@ -13,6 +13,11 @@
  * Pink Fly project unless NEXT_PUBLIC_SANITY_PROJECT_ID / _DATASET say
  * otherwise.
  *
+ * Document ids never contain a dot. Sanity reads a dot as a path separator
+ * and documents inside a path are private — readable only with a token — so a
+ * dotted id is invisible to the site, which reads anonymously. That is not a
+ * cosmetic detail: it is the difference between an article appearing and not.
+ *
  * Safe to re-run: every document has a fixed id and is written with
  * `createOrReplace`, so a second run restores the seed rather than
  * duplicating it. It will overwrite editor changes to those documents —
@@ -140,7 +145,7 @@ async function seed() {
   /* -------------------------------------------------------------- regions */
   for (const region of Object.values(regions)) {
     docs.push({
-      _id: `region.${region.slug}`,
+      _id: `region-${region.slug}`,
       _type: "region",
       slug: region.slug,
       name: region.name,
@@ -163,14 +168,14 @@ async function seed() {
 
   /* --------------------------------------------------------- testimonials */
   const testimonialIds = content.testimonials.items.map((item, i) => {
-    const _id = `testimonial.${i}`;
+    const _id = `testimonial-${i}`;
     docs.push({ _id, _type: "testimonial", ...item });
     return { _key: `t-${i}`, _type: "reference", _ref: _id };
   });
 
   /* ------------------------------------------------------------------ team */
   const teamIds = executiveTeam.map((member, i) => {
-    const _id = `teamMember.${i}`;
+    const _id = `teamMember-${i}`;
     docs.push({
       _id,
       _type: "teamMember",
@@ -185,7 +190,7 @@ async function seed() {
 
   /* ----------------------------------------------------------- initiatives */
   const initiativeIds = initiatives.map((item, i) => {
-    const _id = `initiative.${item.slug}`;
+    const _id = `initiative-${item.slug}`;
     docs.push({
       _id,
       _type: "initiative",
@@ -436,7 +441,7 @@ async function seed() {
   /* -------------------------------------------------------- policy pages */
   for (const [slug, policy] of Object.entries(policies)) {
     docs.push({
-      _id: `policyPage.${slug}`,
+      _id: `policyPage-${slug}`,
       _type: "policyPage",
       slug,
       title: policy.title,
@@ -451,7 +456,7 @@ async function seed() {
   /* --------------------------------------------------------------- events */
   for (const event of events) {
     docs.push({
-      _id: `event.${event.slug}`,
+      _id: `event-${event.slug}`,
       _type: "event",
       title: event.title,
       slug: { _type: "slug", current: event.slug },
@@ -484,7 +489,7 @@ async function seed() {
   /* ------------------------------------------------ knowledge base entries */
   for (const entry of kbEntries) {
     docs.push({
-      _id: `kbEntry.${entry.category}.${entry.slug}`,
+      _id: `kbEntry-${entry.category}-${entry.slug}`,
       _type: "kbEntry",
       title: entry.title,
       slug: { _type: "slug", current: entry.slug },
