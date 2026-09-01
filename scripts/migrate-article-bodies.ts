@@ -56,7 +56,11 @@ type Entry = { _id: string; title?: string; body?: unknown[] };
 
 async function main() {
   const entries = await client.fetch<Entry[]>(
-    `*[_type == "kbEntry" && !(_id in path("*.*"))]{ _id, title, body }`
+    // Dot-free ids only — the dotted leftovers are private and the site never
+    // reads them. `string::split` rather than `path()`: the path form matched
+    // nothing here, which made an earlier run report "nothing to migrate" when
+    // in fact it had looked at no documents at all.
+    `*[_type == "kbEntry" && count(string::split(_id, ".")) == 1]{ _id, title, body }`
   );
 
   // What the bodies actually are, before deciding anything about them. A
