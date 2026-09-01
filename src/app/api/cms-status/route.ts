@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dataset, projectId, cmsEnabled } from "../../../../sanity/env";
-import { cmsFetch } from "@/lib/cms/fetch";
+import { cmsFetch, CMS_REVALIDATE_SECONDS } from "@/lib/cms/fetch";
 
 /**
  * What this deployment is actually reading from.
@@ -33,5 +33,12 @@ export async function GET() {
     // false means Sanity could not be reached and the site is on seed content.
     live,
     counts: data ?? null,
+    // How long a published change can take to appear. With the webhook
+    // configured a publish purges the cache immediately; without it the site
+    // picks the change up on its own, within the revalidate window.
+    revalidateWebhook: process.env.SANITY_REVALIDATE_SECRET
+      ? "configured"
+      : "not configured",
+    maxStaleSeconds: CMS_REVALIDATE_SECONDS,
   });
 }
