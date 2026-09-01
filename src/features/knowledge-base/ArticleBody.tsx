@@ -19,18 +19,21 @@ export function ArticleBody({ blocks }: { blocks: KbBlock[] }) {
 
           case "image":
             return (
-              <figure key={i} className="my-9">
+              // Wider than the text it sits in: the picture breaks out of the
+              // reading measure on larger screens, so it carries weight
+              // without the prose losing its line length.
+              <figure key={i} className="my-11 lg:-mx-16 xl:-mx-24">
                 <div className="relative aspect-[3/2] overflow-hidden rounded-[var(--pf-radius-lg)]">
                   <Image
                     src={block.src}
                     alt={block.alt}
                     fill
-                    sizes="(max-width: 768px) 92vw, 768px"
+                    sizes="(max-width: 1024px) 92vw, 1000px"
                     className="object-cover"
                   />
                 </div>
                 {block.caption && (
-                  <figcaption className="mt-3 text-sm text-[var(--pf-muted)]">
+                  <figcaption className="mt-3 text-sm text-[var(--pf-muted)] lg:mx-16 xl:mx-24">
                     {block.caption}
                   </figcaption>
                 )}
@@ -87,7 +90,7 @@ function VideoBlock({ url, title }: { url: string; title?: string }) {
   const embed = embedUrl(url);
 
   return (
-    <figure className="my-9">
+    <figure className="my-11 lg:-mx-16 xl:-mx-24">
       <div className="relative aspect-video overflow-hidden rounded-[var(--pf-radius-lg)] bg-black">
         {embed ? (
           <iframe
@@ -103,7 +106,7 @@ function VideoBlock({ url, title }: { url: string; title?: string }) {
         )}
       </div>
       {title && (
-        <figcaption className="mt-3 text-sm text-[var(--pf-muted)]">
+        <figcaption className="mt-3 text-sm text-[var(--pf-muted)] lg:mx-16 xl:mx-24">
           {title}
         </figcaption>
       )}

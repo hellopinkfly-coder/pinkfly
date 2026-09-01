@@ -71,7 +71,7 @@ export async function EntryPage({
 
       {/* Title, metadata, body */}
       <Section className="pt-10 sm:pt-14">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-4xl">
           <Reveal>
             <Link
               href={
@@ -140,7 +140,7 @@ export async function EntryPage({
 
       {/* Comment section */}
       <Section className="border-t border-[var(--pf-border)] bg-[var(--pf-surface)] py-12 sm:py-16">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-4xl">
           <Reveal className="flex flex-col items-start gap-3 rounded-[var(--pf-radius-xl)] border border-dashed border-[var(--pf-border-strong)] p-8 text-left">
             <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)]">
               <MessageCircle size={19} />
