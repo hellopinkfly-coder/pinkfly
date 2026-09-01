@@ -99,7 +99,44 @@ async function main() {
   const events = await client.fetch<number>(`count(*[_type == "event"])`);
   console.log(`\n=== events ===\n    published events       ${events}\n`);
 
+  await reportAnonymous();
   await reportLivePage();
+}
+
+/**
+ * The same counts read the way the site reads them: no token at all.
+ *
+ * A gap between this and the counts above is a read-permission problem in
+ * Sanity, not a bug in the site — the site has no token and never will.
+ */
+async function reportAnonymous() {
+  const anon = createClient({
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "5t0hmzzq",
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
+    apiVersion: "2024-10-01",
+    useCdn: false,
+    perspective: "published",
+  });
+
+  console.log("\n=== the same dataset read WITHOUT a token (as the site does) ===");
+  try {
+    const counts = await anon.fetch<Record<string, number>>(`{
+      "siteSettings": count(*[_type == "siteSettings"]),
+      "knowledgeBasePage": count(*[_type == "knowledgeBasePage"]),
+      "kbEntry": count(*[_type == "kbEntry"]),
+      "event": count(*[_type == "event"]),
+      "policyPage": count(*[_type == "policyPage"]),
+      "teamMember": count(*[_type == "teamMember"])
+    }`);
+    for (const [type, count] of Object.entries(counts)) {
+      console.log(`${count === 0 ? "  ⚠ " : "    "}${type.padEnd(20)} ${count}`);
+    }
+    const ids = await anon.fetch<string[]>(`*[_type == "kbEntry"][0...3]._id`);
+    console.log(`    sample kbEntry ids     ${JSON.stringify(ids)}`);
+  } catch (error) {
+    console.log(`  ⚠ anonymous read failed: ${(error as Error).message}`);
+    console.log("    That means the dataset is private. The site cannot read it at all.");
+  }
 }
 
 /**
