@@ -102,6 +102,7 @@ async function main() {
   await reportAnonymous();
   await reportLivePage();
   await reportFreshness();
+  await reportRecentEdits();
 }
 
 /**
@@ -274,6 +275,63 @@ async function reportFreshness() {
     console.log("  ⚠ no published article to follow");
   }
   console.log("");
+}
+
+/**
+ * What was edited most recently, and whether the site can see it.
+ *
+ * When an editor says a change is not showing, this is the first question:
+ * did the edit land on a document the site reads at all? Two ways it may not
+ * have. A dotted `_id` is a path, and Sanity keeps path documents private, so
+ * the site — which holds no token — cannot read it however published it is.
+ * And an edit that was saved but never published stays a draft, which the
+ * site is configured never to see.
+ */
+async function reportRecentEdits() {
+  const withToken = createClient({
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "5t0hmzzq",
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
+    apiVersion: "2024-10-01",
+    useCdn: false,
+    // `raw` so drafts are visible here — the point is to spot an edit that
+    // only exists as a draft, which the site by design cannot render.
+    perspective: "raw",
+    ...(process.env.SANITY_API_WRITE_TOKEN
+      ? { token: process.env.SANITY_API_WRITE_TOKEN }
+      : {}),
+  });
+
+  console.log("\n=== most recently edited documents ===");
+  console.log("(a dotted id or a drafts. prefix is invisible to the site)");
+
+  type Edited = { _id: string; _type: string; _updatedAt: string; label?: string };
+  let recent: Edited[];
+  try {
+    recent = await withToken.fetch<Edited[]>(
+      `*[!(_type match "system.*")] | order(_updatedAt desc) [0...12] {
+         _id, _type, _updatedAt, "label": coalesce(title, name, seo.title, slug.current)
+       }`
+    );
+  } catch (error) {
+    console.log(`  ⚠ could not be read: ${(error as Error).message}`);
+    return;
+  }
+
+  for (const doc of recent) {
+    const draft = doc._id.startsWith("drafts.");
+    const bare = doc._id.replace(/^drafts\./, "");
+    const pathScoped = bare.includes(".");
+    const problem = draft
+      ? "DRAFT — publish it"
+      : pathScoped
+        ? "dotted id — the site cannot read it"
+        : "";
+    console.log(
+      `${problem ? "  ⚠ " : "    "}${doc._updatedAt}  ${doc._type.padEnd(18)} ${doc._id}` +
+        (doc.label ? `\n        ${doc.label}` : "") +
+        (problem ? `\n        ${problem}` : "")
+    );
+  }
 }
 
 function escapeHtml(value: string) {
