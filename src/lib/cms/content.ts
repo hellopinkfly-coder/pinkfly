@@ -735,6 +735,7 @@ export type PolicyContent = {
   slug: string;
   title: string;
   intro: string;
+  seo: PageSeo;
   sections: { heading: string; body: string }[];
 };
 
@@ -742,7 +743,13 @@ export async function getPolicyContent(
   slug: PolicySlug
 ): Promise<PolicyContent | null> {
   const { live, data: all } = await cmsFetch<
-    { slug?: string; title?: string; intro?: string; sections?: { heading?: string; body?: string }[] }[]
+    {
+      slug?: string;
+      title?: string;
+      intro?: string;
+      sections?: { heading?: string; body?: string }[];
+      seo?: { title?: string; description?: string; ogImage?: CmsFigure };
+    }[]
   >(policyPagesQuery);
   const cms = all?.find((p) => p.slug === slug);
   const seedPolicy = policies[slug];
@@ -752,10 +759,20 @@ export async function getPolicyContent(
   // quietly serving the shipped copy.
   if (live && !cms) return null;
 
+  const title = pick(cms?.title, seedPolicy.title);
+  const intro = pick(cms?.intro, seedPolicy.intro);
+
   return {
     slug,
-    title: pick(cms?.title, seedPolicy.title),
-    intro: pick(cms?.intro, seedPolicy.intro),
+    title,
+    intro,
+    // The page's own SEO tab wins; otherwise the meta title follows the
+    // heading an editor set, rather than the copy shipped in the repo.
+    seo: {
+      title: pick(cms?.seo?.title, title),
+      description: pick(cms?.seo?.description, intro),
+      image: resolveImage(cms?.seo?.ogImage)?.src ?? (await getDefaultOgImage()),
+    },
     sections: pickList(cms?.sections, fallback([...seedPolicy.sections], live), (section, i) => ({
       heading: pick(section.heading, seedPolicy.sections[i]?.heading ?? ""),
       body: pick(section.body, seedPolicy.sections[i]?.body ?? ""),
@@ -878,7 +895,16 @@ export async function getPartners(): Promise<
 
 /* =============================================================== page SEO */
 
-export type PageSeo = { title: string; description: string };
+export type PageSeo = {
+  title: string;
+  description: string;
+  /**
+   * The share image, resolved to a URL. A page's own SEO image wins; the
+   * site-wide default in Site settings stands in when it has none, and the
+   * shipped logo card when neither is set.
+   */
+  image?: string;
+};
 
 const SEO_QUERIES: Record<string, string> = {
   home: homePageQuery,
@@ -899,11 +925,25 @@ export async function getPageSeo(
   page: keyof typeof SEO_QUERIES,
   seedSeo: PageSeo
 ): Promise<PageSeo> {
-  const { data: doc } = await cmsFetch<{ seo?: { title?: string; description?: string } } | null>(
-    SEO_QUERIES[page]
-  );
+  const { data: doc } = await cmsFetch<{
+    seo?: { title?: string; description?: string; ogImage?: CmsFigure };
+  } | null>(SEO_QUERIES[page]);
+
   return {
     title: pick(doc?.seo?.title, seedSeo.title),
     description: pick(doc?.seo?.description, seedSeo.description),
+    image: resolveImage(doc?.seo?.ogImage)?.src ?? (await getDefaultOgImage()),
   };
+}
+
+/**
+ * The site-wide share image from Site settings, used by any page that has not
+ * set its own. Undefined falls through to the shipped logo card in
+ * `src/lib/seo.ts`.
+ */
+export async function getDefaultOgImage(): Promise<string | undefined> {
+  const { data } = await cmsFetch<{ defaultOgImage?: CmsFigure } | null>(
+    siteSettingsQuery
+  );
+  return resolveImage(data?.defaultOgImage)?.src;
 }

@@ -9,6 +9,7 @@ import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion, isRegionSlug } from "@/lib/region";
 import { regionalSlugs } from "@/config/regions";
 import { buildHomeMetadata } from "@/lib/seo";
+import { getPageSeo } from "@/lib/cms/content";
 
 type Params = { params: Promise<{ region: string }> };
 
@@ -19,7 +20,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Params) {
   const { region: slug } = await params;
   if (!isRegionSlug(slug)) return {};
-  return buildHomeMetadata(await getRegionContent(getRegion(slug)));
+  const region = await getRegionContent(getRegion(slug));
+  return buildHomeMetadata(region, await getPageSeo("home", region.seo));
 }
 
 export default async function Page({ params }: Params) {
