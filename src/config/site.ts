@@ -69,10 +69,6 @@ export const footerNav = {
     links: [
       { label: "About Us", href: "/about" },
       { label: "Contact Us", href: "/about#contact" },
-      {
-        label: "Community Guidelines",
-        href: "/policies/community-guidelines",
-      },
       { label: "Privacy Policy", href: "/policies/privacy" },
     ],
   },
