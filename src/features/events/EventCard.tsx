@@ -14,7 +14,15 @@ type EventCardProps = {
   className?: string;
 };
 
-/** Event card — image, type, date, location, and a details/register pair. */
+/**
+ * Event card — image, type, date, location, and a details/register pair.
+ *
+ * The whole card opens the event. The title link carries an absolutely
+ * positioned pseudo-element that covers the card, so a click anywhere on it
+ * lands on the event page while the markup stays a single anchor per
+ * destination; the Register link sits above that overlay so it keeps its own
+ * target. Nothing about the card's appearance changes.
+ */
 export function EventCard({
   event,
   region,
@@ -27,7 +35,7 @@ export function EventCard({
   return (
     <article
       className={cn(
-        "group flex h-full flex-col overflow-hidden rounded-[var(--pf-radius-xl)] border border-[var(--pf-border)] bg-[var(--pf-surface)] shadow-[var(--pf-shadow-sm)] transition-all duration-300 ease-[var(--pf-ease)] hover:-translate-y-1 hover:border-[var(--pf-accent)]/30 hover:shadow-[var(--pf-shadow-md)]",
+        "group relative flex h-full flex-col overflow-hidden rounded-[var(--pf-radius-xl)] border border-[var(--pf-border)] bg-[var(--pf-surface)] shadow-[var(--pf-shadow-sm)] transition-all duration-300 ease-[var(--pf-ease)] hover:-translate-y-1 hover:border-[var(--pf-accent)]/30 hover:shadow-[var(--pf-shadow-md)]",
         layout === "rail" && "w-[280px] shrink-0 sm:w-[320px]",
         className
       )}
@@ -49,7 +57,10 @@ export function EventCard({
         </div>
 
         <h3 className="mt-4 text-lg leading-snug transition-colors duration-300 group-hover:text-[var(--pf-accent)]">
-          <Link href={href} className="focus-visible:outline-none">
+          <Link
+            href={href}
+            className="after:absolute after:inset-0 after:rounded-[var(--pf-radius-xl)] after:content-[''] focus-visible:outline-none"
+          >
             {event.title}
           </Link>
         </h3>
@@ -72,11 +83,11 @@ export function EventCard({
         <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[var(--pf-border)] pt-5 text-sm">
           <Link
             href={href}
-            className="font-bold text-[var(--pf-heading)] transition-colors hover:text-[var(--pf-accent)]"
+            className="relative z-10 font-bold text-[var(--pf-heading)] transition-colors hover:text-[var(--pf-accent)]"
           >
             Details
           </Link>
-          <Link href={`${href}#register`} className="pf-link font-bold">
+          <Link href={`${href}#register`} className="pf-link relative z-10 font-bold">
             Register
           </Link>
         </div>
