@@ -254,6 +254,21 @@ async function reportFreshness() {
     );
   }
 
+  const events = await anon.fetch<{ title: string; slug: string }[]>(
+    `*[_type == "event"] | order(startsAt asc) { title, "slug": slug.current }`
+  );
+  console.log("\n=== every published event title, against the live events page ===");
+  const eventsPage = await get(base + "/events");
+  console.log(`    GET /events            HTTP ${eventsPage.status}`);
+  for (const event of events) {
+    const present =
+      eventsPage.body.includes(escapeHtml(event.title)) ||
+      eventsPage.body.includes(event.title);
+    console.log(
+      `${present ? "    " : "  ⚠ "}${present ? "on the page    " : "NOT on the page"} ${event.title}`
+    );
+  }
+
   console.log("\n=== detail pages behind the cards ===");
   if (cms.event?.slug) {
     const res = await get(`${base}/events/${cms.event.slug}`);
