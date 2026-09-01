@@ -7,6 +7,11 @@ name: Sanity report
 
 on:
   workflow_dispatch:
+    inputs:
+      site_url:
+        description: "Site to check (defaults to production)"
+        required: false
+        default: "https://pinkfly.vercel.app"
 
 jobs:
   report:
@@ -21,4 +26,5 @@ jobs:
       - name: Report
         env:
           SANITY_API_WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+          SITE_URL: ${{ inputs.site_url }}
         run: npm run report:sanity

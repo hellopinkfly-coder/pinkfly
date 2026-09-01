@@ -8,6 +8,7 @@ import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion, isRegionSlug } from "@/lib/region";
 import { regionalSlugs } from "@/config/regions";
 import { buildMetadata } from "@/lib/seo";
+import { getPolicyContent } from "@/lib/cms/content";
 
 type Params = { params: Promise<{ region: string; slug: string }> };
 
@@ -22,12 +23,12 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Params) {
   const { region: regionSlug, slug } = await params;
   if (!isRegionSlug(regionSlug) || !isPolicySlug(slug)) return {};
-  const policy = policies[slug];
+  const policy = await getPolicyContent(slug);
+  if (!policy) return {};
   return buildMetadata({
     region: await getRegionContent(getRegion(regionSlug)),
     path: `/policies/${slug}`,
-    title: policy.title,
-    description: policy.intro,
+    ...policy.seo,
   });
 }
 

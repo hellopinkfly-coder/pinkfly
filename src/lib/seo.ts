@@ -37,6 +37,7 @@ export function buildMetadata({
   path,
   title,
   description,
+  image,
   images,
   exact = false,
 }: {
@@ -46,6 +47,8 @@ export function buildMetadata({
   /** Page title WITHOUT the region suffix — one is added for regional sites. */
   title: string;
   description: string;
+  /** Share image for this page — an editor's per-page choice in Sanity. */
+  image?: string;
   images?: string[];
   /** Skip the automatic region suffix — the title already names the region. */
   exact?: boolean;
@@ -70,24 +73,30 @@ export function buildMetadata({
       title: suffixed,
       description,
       locale: region.locale.replace("-", "_"),
-      images: images ?? [DEFAULT_OG_IMAGE],
+      images: images ?? [image ?? DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title: suffixed,
       description,
-      images: images ?? [DEFAULT_OG_IMAGE],
+      images: images ?? [image ?? DEFAULT_OG_IMAGE],
     },
   };
 }
 
 /** Metadata for a region's homepage, which uses the region's own SEO copy. */
-export function buildHomeMetadata(region: Region): Metadata {
+export function buildHomeMetadata(
+  region: Region,
+  seo?: { title: string; description: string; image?: string }
+): Metadata {
   return buildMetadata({
     region,
     path: "/",
-    title: region.seo.title,
-    description: region.seo.description,
+    // The SEO tab on the Homepage document wins when an editor fills it in;
+    // otherwise each regional homepage keeps its own title from the region.
+    title: seo?.title ?? region.seo.title,
+    description: seo?.description ?? region.seo.description,
+    image: seo?.image,
     exact: true,
   });
 }
