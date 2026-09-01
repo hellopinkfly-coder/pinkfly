@@ -30,7 +30,7 @@ export async function HomePage({ region }: { region: Region }) {
         <Impact content={content.impact} />
       )}
       {content.community.visible && content.community.cards.length > 0 && (
-        <Community content={content.community} />
+        <Community content={content.community} region={region} />
       )}
       {content.testimonials.visible && (
         <Testimonials content={content.testimonials} />
