@@ -56,8 +56,29 @@ type Entry = { _id: string; title?: string; body?: unknown[] };
 
 async function main() {
   const entries = await client.fetch<Entry[]>(
-    `*[_type == "kbEntry" && !(_id in path("*.*"))]{ _id, title, body }`
+    // Dot-free ids only — the dotted leftovers are private and the site never
+    // reads them. `string::split` rather than `path()`: the path form matched
+    // nothing here, which made an earlier run report "nothing to migrate" when
+    // in fact it had looked at no documents at all.
+    `*[_type == "kbEntry" && count(string::split(_id, ".")) == 1]{ _id, title, body }`
   );
+
+  // What the bodies actually are, before deciding anything about them. A
+  // migration that reports "nothing to do" is only reassuring if you can see
+  // the shape it looked at.
+  console.log(`${entries.length} entr(ies) the site can read\n`);
+  for (const entry of entries.slice(0, 3)) {
+    const body = entry.body ?? [];
+    const shapes = body.map((block) =>
+      typeof block === "string"
+        ? "string"
+        : `${(block as { _type?: string })?._type ?? "object without _type"}`
+    );
+    console.log(`${entry._id}`);
+    console.log(`    ${body.length} block(s): ${JSON.stringify(shapes)}`);
+    console.log(`    first block: ${JSON.stringify(body[0])?.slice(0, 220)}`);
+  }
+  console.log("");
 
   const transaction = client.transaction();
   let touched = 0;
