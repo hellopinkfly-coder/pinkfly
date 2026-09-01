@@ -12,7 +12,8 @@
     "lint": "next lint",
     "seed:sanity": "tsx scripts/seed-sanity.ts",
     "typecheck": "tsc --noEmit",
-    "report:sanity": "tsx scripts/report-sanity.ts"
+    "report:sanity": "tsx scripts/report-sanity.ts",
+    "migrate:ids": "tsx scripts/migrate-doc-ids.ts"
   },
   "dependencies": {
     "@sanity/client": "^7.26.2",

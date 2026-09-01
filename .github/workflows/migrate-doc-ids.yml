@@ -1,0 +1,34 @@
+# One-time migration: rename documents whose id contains a dot.
+#
+# Sanity reads a dot as a path separator and documents inside a path are
+# private, so the site — which reads anonymously — cannot see them. This
+# renames them to the same id with dashes, keeping their current content
+# including Studio edits, and repoints references before deleting the old
+# documents.
+#
+# Run the dry run first (apply = false, the default) and read the plan.
+name: Migrate document ids
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Perform the migration (unchecked = dry run)"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Migrate
+        env:
+          SANITY_API_WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+        run: npm run migrate:ids ${{ inputs.apply && '-- --apply' || '' }}
