@@ -12,7 +12,7 @@ import type { Region } from "@/lib/region";
 /**
  * The homepage, in the order the wireframe sets out:
  * hero carousel → join CTA → impact → how we gather →
- * testimonials → why Pink Fly → social wall → join + newsletter.
+ * testimonials → why PinkFly → social wall → join + newsletter.
  *
  * One component serves every region; only the `region` object changes.
  * All copy, imagery and section visibility come from Sanity — this file
@@ -30,7 +30,7 @@ export async function HomePage({ region }: { region: Region }) {
         <Impact content={content.impact} />
       )}
       {content.community.visible && content.community.cards.length > 0 && (
-        <Community content={content.community} />
+        <Community content={content.community} region={region} />
       )}
       {content.testimonials.visible && (
         <Testimonials content={content.testimonials} />

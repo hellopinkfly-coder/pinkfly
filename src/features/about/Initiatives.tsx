@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import type { AboutContent } from "@/lib/cms/content";
 
 /**
- * Previous Pink Fly activities and initiatives.
+ * Previous PinkFly activities and initiatives.
  *
  * HIDDEN FOR NOW via `flags.initiatives` in `src/config/flags.ts`. The
  * component and its data are complete — flip the flag to publish it. Do not
@@ -30,7 +30,7 @@ export function Initiatives({
         align="left"
       />
 
-      <Rail label="Past Pink Fly initiatives" className="mt-12">
+      <Rail label="Past PinkFly initiatives" className="mt-12">
         {initiatives.map((initiative) => (
           <Reveal
             key={initiative.slug}

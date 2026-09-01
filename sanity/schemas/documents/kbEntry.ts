@@ -11,6 +11,15 @@ export const kbEntry = defineType({
     { name: "extra", title: "Category extras" },
   ],
   fields: [
+    defineField({
+      name: "hidden",
+      title: "Hide from the website",
+      type: "boolean",
+      group: "main",
+      initialValue: false,
+      description:
+        "Keeps the entry here but takes it off the site — it disappears from its category rail and its page stops resolving. Uncheck to put it back.",
+    }),
     defineField({ name: "title", type: "string", group: "main", validation: (r) => r.required() }),
     defineField({
       name: "slug",
@@ -47,7 +56,20 @@ export const kbEntry = defineType({
     defineField({ name: "publishedAt", type: "date", group: "main", validation: (r) => r.required() }),
     defineField({ name: "readingTime", type: "string", group: "main" }),
 
-    defineField({ name: "body", title: "Paragraphs", type: "array", of: [{ type: "text" }], group: "body" }),
+    defineField({
+      name: "body",
+      title: "Article body",
+      type: "array",
+      group: "body",
+      description:
+        "Add paragraphs, and drop an image, a video or a file to download anywhere between them — they render in the order you arrange them here.",
+      of: [
+        { type: "text", title: "Paragraph" },
+        { type: "figure", title: "Image" },
+        { type: "videoEmbed" },
+        { type: "fileAttachment" },
+      ],
+    }),
 
     defineField({
       name: "source",
@@ -77,5 +99,12 @@ export const kbEntry = defineType({
       ],
     }),
   ],
-  preview: { select: { title: "title", subtitle: "category", media: "image.asset" } },
+  preview: {
+    select: { title: "title", subtitle: "category", media: "image.asset", hidden: "hidden" },
+    prepare: ({ title, subtitle, media, hidden }) => ({
+      title: hidden ? `${title} — hidden` : title,
+      subtitle,
+      media,
+    }),
+  },
 });

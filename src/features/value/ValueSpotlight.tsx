@@ -19,7 +19,7 @@ export function ValueSpotlight() {
               <span className="px-8 text-center font-[family-name:var(--font-display)] text-sm uppercase tracking-widest text-[var(--pf-muted)]">
                 Photograph of a
                 <br />
-                Pink Fly meetup
+                PinkFly meetup
               </span>
             </div>
           </div>

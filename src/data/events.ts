@@ -3,7 +3,7 @@
  *
  * Every event declares the regions it belongs to, so the same list powers
  * `/events`, `/india/events`, `/dubai/events` and `/usa/events` without any
- * duplication. Details that Pink Fly has not supplied (venue addresses,
+ * duplication. Details that PinkFly has not supplied (venue addresses,
  * ticket prices, speakers) are left null/placeholder rather than invented.
  */
 import type { RegionSlug } from "@/config/regions";
@@ -58,7 +58,7 @@ const SPEAKER_TBC = [
 export const events: PinkFlyEvent[] = [
   {
     slug: "founder-meetup-autumn",
-    title: "Pink Fly Founder Meetup",
+    title: "PinkFly Founder Meetup",
     excerpt:
       "An evening of introductions, short founder talks and the kind of conversation that only happens in person.",
     regions: ["global", "india"],
@@ -172,7 +172,7 @@ export const events: PinkFlyEvent[] = [
   },
   {
     slug: "launch-night-november",
-    title: "Pink Fly Launch Night",
+    title: "PinkFly Launch Night",
     excerpt:
       "Six members launch something new on stage. Come for the launches, stay for the room.",
     regions: ["global", "india"],

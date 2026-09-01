@@ -524,7 +524,7 @@ export async function getAboutContent(): Promise<AboutContent> {
       heading: heading(cms?.teamHeading, {
         eyebrow: "The team",
         headline: "Executive team.",
-        intro: "The people building Pink Fly.",
+        intro: "The people building PinkFly.",
       }),
       members: pickList(teamDocs, fallback(executiveTeam, live), (member, i) => ({
         name: pick(member.name, executiveTeam[i]?.name ?? ""),
@@ -685,7 +685,17 @@ export async function getEventsPageContent(): Promise<EventsPageContent> {
 /* ====================================================== knowledge base page */
 
 export type KnowledgeBaseContent = {
-  hero: { eyebrow: string; title: string; intro: string; banner: ResolvedImage };
+  hero: {
+    eyebrow: string;
+    title: string;
+    intro: string;
+    /**
+     * Absent when no banner image is set in Sanity, and the page then opens on
+     * its heading and copy. Editors control the banner entirely: clearing the
+     * image removes it, setting one brings it back, neither needing a deploy.
+     */
+    banner?: ResolvedImage;
+  };
   categories: { id: string; title: string; intro: string; anchor: string }[];
   commentsClosedMessage: string;
 };
@@ -705,7 +715,13 @@ export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
       eyebrow: pick(cms?.eyebrow, seed.knowledgeBase.hero.eyebrow),
       title: pick(cms?.title, seed.knowledgeBase.hero.title),
       intro: pick(cms?.intro, seed.knowledgeBase.hero.intro),
-      banner: resolveImage(cms?.bannerImage, knowledgeImages.banner),
+      // No seed fallback while Sanity is answering: an editor who clears the
+      // banner means it gone, and falling back would put it straight back. The
+      // seed still covers an outage, so the page never renders bannerless
+      // just because Sanity was unreachable.
+      banner: live
+        ? resolveImage(cms?.bannerImage)
+        : knowledgeImages.banner,
     },
     // The anchor stays in code: it is a URL contract the navigation links to,
     // not copy, so an editor cannot break the in-page links by retitling a rail.
@@ -865,7 +881,7 @@ export async function getSiteContent(): Promise<SiteContent> {
       },
     },
     navCta: {
-      label: pick(cms?.navCta?.label, "Join Pink Fly"),
+      label: pick(cms?.navCta?.label, "Join PinkFly"),
       knowledgeLabel: pick(cms?.navCta?.knowledgeLabel, "Join Our Community"),
       href: pick(cms?.navCta?.href, "/join"),
     },

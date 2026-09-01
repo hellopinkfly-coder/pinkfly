@@ -12,7 +12,7 @@ import type { Region } from "@/lib/region";
 
 /**
  * About page, in wireframe order:
- * header → why Pink Fly exists → banner → founder story →
+ * header → why PinkFly exists → banner → founder story →
  * community guidelines → initiatives → executive team → contact → footer.
  *
  * Every headline, paragraph, image and section switch on this page is edited

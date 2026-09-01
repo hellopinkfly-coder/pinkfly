@@ -4,7 +4,7 @@
  * Each loader returns the exact type the rest of the app already uses, so the
  * filtering, sorting and routing helpers in `src/data` keep working unchanged.
  * An empty CMS list means "not populated yet" and falls back to the seed data;
- * once Pink Fly adds a document in the Studio the whole list comes from there.
+ * once PinkFly adds a document in the Studio the whole list comes from there.
  */
 import { cmsFetch } from "./fetch";
 import { pick, resolveImage, type CmsFigure } from "./resolve";
@@ -15,7 +15,12 @@ import {
   type PinkFlyEvent,
   type EventType,
 } from "@/data/events";
-import { kbEntries as seedKbEntries, type KbEntry, type KbCategory } from "@/data/knowledge-base";
+import {
+  kbEntries as seedKbEntries,
+  type KbEntry,
+  type KbBlock,
+  type KbCategory,
+} from "@/data/knowledge-base";
 import { eventImages, teamPlaceholder } from "@/config/images";
 import { regions as seedRegions, type Region, type RegionSlug } from "@/config/regions";
 
@@ -84,11 +89,87 @@ type CmsKbEntry = {
   author?: { name?: string; role?: string };
   publishedAt?: string;
   readingTime?: string;
-  body?: string[];
+  /**
+   * Mixed on purpose. A paragraph is a plain string, and every other block is
+   * an object carrying its own `_type` — which is also what entries written
+   * before the richer body existed still look like.
+   */
+  body?: (string | CmsBodyBlock)[];
+  /** File blocks with their asset dereferenced, keyed back to `body`. */
+  bodyFiles?: CmsBodyFile[];
   source?: { name?: string; url?: string };
   policy?: KbEntry["policy"];
   image?: CmsFigure;
 };
+
+type CmsBodyBlock = {
+  _type?: string;
+  _key?: string;
+  url?: string;
+  title?: string;
+} & CmsFigure;
+
+type CmsBodyFile = {
+  _key?: string;
+  title?: string;
+  description?: string;
+  url?: string;
+  name?: string;
+  size?: number;
+};
+
+/** "1.2 MB" from a byte count, or nothing when Sanity reported no size. */
+function formatSize(bytes?: number): string | undefined {
+  if (typeof bytes !== "number" || bytes <= 0) return undefined;
+  const mb = bytes / 1_000_000;
+  return mb >= 1 ? `${mb.toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1000))} KB`;
+}
+
+/**
+ * The body as the page reads it.
+ *
+ * Anything unrecognised is dropped rather than rendered blank — an editor
+ * mid-edit should not break the page — and a file whose asset has not
+ * finished uploading has no URL yet, so it is skipped until it does.
+ */
+function resolveBody(
+  blocks: (string | CmsBodyBlock)[] | undefined,
+  files: CmsBodyFile[] | undefined
+): KbBlock[] {
+  const byKey = new Map((files ?? []).map((file) => [file._key, file]));
+
+  return (blocks ?? []).flatMap<KbBlock>((block) => {
+    if (typeof block === "string") {
+      return block.trim() ? [{ kind: "paragraph", text: block }] : [];
+    }
+    if (!block || typeof block !== "object") return [];
+
+    if (block._type === "figure") {
+      const image = resolveImage(block);
+      return image ? [{ kind: "image", src: image.src, alt: image.alt, caption: image.label }] : [];
+    }
+
+    if (block._type === "videoEmbed") {
+      return block.url ? [{ kind: "video", url: block.url, title: block.title }] : [];
+    }
+
+    if (block._type === "fileAttachment") {
+      const file = byKey.get(block._key);
+      if (!file?.url) return [];
+      return [
+        {
+          kind: "file",
+          url: file.url,
+          title: file.title || file.name || "Download",
+          description: file.description,
+          sizeLabel: formatSize(file.size),
+        },
+      ];
+    }
+
+    return [];
+  });
+}
 
 export async function getKbEntries(): Promise<KbEntry[]> {
   const { live, data: cms } = await cmsFetch<CmsKbEntry[]>(kbEntriesQuery);
@@ -100,7 +181,7 @@ export async function getKbEntries(): Promise<KbEntry[]> {
     title: e.title ?? "",
     excerpt: e.excerpt ?? "",
     author: {
-      name: e.author?.name ?? "Pink Fly",
+      name: e.author?.name ?? "PinkFly",
       role: e.author?.role ?? "Contributor",
     },
     publishedAt: e.publishedAt ?? "",
@@ -110,7 +191,7 @@ export async function getKbEntries(): Promise<KbEntry[]> {
       alt: e.title ?? "Knowledge Base entry",
     }),
     tag: e.tag ?? "",
-    body: e.body ?? [],
+    body: resolveBody(e.body, e.bodyFiles),
     source: e.source?.name ? { name: e.source.name, url: e.source.url } : undefined,
     policy: e.policy,
   }));

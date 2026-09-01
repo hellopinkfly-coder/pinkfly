@@ -7,7 +7,7 @@ export const aboutPage = defineType({
   type: "document",
   groups: [
     { name: "hero", title: "Header", default: true },
-    { name: "mission", title: "Why Pink Fly exists" },
+    { name: "mission", title: "Why PinkFly exists" },
     { name: "banner", title: "Banner" },
     { name: "founder", title: "Founder story" },
     { name: "guidelines", title: "Community guidelines" },

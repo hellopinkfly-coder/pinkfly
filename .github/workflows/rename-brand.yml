@@ -1,0 +1,30 @@
+# Rename the brand across the CMS: "Pink Fly" → "PinkFly".
+#
+# The site's copy lives in Sanity, so the rename has to happen there as well
+# as in code. Run it from the Actions tab; it defaults to a dry run that only
+# prints what it would change.
+name: Rename brand in Sanity
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Perform the rename (unchecked = dry run)"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Rename
+        env:
+          SANITY_API_WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+        run: npm run rename:brand ${{ inputs.apply && '-- --apply' || '' }}

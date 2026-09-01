@@ -6,7 +6,7 @@
  * content in `src/config` — so a fresh clone, a preview build and CI all work
  * before the CMS is wired up.
  *
- * The Pink Fly project id and dataset are the defaults, so every deploy is
+ * The PinkFly project id and dataset are the defaults, so every deploy is
  * connected to the CMS without extra configuration. Both stay overridable by
  * environment variable for a different project or dataset. Only the write
  * token is secret, and it lives in the environment alone.

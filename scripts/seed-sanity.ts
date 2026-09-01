@@ -10,7 +10,7 @@
  *   npm run seed:sanity
  *
  * It reads the write token from `.env.local` (or the shell), and targets the
- * Pink Fly project unless NEXT_PUBLIC_SANITY_PROJECT_ID / _DATASET say
+ * PinkFly project unless NEXT_PUBLIC_SANITY_PROJECT_ID / _DATASET say
  * otherwise.
  *
  * Document ids never contain a dot. Sanity reads a dot as a path separator
@@ -134,7 +134,7 @@ async function seed() {
       links: keyed(footerNav.company.links.map(link), "fo"),
     },
     navCta: {
-      label: "Join Pink Fly",
+      label: "Join PinkFly",
       knowledgeLabel: "Join Our Community",
       href: "/join",
     },
@@ -351,7 +351,7 @@ async function seed() {
     teamHeading: {
       _type: "sectionHeading",
       eyebrow: "Executive team",
-      headline: "The people behind Pink Fly.",
+      headline: "The people behind PinkFly.",
       intro:
         "Photographs and biographies are placeholders until the team's final details are confirmed.",
     },
