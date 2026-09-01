@@ -107,6 +107,7 @@ type CmsBodyBlock = {
   _key?: string;
   url?: string;
   title?: string;
+  text?: string;
 } & CmsFigure;
 
 type CmsBodyFile = {
@@ -139,10 +140,16 @@ function resolveBody(
   const byKey = new Map((files ?? []).map((file) => [file._key, file]));
 
   return (blocks ?? []).flatMap<KbBlock>((block) => {
+    // Entries written before paragraphs became objects still hold plain
+    // strings, and are read as paragraphs until the migration converts them.
     if (typeof block === "string") {
       return block.trim() ? [{ kind: "paragraph", text: block }] : [];
     }
     if (!block || typeof block !== "object") return [];
+
+    if (block._type === "paragraph") {
+      return block.text?.trim() ? [{ kind: "paragraph", text: block.text }] : [];
+    }
 
     if (block._type === "figure") {
       const image = resolveImage(block);

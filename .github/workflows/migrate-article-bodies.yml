@@ -1,0 +1,30 @@
+# Convert Knowledge Base bodies from plain strings to paragraph objects.
+#
+# Sanity cannot mix primitives and objects in one array, so while bodies held
+# plain strings the Studio could not offer Image, Video or File beside them.
+# Run this from the Actions tab; it defaults to a dry run.
+name: Migrate article bodies
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Perform the migration (unchecked = dry run)"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Migrate
+        env:
+          SANITY_API_WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+        run: npm run migrate:bodies ${{ inputs.apply && '-- --apply' || '' }}
