@@ -4,19 +4,19 @@
  */
 export const pageSeo = {
   about: {
-    title: "About PinkFly — our story, team and community guidelines",
+    title: "About Pinkfly — our story, team and community guidelines",
     description:
-      "Why PinkFly exists, the founder story behind it, how the community works, and the team building it.",
+      "Why Pinkfly exists, the founder story behind it, how the community works, and the team building it.",
   },
   join: {
-    title: "Join the PinkFly community",
+    title: "Join the Pinkfly community",
     description:
       "Membership is free. Networking, mentorship, events, masterclasses and a founder community built to help you grow.",
   },
   events: {
     title: "Events — meetups, webinars, masterclasses and coffee chats",
     description:
-      "Browse upcoming PinkFly events by location, month and event type, and register for the ones near you.",
+      "Browse upcoming Pinkfly events by location, month and event type, and register for the ones near you.",
   },
   knowledgeBase: {
     title: "Knowledge Base — articles, business news and government policies",

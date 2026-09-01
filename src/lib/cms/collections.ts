@@ -4,7 +4,7 @@
  * Each loader returns the exact type the rest of the app already uses, so the
  * filtering, sorting and routing helpers in `src/data` keep working unchanged.
  * An empty CMS list means "not populated yet" and falls back to the seed data;
- * once PinkFly adds a document in the Studio the whole list comes from there.
+ * once Pinkfly adds a document in the Studio the whole list comes from there.
  */
 import { cmsFetch } from "./fetch";
 import { pick, resolveImage, type CmsFigure } from "./resolve";
@@ -12,7 +12,7 @@ import { eventsQuery, kbEntriesQuery, regionsQuery } from "./queries";
 
 import {
   events as seedEvents,
-  type PinkFlyEvent,
+  type PinkflyEvent,
   type EventType,
 } from "@/data/events";
 import {
@@ -46,7 +46,7 @@ type CmsEvent = {
   image?: CmsFigure;
 };
 
-export async function getEvents(): Promise<PinkFlyEvent[]> {
+export async function getEvents(): Promise<PinkflyEvent[]> {
   const { live, data: cms } = await cmsFetch<CmsEvent[]>(eventsQuery);
   // Sanity answered with an empty list: every event is unpublished, so the
   // site has no events. Only an outage falls back to the seed.
@@ -181,7 +181,7 @@ export async function getKbEntries(): Promise<KbEntry[]> {
     title: e.title ?? "",
     excerpt: e.excerpt ?? "",
     author: {
-      name: e.author?.name ?? "PinkFly",
+      name: e.author?.name ?? "Pinkfly",
       role: e.author?.role ?? "Contributor",
     },
     publishedAt: e.publishedAt ?? "",

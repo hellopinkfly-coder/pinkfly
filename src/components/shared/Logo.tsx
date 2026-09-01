@@ -3,13 +3,13 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 /**
- * PinkFly logo.
+ * Pinkfly logo.
  *
  * SINGLE SOURCE OF TRUTH for the logo. Every placement — navbar, footer,
  * article header — renders this, so the brand only has to change here.
  *
  * The artwork ships in two cuts, both transparent-backed: the compact lockup
- * (balloon mark + "PinkFly") and the full lockup, which adds the "Building
+ * (balloon mark + "Pinkfly") and the full lockup, which adds the "Building
  * Dreams" tagline. The tagline is unreadable at navbar height, so the compact
  * cut is the default and the full one is opt-in via `withTagline`.
  *
@@ -57,7 +57,7 @@ export function LogoMark({
   const height = heights[size];
   const cut = withTagline ? art.full : art.compact;
   const width = Math.round((height * cut.width) / cut.height);
-  const alt = withTagline ? "PinkFly — Building Dreams" : "PinkFly";
+  const alt = withTagline ? "Pinkfly — Building Dreams" : "Pinkfly";
 
   return (
     <span
@@ -101,7 +101,7 @@ export function Logo({
   return (
     <Link
       href={href}
-      aria-label="PinkFly — home"
+      aria-label="Pinkfly — home"
       className={cn(
         "inline-flex items-center transition-opacity duration-200 hover:opacity-80",
         className

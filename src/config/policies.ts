@@ -10,11 +10,11 @@ export const policies = {
     slug: "terms",
     title: "Terms & Conditions",
     intro:
-      "The terms that govern your use of the PinkFly website, community, and events.",
+      "The terms that govern your use of the Pinkfly website, community, and events.",
     sections: [
       {
-        heading: "Using PinkFly",
-        body: "By accessing our website or joining the PinkFly community, you agree to these terms. If you do not agree, please do not use the service.",
+        heading: "Using Pinkfly",
+        body: "By accessing our website or joining the Pinkfly community, you agree to these terms. If you do not agree, please do not use the service.",
       },
       {
         heading: "Membership",
@@ -22,7 +22,7 @@ export const policies = {
       },
       {
         heading: "Content",
-        body: "All PinkFly content — playbooks, masterclass material, and templates — remains the property of PinkFly and Noboru World, and is provided for your own use only.",
+        body: "All Pinkfly content — playbooks, masterclass material, and templates — remains the property of Pinkfly and Noboru World, and is provided for your own use only.",
       },
       {
         heading: "Changes",
@@ -34,7 +34,7 @@ export const policies = {
     slug: "refund",
     title: "Refund Policy",
     intro:
-      "How refunds work for PinkFly memberships, events, and paid programmes.",
+      "How refunds work for Pinkfly memberships, events, and paid programmes.",
     sections: [
       {
         heading: "Memberships",
@@ -46,7 +46,7 @@ export const policies = {
       },
       {
         heading: "Cancelled events",
-        body: "If PinkFly cancels an event, you will receive a full refund or the option to move your place to a future date.",
+        body: "If Pinkfly cancels an event, you will receive a full refund or the option to move your place to a future date.",
       },
       {
         heading: "Requesting a refund",
@@ -69,7 +69,7 @@ export const policies = {
       },
       {
         heading: "Sharing",
-        body: "We do not sell your data. We share it only with the service providers who help us run PinkFly, and only as needed.",
+        body: "We do not sell your data. We share it only with the service providers who help us run Pinkfly, and only as needed.",
       },
       {
         heading: "Your choices",
@@ -81,7 +81,7 @@ export const policies = {
     slug: "community-guidelines",
     title: "Community Guidelines",
     intro:
-      "The behaviour that keeps PinkFly a room worth walking into.",
+      "The behaviour that keeps Pinkfly a room worth walking into.",
     sections: [
       {
         heading: "Show up for each other",

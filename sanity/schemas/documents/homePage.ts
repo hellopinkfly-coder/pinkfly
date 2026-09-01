@@ -4,7 +4,7 @@ import { visibleField } from "../objects/blocks";
 /**
  * The homepage, section by section, in the order the wireframe sets out:
  * hero carousel → join CTA → impact → how we gather → testimonials →
- * why PinkFly exists → join + newsletter.
+ * why Pinkfly exists → join + newsletter.
  */
 export const homePage = defineType({
   name: "homePage",
@@ -15,7 +15,7 @@ export const homePage = defineType({
     { name: "impact", title: "Impact" },
     { name: "community", title: "How we gather" },
     { name: "testimonials", title: "Testimonials" },
-    { name: "mission", title: "Why PinkFly exists" },
+    { name: "mission", title: "Why Pinkfly exists" },
     { name: "join", title: "Join + newsletter" },
     { name: "social", title: "Social wall" },
     { name: "seo", title: "SEO" },

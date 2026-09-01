@@ -1,4 +1,4 @@
-# Rename the brand across the CMS: "Pink Fly" → "PinkFly".
+# Rename the brand across the CMS to the one-word wordmark, "Pinkfly".
 #
 # The site's copy lives in Sanity, so the rename has to happen there as well
 # as in code. Run it from the Actions tab; it defaults to a dry run that only

@@ -1,0 +1,29 @@
+# Clear the Knowledge Base page banner image.
+#
+# The banner is content, not code — the page already renders without one when
+# none is set. Run this from the Actions tab; it defaults to a dry run.
+name: Clear Knowledge Base banner
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Clear it (unchecked = dry run)"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  clear:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Clear
+        env:
+          SANITY_API_WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+        run: npm run clear:kb-banner ${{ inputs.apply && '-- --apply' || '' }}

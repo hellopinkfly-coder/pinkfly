@@ -3,7 +3,7 @@
  *
  * Every event declares the regions it belongs to, so the same list powers
  * `/events`, `/india/events`, `/dubai/events` and `/usa/events` without any
- * duplication. Details that PinkFly has not supplied (venue addresses,
+ * duplication. Details that Pinkfly has not supplied (venue addresses,
  * ticket prices, speakers) are left null/placeholder rather than invented.
  */
 import type { RegionSlug } from "@/config/regions";
@@ -15,7 +15,7 @@ export type EventType =
   | "Coffee Chat"
   | "Launch";
 
-export type PinkFlyEvent = {
+export type PinkflyEvent = {
   slug: string;
   title: string;
   excerpt: string;
@@ -55,10 +55,10 @@ const SPEAKER_TBC = [
   { name: "Speaker to be announced", designation: "Designation TBC", image: null },
 ];
 
-export const events: PinkFlyEvent[] = [
+export const events: PinkflyEvent[] = [
   {
     slug: "founder-meetup-autumn",
-    title: "PinkFly Founder Meetup",
+    title: "Pinkfly Founder Meetup",
     excerpt:
       "An evening of introductions, short founder talks and the kind of conversation that only happens in person.",
     regions: ["global", "india"],
@@ -172,7 +172,7 @@ export const events: PinkFlyEvent[] = [
   },
   {
     slug: "launch-night-november",
-    title: "PinkFly Launch Night",
+    title: "Pinkfly Launch Night",
     excerpt:
       "Six members launch something new on stage. Come for the launches, stay for the room.",
     regions: ["global", "india"],
@@ -285,40 +285,40 @@ export const eventTypes: EventType[] = [
  * former; the `events` export above is the fallback.
  */
 export function filterEventsForRegion(
-  list: PinkFlyEvent[],
+  list: PinkflyEvent[],
   region: RegionSlug
-): PinkFlyEvent[] {
+): PinkflyEvent[] {
   return list
     .filter((e) => e.regions.includes(region))
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 }
 
 export function findEvent(
-  list: PinkFlyEvent[],
+  list: PinkflyEvent[],
   slug: string
-): PinkFlyEvent | undefined {
+): PinkflyEvent | undefined {
   return list.find((e) => e.slug === slug);
 }
 
 /** Upcoming events other than the one being viewed. */
 export function upcomingEvents(
-  list: PinkFlyEvent[],
+  list: PinkflyEvent[],
   region: RegionSlug,
   excludeSlug?: string,
   limit = 4
-): PinkFlyEvent[] {
+): PinkflyEvent[] {
   return filterEventsForRegion(list, region)
     .filter((e) => e.slug !== excludeSlug)
     .slice(0, limit);
 }
 
 /** Distinct cities across a region's events — powers the Location filter. */
-export function eventCities(list: PinkFlyEvent[], region: RegionSlug): string[] {
+export function eventCities(list: PinkflyEvent[], region: RegionSlug): string[] {
   return [...new Set(filterEventsForRegion(list, region).map((e) => e.city))].sort();
 }
 
 /** Distinct `YYYY-MM` keys across a region's events — powers the Month filter. */
-export function eventMonths(list: PinkFlyEvent[], region: RegionSlug): string[] {
+export function eventMonths(list: PinkflyEvent[], region: RegionSlug): string[] {
   return [
     ...new Set(filterEventsForRegion(list, region).map((e) => e.startsAt.slice(0, 7))),
   ].sort();
@@ -326,7 +326,7 @@ export function eventMonths(list: PinkFlyEvent[], region: RegionSlug): string[] 
 
 /** Distinct event types present in a region — powers the Type filter. */
 export function eventTypesForRegion(
-  list: PinkFlyEvent[],
+  list: PinkflyEvent[],
   region: RegionSlug
 ): EventType[] {
   const present = new Set(filterEventsForRegion(list, region).map((e) => e.type));

@@ -57,7 +57,7 @@ export function Footer({
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`PinkFly on ${label}`}
+                  aria-label={`Pinkfly on ${label}`}
                   className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--pf-border)] text-[var(--pf-text)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--pf-accent)] hover:text-[var(--pf-accent)]"
                 >
                   <Icon size={17} />

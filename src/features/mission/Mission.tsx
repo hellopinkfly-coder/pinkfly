@@ -7,7 +7,7 @@ import { regionPath, type Region } from "@/lib/region";
 import type { MissionContent } from "@/lib/cms/content";
 
 /**
- * "Why PinkFly exists".
+ * "Why Pinkfly exists".
  *
  * Centred on the same eyebrow → headline → copy pattern every other section
  * uses, so the page reads as one system rather than switching alignment

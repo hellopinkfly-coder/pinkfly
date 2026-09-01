@@ -2,14 +2,14 @@
  * Site-wide configuration: identity, social links, navigation, integrations.
  *
  * Anything region-specific lives in `src/config/regions.ts` instead — this
- * file holds only what is true for PinkFly globally.
+ * file holds only what is true for Pinkfly globally.
  */
 
 export const siteConfig = {
-  name: "PinkFly",
+  name: "Pinkfly",
   tagline: "Building Dreams",
   description:
-    "PinkFly is a community for ambitious women founders — mentorship, network, events and education to help you launch, scale and conquer.",
+    "Pinkfly is a community for ambitious women founders — mentorship, network, events and education to help you launch, scale and conquer.",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   parent: "Noboru World",
   parentUrl: "https://noboruworld.com",
@@ -22,7 +22,7 @@ export const siteConfig = {
   phone: "+91 00000 00000",
   socials: {
     instagram: "https://www.instagram.com/pinkfly_official/",
-    youtube: "https://www.youtube.com/@PinkFly-official",
+    youtube: "https://www.youtube.com/@Pinkfly-official",
     linkedin: "https://www.linkedin.com/in/pink-fly-aaa198429/",
     twitter: "https://x.com/Pinkflyofficial",
   },
@@ -58,7 +58,7 @@ export const footerNav = {
   community: {
     title: "Community",
     links: [
-      { label: "Join PinkFly", href: "/join" },
+      { label: "Join Pinkfly", href: "/join" },
       { label: "FAQs", href: "/join#faqs" },
       { label: "Knowledge Base", href: "/knowledge-base" },
       { label: "Events", href: "/events" },

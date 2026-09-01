@@ -4,7 +4,7 @@ import type { StructureResolver } from "sanity/structure";
  * Studio navigation.
  *
  * Pages are singletons — one document each, opened directly rather than as a
- * list you have to click into. Collections stay as lists, because PinkFly
+ * list you have to click into. Collections stay as lists, because Pinkfly
  * adds and removes those over time.
  */
 const SINGLETONS: [type: string, title: string][] = [
@@ -35,7 +35,7 @@ const collection = (S: Parameters<StructureResolver>[0], type: string, title: st
 
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title("PinkFly")
+    .title("Pinkfly")
     .items([
       S.listItem()
         .title("Pages")

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Countdown } from "@/features/events/Countdown";
 import { EventCard } from "@/features/events/EventCard";
-import { upcomingEvents, type PinkFlyEvent } from "@/data/events";
+import { upcomingEvents, type PinkflyEvent } from "@/data/events";
 import { getEvents } from "@/lib/cms/collections";
 import { teamPlaceholder } from "@/config/images";
 import {
@@ -27,7 +27,7 @@ export async function EventDetailPage({
   event,
   region,
 }: {
-  event: PinkFlyEvent;
+  event: PinkflyEvent;
   region: Region;
 }) {
   const upcoming = upcomingEvents(await getEvents(), region.slug, event.slug);
@@ -208,7 +208,7 @@ export async function EventDetailPage({
             <h2 className="pf-h2 text-2xl sm:text-3xl">Upcoming events</h2>
           </Reveal>
           <Rail label="Upcoming events" className="mt-10">
-            {upcoming.map((item: PinkFlyEvent) => (
+            {upcoming.map((item: PinkflyEvent) => (
               <EventCard
                 key={item.slug}
                 event={item}
