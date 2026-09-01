@@ -11,7 +11,8 @@
     "studio:deploy": "npm --prefix sanity run deploy",
     "lint": "next lint",
     "seed:sanity": "tsx scripts/seed-sanity.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "report:sanity": "tsx scripts/report-sanity.ts"
   },
   "dependencies": {
     "@sanity/client": "^7.26.2",

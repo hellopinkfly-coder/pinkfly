@@ -1,0 +1,24 @@
+# Read-only snapshot of the Sanity dataset.
+#
+# Run it from the Actions tab when the site is not showing content you expect.
+# It writes nothing — it reports which documents are published, since an
+# unpublished document is invisible to the site by design.
+name: Sanity report
+
+on:
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Report
+        env:
+          SANITY_API_WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+        run: npm run report:sanity
