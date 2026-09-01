@@ -10,7 +10,7 @@
  *   npm run seed:sanity
  *
  * It reads the write token from `.env.local` (or the shell), and targets the
- * PinkFly project unless NEXT_PUBLIC_SANITY_PROJECT_ID / _DATASET say
+ * Pinkfly project unless NEXT_PUBLIC_SANITY_PROJECT_ID / _DATASET say
  * otherwise.
  *
  * Document ids never contain a dot. Sanity reads a dot as a path separator
@@ -38,7 +38,7 @@ import {
   policyNav,
 } from "../src/config/site";
 import { regions } from "../src/config/regions";
-import { joinImages, eventImages, knowledgeImages } from "../src/config/images";
+import { joinImages, eventImages } from "../src/config/images";
 import { events } from "../src/data/events";
 import { kbEntries } from "../src/data/knowledge-base";
 import { executiveTeam, initiatives } from "../src/data/team";
@@ -134,7 +134,7 @@ async function seed() {
       links: keyed(footerNav.company.links.map(link), "fo"),
     },
     navCta: {
-      label: "Join PinkFly",
+      label: "Join Pinkfly",
       knowledgeLabel: "Join Our Community",
       href: "/join",
     },
@@ -351,7 +351,7 @@ async function seed() {
     teamHeading: {
       _type: "sectionHeading",
       eyebrow: "Executive team",
-      headline: "The people behind PinkFly.",
+      headline: "The people behind Pinkfly.",
       intro:
         "Photographs and biographies are placeholders until the team's final details are confirmed.",
     },
@@ -424,7 +424,6 @@ async function seed() {
     eyebrow: content.knowledgeBase.hero.eyebrow,
     title: content.knowledgeBase.hero.title,
     intro: content.knowledgeBase.hero.intro,
-    bannerImage: figure(knowledgeImages.banner),
     categories: keyed(
       kbCategories.map((c) => ({
         _type: "kbCategoryRail",

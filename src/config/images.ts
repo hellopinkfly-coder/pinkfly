@@ -82,7 +82,7 @@ export const heroSlides: HeroSlide[] = [
   },
   {
     src: u("1551836022-d5d88e9218df", 2400),
-    alt: "A woman speaking to an audience at a PinkFly event",
+    alt: "A woman speaking to an audience at a Pinkfly event",
     label: "Masterclasses",
     headline: "Skills you can use on Monday.",
     focal: "50% 35%",
@@ -96,7 +96,7 @@ export const HERO_INTERVAL = 2000;
 export const communityImages: Record<string, StockImage> = {
   meetups: {
     src: u("1543269865-cbf427effbad", 1200),
-    alt: "Women gathered around a table at a PinkFly meetup",
+    alt: "Women gathered around a table at a Pinkfly meetup",
     label: "Meetups & launches",
   },
   onlineMeets: {
@@ -131,11 +131,11 @@ export const aboutImages = {
   banner: {
     src: u("1521737604893-d14cc237f11d", 2000),
     alt: "Women entrepreneurs collaborating in a bright workspace",
-    label: "The PinkFly community",
+    label: "The Pinkfly community",
   } satisfies StockImage,
   founder: {
     src: u("1573497491208-6b1acb260507", 1200),
-    alt: "Portrait placeholder for the PinkFly founder",
+    alt: "Portrait placeholder for the Pinkfly founder",
     label: "Founder",
   } satisfies StockImage,
   guidelines: {
@@ -158,21 +158,12 @@ export const joinImages = {
 export const eventImages = {
   banner: {
     src: u("1551836022-d5d88e9218df", 2400),
-    alt: "A woman addressing an audience at a PinkFly event",
-    label: "PinkFly events",
+    alt: "A woman addressing an audience at a Pinkfly event",
+    label: "Pinkfly events",
   } satisfies StockImage,
   fallback: {
     src: u("1543269865-cbf427effbad", 1200),
-    alt: "Women at a PinkFly community event",
-  } satisfies StockImage,
-};
-
-/** Knowledge Base editorial imagery. */
-export const knowledgeImages = {
-  banner: {
-    src: u("1544717297-fa95b6ee9643", 2000),
-    alt: "A woman reading and taking notes at her desk",
-    label: "Knowledge Base",
+    alt: "Women at a Pinkfly community event",
   } satisfies StockImage,
 };
 

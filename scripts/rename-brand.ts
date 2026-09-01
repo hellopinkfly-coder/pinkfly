@@ -1,5 +1,5 @@
 /**
- * Rename the brand across the CMS: "Pink Fly" → "PinkFly".
+ * Rename the brand across the CMS to the one-word wordmark, "Pinkfly".
  *
  * The site's copy lives in Sanity, so renaming the brand in code only changes
  * the seed and the outage fallback — the words a visitor reads come from the
@@ -54,8 +54,11 @@ const client = createClient({
   token,
 });
 
-const FROM = /Pink\s+Fly/g;
-const TO = "PinkFly";
+// Matches the spaced original and the intermediate capital-F spelling alike,
+// so a dataset part-way through a rename converges instead of keeping both.
+// "Pinkfly" itself does not match, which is what makes a re-run a no-op.
+const FROM = /Pink\s*Fly/g;
+const TO = "Pinkfly";
 
 /** Keys that carry an identifier or a link rather than copy. */
 const SKIP = new Set(["_id", "_type", "_ref", "_key", "current", "url", "href", "slug"]);
@@ -109,7 +112,7 @@ async function main() {
   }
 
   if (touched === 0) {
-    console.log("Nothing to rename — no document mentions the old spelling.");
+    console.log("Nothing to rename — no document mentions an old spelling.");
     return;
   }
 

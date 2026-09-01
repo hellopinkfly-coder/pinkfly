@@ -1,7 +1,7 @@
 import type { Variants, Transition } from "framer-motion";
 
 /* ==========================================================================
-   PinkFly — Motion System
+   Pinkfly — Motion System
    --------------------------------------------------------------------------
    One brand, one motion language. The metaphor is FLIGHT: everything on this
    site lifts. Elements rise into place, they never drop in, never spin, never

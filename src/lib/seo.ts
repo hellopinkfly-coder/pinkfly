@@ -27,7 +27,7 @@ export function languageAlternates(path: string): Record<string, string> {
 }
 
 /**
- * Share image used when a page supplies none: the PinkFly logo lockup.
+ * Share image used when a page supplies none: the Pinkfly logo lockup.
  * Resolved against `metadataBase`, so a bare path is enough.
  */
 const DEFAULT_OG_IMAGE = "/brand/og-image.png";
@@ -56,7 +56,7 @@ export function buildMetadata({
   const suffixed =
     exact || region.slug === "global"
       ? title
-      : `${title} | PinkFly ${region.shortName}`;
+      : `${title} | Pinkfly ${region.shortName}`;
   const canonical = abs(regionPath(region, path));
 
   return {

@@ -30,7 +30,7 @@ export type Region = {
   locale: string;
   /** Currency used for ticket prices and membership fees. */
   currency: { code: string; symbol: string } | null;
-  /** Postal address. `null` until PinkFly supplies it. */
+  /** Postal address. `null` until Pinkfly supplies it. */
   address: string[] | null;
   /** Contact phone in E.164-ish display form. `null` until supplied. */
   phone: string | null;
@@ -77,7 +77,7 @@ const GLOBAL: Region = {
   email: "hello.pinkfly@gmail.com",
   timezone: "UTC",
   copy: {
-    heroEyebrow: "The PinkFly community",
+    heroEyebrow: "The Pinkfly community",
     heroHeadline: "You were never meant to build alone.",
     joinIntro: "Women founders worldwide, building businesses and each other.",
     eventsIntro: "Meetups, webinars and coffee chats, across every region.",
@@ -87,9 +87,9 @@ const GLOBAL: Region = {
     crmSegment: "global",
   },
   seo: {
-    title: "PinkFly — Building Dreams",
+    title: "Pinkfly — Building Dreams",
     description:
-      "PinkFly is a global community for ambitious women entrepreneurs — mentorship, networking, events and education to help you launch, scale and conquer.",
+      "Pinkfly is a global community for ambitious women entrepreneurs — mentorship, networking, events and education to help you launch, scale and conquer.",
   },
 };
 
@@ -110,19 +110,19 @@ const INDIA: Region = {
   email: null,
   timezone: "Asia/Kolkata",
   copy: {
-    heroEyebrow: "PinkFly India",
+    heroEyebrow: "Pinkfly India",
     heroHeadline: "India's women founders, in one room.",
     joinIntro: "Founders building across India, metro to tier-2.",
-    eventsIntro: "PinkFly gatherings hosted across India.",
+    eventsIntro: "Pinkfly gatherings hosted across India.",
   },
   form: {
     googleFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL_INDIA ?? "",
     crmSegment: "india",
   },
   seo: {
-    title: "PinkFly India — A community for women entrepreneurs in India",
+    title: "Pinkfly India — A community for women entrepreneurs in India",
     description:
-      "PinkFly India connects women entrepreneurs across India with mentorship, founder meetups, masterclasses and a network built to help businesses scale.",
+      "Pinkfly India connects women entrepreneurs across India with mentorship, founder meetups, masterclasses and a network built to help businesses scale.",
   },
 };
 
@@ -139,20 +139,20 @@ const DUBAI: Region = {
   email: null,
   timezone: "Asia/Dubai",
   copy: {
-    heroEyebrow: "PinkFly Dubai",
+    heroEyebrow: "Pinkfly Dubai",
     heroHeadline: "Build your business where the world meets.",
     joinIntro:
       "Join women founders and operators building across the UAE.",
-    eventsIntro: "PinkFly gatherings hosted across the UAE.",
+    eventsIntro: "Pinkfly gatherings hosted across the UAE.",
   },
   form: {
     googleFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL_DUBAI ?? "",
     crmSegment: "dubai",
   },
   seo: {
-    title: "PinkFly Dubai — A community for women entrepreneurs in the UAE",
+    title: "Pinkfly Dubai — A community for women entrepreneurs in the UAE",
     description:
-      "PinkFly Dubai brings together women entrepreneurs across the UAE with mentorship, networking events, masterclasses and a community built for growth.",
+      "Pinkfly Dubai brings together women entrepreneurs across the UAE with mentorship, networking events, masterclasses and a community built for growth.",
   },
 };
 
@@ -169,19 +169,19 @@ const USA: Region = {
   email: null,
   timezone: "America/New_York",
   copy: {
-    heroEyebrow: "PinkFly USA",
+    heroEyebrow: "Pinkfly USA",
     heroHeadline: "Ambition, with people behind it.",
     joinIntro: "Join women founders building across the United States.",
-    eventsIntro: "PinkFly gatherings hosted across the United States.",
+    eventsIntro: "Pinkfly gatherings hosted across the United States.",
   },
   form: {
     googleFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL_USA ?? "",
     crmSegment: "usa",
   },
   seo: {
-    title: "PinkFly USA — A community for women entrepreneurs in the US",
+    title: "Pinkfly USA — A community for women entrepreneurs in the US",
     description:
-      "PinkFly USA connects women entrepreneurs across the United States with mentorship, founder meetups, masterclasses and a network built to help businesses scale.",
+      "Pinkfly USA connects women entrepreneurs across the United States with mentorship, founder meetups, masterclasses and a network built to help businesses scale.",
   },
 };
 

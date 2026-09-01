@@ -1,7 +1,7 @@
 import { defineField, defineType } from "sanity";
 
 /**
- * Everything true of PinkFly globally: identity, contact, navigation,
+ * Everything true of Pinkfly globally: identity, contact, navigation,
  * social links and the registration form destination. Region-specific
  * details live on the `region` documents instead.
  */
@@ -27,7 +27,7 @@ export const siteSettings = defineType({
       type: "figure",
       group: "identity",
       description:
-        "Optional. Leave empty to keep the type-set PinkFly wordmark.",
+        "Optional. Leave empty to keep the type-set Pinkfly wordmark.",
     }),
     defineField({
       name: "defaultOgImage",

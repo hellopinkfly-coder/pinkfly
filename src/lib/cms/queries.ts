@@ -28,7 +28,9 @@ export const homePageQuery = groq`*[_type == "homePage"][0]{
   missionCta,
   missionVisible,
   finalCta,
+  finalCtaVisible,
   joinCta,
+  joinCtaVisible,
   socialHeading ${HEADING},
   socialPosts[]{ url, caption, image ${FIGURE} },
   socialVisible,
@@ -66,8 +68,8 @@ export const eventsPageQuery = groq`*[_type == "eventsPage"][0]{
 }`;
 
 export const knowledgeBasePageQuery = groq`*[_type == "knowledgeBasePage"][0]{
-  eyebrow, title, intro, bannerImage ${FIGURE},
-  categories[]{ id, title, description },
+  eyebrow, title, intro,
+  categories[]{ id, title, description, hidden },
   commentsClosedMessage,
   seo ${SEO}
 }`;

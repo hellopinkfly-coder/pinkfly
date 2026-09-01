@@ -40,7 +40,7 @@ import * as seed from "@/config/content";
 import { flags } from "@/config/flags";
 import { policies, type PolicySlug } from "@/config/policies";
 import { siteConfig, integrations, mainNav, knowledgeBaseNav, footerNav, policyNav } from "@/config/site";
-import { aboutImages, joinImages, eventImages, knowledgeImages, teamPlaceholder } from "@/config/images";
+import { aboutImages, joinImages, eventImages, teamPlaceholder } from "@/config/images";
 import { executiveTeam, initiatives as seedInitiatives, type Initiative, type TeamMember } from "@/data/team";
 import { kbCategories } from "@/data/knowledge-base";
 import type { FrameShape } from "@/components/shared/ImageFrame";
@@ -136,6 +136,9 @@ export type HomeContent = {
     posts: SocialPost[];
   };
   finalCta: FinalCtaContent;
+  /** The CTA band under the hero, and the join block at the foot of the page. */
+  finalCtaVisible: boolean;
+  joinCtaVisible: boolean;
   joinCta: {
     eyebrow: string;
     headline: string;
@@ -189,6 +192,8 @@ type CmsHome = {
   missionBody?: string[];
   missionCta?: CmsCta;
   missionVisible?: boolean;
+  finalCtaVisible?: boolean;
+  joinCtaVisible?: boolean;
   finalCta?: {
     eyebrow?: string;
     headline?: string;
@@ -362,6 +367,8 @@ export async function getHomeContent(): Promise<HomeContent> {
     },
 
     finalCta: finalCtaFrom(cms?.finalCta),
+    finalCtaVisible: pickBool(cms?.finalCtaVisible, fallbackFlag(true, live, cms)),
+    joinCtaVisible: pickBool(cms?.joinCtaVisible, fallbackFlag(true, live, cms)),
     joinCta: {
       eyebrow: pick(cms?.joinCta?.eyebrow, seed.joinCta.eyebrow),
       headline: pick(cms?.joinCta?.headline, seed.joinCta.headline),
@@ -524,7 +531,7 @@ export async function getAboutContent(): Promise<AboutContent> {
       heading: heading(cms?.teamHeading, {
         eyebrow: "The team",
         headline: "Executive team.",
-        intro: "The people building PinkFly.",
+        intro: "The people building Pinkfly.",
       }),
       members: pickList(teamDocs, fallback(executiveTeam, live), (member, i) => ({
         name: pick(member.name, executiveTeam[i]?.name ?? ""),
@@ -685,18 +692,16 @@ export async function getEventsPageContent(): Promise<EventsPageContent> {
 /* ====================================================== knowledge base page */
 
 export type KnowledgeBaseContent = {
-  hero: {
-    eyebrow: string;
+  // The page opens on its heading and copy — it carries no banner.
+  hero: { eyebrow: string; title: string; intro: string };
+  categories: {
+    id: string;
     title: string;
     intro: string;
-    /**
-     * Absent when no banner image is set in Sanity, and the page then opens on
-     * its heading and copy. Editors control the banner entirely: clearing the
-     * image removes it, setting one brings it back, neither needing a deploy.
-     */
-    banner?: ResolvedImage;
-  };
-  categories: { id: string; title: string; intro: string; anchor: string }[];
+    anchor: string;
+    /** Set in Sanity to take the rail off the page without deleting it. */
+    hidden: boolean;
+  }[];
   commentsClosedMessage: string;
 };
 
@@ -705,8 +710,12 @@ export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
     eyebrow?: string;
     title?: string;
     intro?: string;
-    bannerImage?: CmsFigure;
-    categories?: { id?: string; title?: string; description?: string }[];
+    categories?: {
+      id?: string;
+      title?: string;
+      description?: string;
+      hidden?: boolean;
+    }[];
     commentsClosedMessage?: string;
   } | null>(knowledgeBasePageQuery);
 
@@ -715,20 +724,16 @@ export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
       eyebrow: pick(cms?.eyebrow, seed.knowledgeBase.hero.eyebrow),
       title: pick(cms?.title, seed.knowledgeBase.hero.title),
       intro: pick(cms?.intro, seed.knowledgeBase.hero.intro),
-      // No seed fallback while Sanity is answering: an editor who clears the
-      // banner means it gone, and falling back would put it straight back. The
-      // seed still covers an outage, so the page never renders bannerless
-      // just because Sanity was unreachable.
-      banner: live
-        ? resolveImage(cms?.bannerImage)
-        : knowledgeImages.banner,
     },
     // The anchor stays in code: it is a URL contract the navigation links to,
     // not copy, so an editor cannot break the in-page links by retitling a rail.
     categories: pickList<
-      { id?: string; title?: string; description?: string },
-      { id: string; title: string; intro: string; anchor: string }
-    >(cms?.categories, [...kbCategories], (category, i) => {
+      { id?: string; title?: string; description?: string; hidden?: boolean },
+      { id: string; title: string; intro: string; anchor: string; hidden: boolean }
+    >(
+      cms?.categories,
+      kbCategories.map((c) => ({ ...c, hidden: false })),
+      (category, i) => {
       const fallback =
         kbCategories.find((c) => c.id === category.id) ?? kbCategories[i];
       return {
@@ -736,6 +741,7 @@ export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
         title: pick(category.title, fallback?.title ?? ""),
         intro: pick(category.description, fallback?.intro ?? ""),
         anchor: fallback?.anchor ?? "",
+        hidden: category.hidden === true,
       };
     }),
     commentsClosedMessage: pick(
@@ -881,7 +887,7 @@ export async function getSiteContent(): Promise<SiteContent> {
       },
     },
     navCta: {
-      label: pick(cms?.navCta?.label, "Join PinkFly"),
+      label: pick(cms?.navCta?.label, "Join Pinkfly"),
       knowledgeLabel: pick(cms?.navCta?.knowledgeLabel, "Join Our Community"),
       href: pick(cms?.navCta?.href, "/join"),
     },
