@@ -498,13 +498,11 @@ async function seed() {
       author: entry.author,
       publishedAt: entry.publishedAt,
       readingTime: entry.readingTime,
-      // Paragraph objects, not strings: Sanity cannot mix primitives and
-      // objects in one array, and the body also holds images, videos and files.
-      body: entry.body.map((block, i) => ({
-        _key: `body-${i}`,
-        _type: "paragraph",
-        text: block.kind === "paragraph" ? block.text : "",
-      })),
+      // Plain strings: the paragraphs live in their own array, and the image,
+      // video and downloads each have their own field beside it.
+      body: entry.body.flatMap((block) =>
+        block.kind === "paragraph" ? [block.text] : []
+      ),
       ...(entry.source ? { source: entry.source } : {}),
       ...(entry.policy
         ? { policy: { ...entry.policy, keyPoints: [...entry.policy.keyPoints] } }

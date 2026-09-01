@@ -111,14 +111,16 @@ export const eventsQuery = groq`*[_type == "event" && hidden != true] | order(st
 
 export const kbEntriesQuery = groq`*[_type == "kbEntry" && hidden != true] | order(publishedAt desc){
   "slug": slug.current, category, title, excerpt, tag,
-  author, publishedAt, readingTime, body, source, policy,
+  author, publishedAt, readingTime, source, policy,
+  body, bodyAfterImage,
+  inlineImage ${FIGURE},
+  video,
   image ${FIGURE},
-  // Files are the one body block needing a dereference: the image builder
-  // resolves a figure from its reference alone, but a download needs the
-  // asset's real URL, name and size. Keyed so the body can be stitched back
-  // together in order without projecting over the plain-text paragraphs.
-  "bodyFiles": body[_type == "fileAttachment"]{
-    _key, title, description,
+  // Files are the one part needing a dereference: the image builder resolves a
+  // figure from its reference alone, but a download needs the asset's real
+  // URL, name and size.
+  "files": attachments[]{
+    title, description,
     "url": file.asset->url,
     "name": file.asset->originalFilename,
     "size": file.asset->size

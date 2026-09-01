@@ -89,29 +89,19 @@ type CmsKbEntry = {
   author?: { name?: string; role?: string };
   publishedAt?: string;
   readingTime?: string;
-  /**
-   * Mixed on purpose. A paragraph is a plain string, and every other block is
-   * an object carrying its own `_type` — which is also what entries written
-   * before the richer body existed still look like.
-   */
-  body?: (string | CmsBodyBlock)[];
-  /** File blocks with their asset dereferenced, keyed back to `body`. */
-  bodyFiles?: CmsBodyFile[];
+  /** The opening paragraphs, then the image, then the rest. */
+  body?: string[];
+  inlineImage?: CmsFigure;
+  bodyAfterImage?: string[];
+  video?: { url?: string; title?: string };
+  /** Downloads, with their assets dereferenced. */
+  files?: CmsBodyFile[];
   source?: { name?: string; url?: string };
   policy?: KbEntry["policy"];
   image?: CmsFigure;
 };
 
-type CmsBodyBlock = {
-  _type?: string;
-  _key?: string;
-  url?: string;
-  title?: string;
-  text?: string;
-} & CmsFigure;
-
 type CmsBodyFile = {
-  _key?: string;
   title?: string;
   description?: string;
   url?: string;
@@ -127,55 +117,45 @@ function formatSize(bytes?: number): string | undefined {
 }
 
 /**
- * The body as the page reads it.
+ * The article in the order it reads: the opening paragraphs, the image between
+ * them, the paragraphs after it, then the video and any downloads.
  *
- * Anything unrecognised is dropped rather than rendered blank — an editor
- * mid-edit should not break the page — and a file whose asset has not
- * finished uploading has no URL yet, so it is skipped until it does.
+ * Each comes from its own field rather than one mixed array, because Sanity
+ * cannot mix plain text with objects in a single array. Anything an editor has
+ * left empty simply contributes nothing, so an article with no picture reads as
+ * continuous prose.
  */
-function resolveBody(
-  blocks: (string | CmsBodyBlock)[] | undefined,
-  files: CmsBodyFile[] | undefined
-): KbBlock[] {
-  const byKey = new Map((files ?? []).map((file) => [file._key, file]));
+function resolveBody(entry: CmsKbEntry): KbBlock[] {
+  const paragraphs = (lines?: string[]): KbBlock[] =>
+    (lines ?? [])
+      .filter((line) => line?.trim())
+      .map((text) => ({ kind: "paragraph", text }) as const);
 
-  return (blocks ?? []).flatMap<KbBlock>((block) => {
-    // Entries written before paragraphs became objects still hold plain
-    // strings, and are read as paragraphs until the migration converts them.
-    if (typeof block === "string") {
-      return block.trim() ? [{ kind: "paragraph", text: block }] : [];
-    }
-    if (!block || typeof block !== "object") return [];
+  const image = resolveImage(entry.inlineImage);
+  const blocks: KbBlock[] = [
+    ...paragraphs(entry.body),
+    ...(image
+      ? [{ kind: "image", src: image.src, alt: image.alt, caption: image.label } as const]
+      : []),
+    ...paragraphs(entry.bodyAfterImage),
+  ];
 
-    if (block._type === "paragraph") {
-      return block.text?.trim() ? [{ kind: "paragraph", text: block.text }] : [];
-    }
+  if (entry.video?.url) {
+    blocks.push({ kind: "video", url: entry.video.url, title: entry.video.title });
+  }
 
-    if (block._type === "figure") {
-      const image = resolveImage(block);
-      return image ? [{ kind: "image", src: image.src, alt: image.alt, caption: image.label }] : [];
-    }
+  for (const file of entry.files ?? []) {
+    if (!file.url) continue;
+    blocks.push({
+      kind: "file",
+      url: file.url,
+      title: file.title || file.name || "Download",
+      description: file.description,
+      sizeLabel: formatSize(file.size),
+    });
+  }
 
-    if (block._type === "videoEmbed") {
-      return block.url ? [{ kind: "video", url: block.url, title: block.title }] : [];
-    }
-
-    if (block._type === "fileAttachment") {
-      const file = byKey.get(block._key);
-      if (!file?.url) return [];
-      return [
-        {
-          kind: "file",
-          url: file.url,
-          title: file.title || file.name || "Download",
-          description: file.description,
-          sizeLabel: formatSize(file.size),
-        },
-      ];
-    }
-
-    return [];
-  });
+  return blocks;
 }
 
 export async function getKbEntries(): Promise<KbEntry[]> {
@@ -198,7 +178,7 @@ export async function getKbEntries(): Promise<KbEntry[]> {
       alt: e.title ?? "Knowledge Base entry",
     }),
     tag: e.tag ?? "",
-    body: resolveBody(e.body, e.bodyFiles),
+    body: resolveBody(e),
     source: e.source?.name ? { name: e.source.name, url: e.source.url } : undefined,
     policy: e.policy,
   }));
