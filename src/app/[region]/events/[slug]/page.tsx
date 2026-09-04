@@ -12,17 +12,21 @@ import { getRegion, isRegionSlug } from "@/lib/region";
 import { regionalSlugs } from "@/config/regions";
 import { buildMetadata } from "@/lib/seo";
 
-type Params = { params: Promise<{ region: string; slug: string }> };
+/**
+ * Rendered on request, not at build.
+ *
+ * The page's content comes from Sanity, and a prerendered page keeps whatever
+ * the CMS held when the deploy ran — so a change published in the Studio only
+ * appeared on the next deploy. Rendering on request means a publish is on the
+ * page at the next refresh.
+ *
+ * Temporary, and paired with `CMS_REVALIDATE_SECONDS = 0`: once the publish
+ * webhook is configured, both go back and the site is cached again with the
+ * webhook purging it on publish.
+ */
+export const dynamic = "force-dynamic";
 
-// Built from the CMS — see the note on the global route.
-export async function generateStaticParams() {
-  const published = await getEvents();
-  return regionalSlugs.flatMap((region) =>
-    published
-      .filter((event) => event.regions.includes(region))
-      .map((event) => ({ region, slug: event.slug }))
-  );
-}
+type Params = { params: Promise<{ region: string; slug: string }> };
 
 export async function generateMetadata({ params }: Params) {
   const { region: regionSlug, slug } = await params;

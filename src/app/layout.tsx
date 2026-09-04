@@ -48,6 +48,21 @@ const themeInitScript = `
  * Root metadata. Per-page titles, descriptions, canonicals and hreflang are
  * supplied by `buildMetadata` in each route — this only sets the defaults.
  */
+/**
+ * Render on request rather than at build.
+ *
+ * Every page's content comes from Sanity, and a prerendered page keeps
+ * whatever the CMS held when the deploy ran — so a change published in the
+ * Studio never appeared until the next deploy. Rendering on request means a
+ * publish is on the page at the next refresh.
+ *
+ * The Studio route sets its own `force-static` and is unaffected, and this is
+ * the same one switch as `CMS_REVALIDATE_SECONDS`: once the publish webhook is
+ * configured, remove this and put that back to 60 to return to a cached,
+ * webhook-purged site.
+ */
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
