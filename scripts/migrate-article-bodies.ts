@@ -1,15 +1,16 @@
 /**
- * Put Knowledge Base bodies back to plain paragraphs.
+ * Convert body copy from plain strings to Portable Text.
  *
- * An earlier attempt made each paragraph a `paragraph` object so that images
- * could sit beside them in one array. Sanity cannot mix plain text with
- * objects in an array, and the result was a body the Studio refused to render
- * at all: "Item of type paragraph not valid for this list".
+ * A link is an annotation on a span of text, so body copy has to be Portable
+ * Text for an editor to add one. Sanity cannot hold plain strings in a block
+ * array — it renders them as "not valid for this list" — so the existing copy
+ * has to be converted rather than left beside the new shape.
  *
- * The article is now assembled from separate fields — paragraphs, then an
- * image, then more paragraphs — so `body` holds plain strings again. This
- * unwraps any paragraph object back to its text, carrying the copy across
- * unchanged and leaving strings alone, so it is safe to re-run.
+ * Each string becomes one paragraph block carrying that text and nothing else,
+ * so the copy is identical and only its container changes. Blocks that are
+ * already Portable Text are left alone, which makes a second run a no-op.
+ *
+ * Covers both Knowledge Base bodies and event descriptions.
  *
  *   npm run migrate:bodies            # dry run
  *   npm run migrate:bodies -- --apply # performs it
@@ -54,65 +55,69 @@ const client = createClient({
 
 type Entry = { _id: string; title?: string; body?: unknown[] };
 
-async function main() {
-  const entries = await client.fetch<Entry[]>(
-    // Dot-free ids only — the dotted leftovers are private and the site never
-    // reads them. `string::split` rather than `path()`: the path form matched
-    // nothing here, which made an earlier run report "nothing to migrate" when
-    // in fact it had looked at no documents at all.
-    `*[_type == "kbEntry" && count(string::split(_id, ".")) == 1]{ _id, title, body }`
-  );
+type Doc = { _id: string; _type: string; title?: string } & Record<string, unknown>;
 
-  // What the bodies actually are, before deciding anything about them. A
-  // migration that reports "nothing to do" is only reassuring if you can see
-  // the shape it looked at.
-  console.log(`${entries.length} entr(ies) the site can read\n`);
-  for (const entry of entries.slice(0, 3)) {
-    const body = entry.body ?? [];
-    const shapes = body.map((block) =>
-      typeof block === "string"
-        ? "string"
-        : `${(block as { _type?: string })?._type ?? "object without _type"}`
-    );
-    console.log(`${entry._id}`);
-    console.log(`    ${body.length} block(s): ${JSON.stringify(shapes)}`);
-    console.log(`    first block: ${JSON.stringify(body[0])?.slice(0, 220)}`);
-  }
-  console.log("");
+/** One paragraph of Portable Text carrying exactly this text. */
+function block(text: string, i: number) {
+  return {
+    _key: `b${i}`,
+    _type: "block",
+    style: "normal",
+    markDefs: [],
+    children: [{ _key: `s${i}`, _type: "span", text, marks: [] }],
+  };
+}
+
+/** The fields holding body copy, by document type. */
+const FIELDS: Record<string, string[]> = {
+  kbEntry: ["body", "bodyAfterImage"],
+  event: ["description"],
+};
+
+async function main() {
+  const docs = await client.fetch<Doc[]>(
+    // Dot-free ids only — the dotted leftovers are private and the site never
+    // reads them.
+    `*[_type in ["kbEntry", "event"] && count(string::split(_id, ".")) == 1]`
+  );
 
   const transaction = client.transaction();
   let touched = 0;
 
-  for (const entry of entries) {
-    const body = entry.body ?? [];
-    const objects = body.filter((block) => typeof block === "object" && block).length;
-    if (objects === 0) continue;
+  for (const doc of docs) {
+    const set: Record<string, unknown> = {};
 
-    const next = body.map((block) =>
-      typeof block === "string"
-        ? block
-        : ((block as { text?: string })?.text ?? "")
-    );
+    for (const field of FIELDS[doc._type] ?? []) {
+      const value = doc[field];
+      if (!Array.isArray(value)) continue;
+      const strings = value.filter((item) => typeof item === "string");
+      if (strings.length === 0) continue;
 
+      set[field] = value.map((item, i) =>
+        typeof item === "string" ? block(item, i) : item
+      );
+      console.log(
+        `${doc._id}  ${field}: ${strings.length} string(s) → Portable Text  (${doc.title ?? "untitled"})`
+      );
+    }
+
+    if (Object.keys(set).length === 0) continue;
     touched += 1;
-    console.log(
-      `${entry._id}  ${objects} object(s) → plain paragraphs  (${entry.title ?? "untitled"})`
-    );
-    transaction.patch(entry._id, { set: { body: next } });
+    transaction.patch(doc._id, { set });
   }
 
   if (touched === 0) {
-    console.log("Every body is already plain paragraphs — nothing to migrate.");
+    console.log("Every body is already Portable Text — nothing to migrate.");
     return;
   }
 
   if (!apply) {
-    console.log(`\n${touched} entr(ies) would change. Re-run with --apply to perform it.`);
+    console.log(`\n${touched} document(s) would change. Re-run with --apply to perform it.`);
     return;
   }
 
   await transaction.commit();
-  console.log(`\nUnwrapped the bodies of ${touched} entr(ies).`);
+  console.log(`\nConverted ${touched} document(s).`);
 }
 
 main().catch((error) => {
