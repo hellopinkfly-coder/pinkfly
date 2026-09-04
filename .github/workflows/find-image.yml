@@ -3,6 +3,13 @@
 name: Find image
 
 on:
+  # Runs on push as well, because a workflow that exists only on a branch
+  # cannot be dispatched until it reaches the default branch, and this is
+  # needed now rather than after a merge.
+  push:
+    paths:
+      - "scripts/find-image.ts"
+      - ".github/workflows/find-image.yml"
   workflow_dispatch:
     inputs:
       title:
