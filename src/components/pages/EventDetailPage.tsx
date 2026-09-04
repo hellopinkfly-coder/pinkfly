@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Countdown } from "@/features/events/Countdown";
 import { EventCard } from "@/features/events/EventCard";
+import { RichText } from "@/components/shared/RichText";
 import { upcomingEvents, type PinkflyEvent } from "@/data/events";
 import { getEvents } from "@/lib/cms/collections";
 import { teamPlaceholder } from "@/config/images";
@@ -157,9 +158,7 @@ export async function EventDetailPage({
 
             {event.description.length > 0 && (
               <div className="pf-prose mt-8 text-[var(--pf-text)]">
-                {event.description.map((paragraph) => (
-                  <p key={paragraph.slice(0, 32)}>{paragraph}</p>
-                ))}
+                <RichText value={event.description as never} />
               </div>
             )}
           </Reveal>

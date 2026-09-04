@@ -38,7 +38,8 @@ export type PinkflyEvent = {
   registrationUrl: string;
   whoShouldJoin: string[];
   whyJoin: string[];
-  description: string[];
+  /** Portable Text from Sanity, or the plain paragraphs written before it. */
+  description: unknown[];
   speakers: {
     name: string;
     designation: string;

@@ -65,11 +65,11 @@ export const kbEntry = defineType({
      */
     defineField({
       name: "body",
-      title: "Paragraphs — before the image",
-      type: "array",
+      title: "Article — before the image",
+      type: "richText",
       group: "body",
-      of: [{ type: "text" }],
-      description: "The opening of the article. One paragraph per item.",
+      description:
+        "The opening of the article. Highlight text and use the link button to turn it into a link.",
     }),
     defineField({
       name: "inlineImage",
@@ -81,10 +81,9 @@ export const kbEntry = defineType({
     }),
     defineField({
       name: "bodyAfterImage",
-      title: "Paragraphs — after the image",
-      type: "array",
+      title: "Article — after the image",
+      type: "richText",
       group: "body",
-      of: [{ type: "text" }],
       description: "The rest of the article, below the image.",
     }),
     defineField({

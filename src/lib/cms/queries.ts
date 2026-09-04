@@ -80,7 +80,7 @@ export const policyPagesQuery = groq`*[_type == "policyPage"]{
 
 export const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
   name, tagline, description, parent, parentUrl,
-  logo ${FIGURE}, defaultOgImage ${FIGURE},
+  logo ${FIGURE}, defaultOgImage ${FIGURE}, placeholderImage ${FIGURE},
   contactEmail, address, phone, socials,
   mainNav[]{ label, href },
   knowledgeBaseNav[]{ label, href },

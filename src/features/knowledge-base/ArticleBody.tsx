@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Download, FileText } from "lucide-react";
+import { RichText } from "@/components/shared/RichText";
 import type { KbBlock } from "@/data/knowledge-base";
 
 /**
@@ -16,6 +17,9 @@ export function ArticleBody({ blocks }: { blocks: KbBlock[] }) {
         switch (block.kind) {
           case "paragraph":
             return <p key={i}>{block.text}</p>;
+
+          case "rich":
+            return <RichText key={i} value={block.value as never} />;
 
           case "image":
             return (

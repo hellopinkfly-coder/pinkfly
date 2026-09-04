@@ -6,6 +6,7 @@ import { navLink } from "./objects/navLink";
 import { seo } from "./objects/seo";
 import { socialPost } from "./objects/socialPost";
 import { videoEmbed, fileAttachment } from "./objects/articleBlocks";
+import { richText } from "./objects/richText";
 import { iconPicker } from "./objects/iconPicker";
 import {
   titledItem,
@@ -42,6 +43,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   faqItem,
   imageCard,
   socialPost,
+  richText,
   videoEmbed,
   fileAttachment,
 
