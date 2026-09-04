@@ -11,14 +11,21 @@ import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion } from "@/lib/region";
 import { buildMetadata } from "@/lib/seo";
 
-type Params = { params: Promise<{ category: string; slug: string }> };
+/**
+ * Rendered on request, not at build.
+ *
+ * The page's content comes from Sanity, and a prerendered page keeps whatever
+ * the CMS held when the deploy ran — so a change published in the Studio only
+ * appeared on the next deploy. Rendering on request means a publish is on the
+ * page at the next refresh.
+ *
+ * Temporary, and paired with `CMS_REVALIDATE_SECONDS = 0`: once the publish
+ * webhook is configured, both go back and the site is cached again with the
+ * webhook purging it on publish.
+ */
+export const dynamic = "force-dynamic";
 
-// Built from the CMS, so publishing an article prerenders it and
-// unpublishing one stops it being built. Falls back to the seed only when
-// Sanity is unreachable.
-export async function generateStaticParams() {
-  return (await getKbEntries()).map(({ category, slug }) => ({ category, slug }));
-}
+type Params = { params: Promise<{ category: string; slug: string }> };
 
 export async function generateMetadata({ params }: Params) {
   const { category, slug } = await params;

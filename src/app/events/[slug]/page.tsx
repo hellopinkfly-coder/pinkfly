@@ -11,14 +11,21 @@ import { getRegionContent } from "@/lib/cms/collections";
 import { getRegion } from "@/lib/region";
 import { buildMetadata } from "@/lib/seo";
 
-type Params = { params: Promise<{ slug: string }> };
+/**
+ * Rendered on request, not at build.
+ *
+ * The page's content comes from Sanity, and a prerendered page keeps whatever
+ * the CMS held when the deploy ran — so a change published in the Studio only
+ * appeared on the next deploy. Rendering on request means a publish is on the
+ * page at the next refresh.
+ *
+ * Temporary, and paired with `CMS_REVALIDATE_SECONDS = 0`: once the publish
+ * webhook is configured, both go back and the site is cached again with the
+ * webhook purging it on publish.
+ */
+export const dynamic = "force-dynamic";
 
-// Built from the CMS so a newly published event is prerendered and an
-// unpublished one stops being. `getEvents` falls back to the seed only when
-// Sanity is unreachable, which keeps the build working during an outage.
-export async function generateStaticParams() {
-  return (await getEvents()).map((event) => ({ slug: event.slug }));
-}
+type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params) {
   const { slug } = await params;

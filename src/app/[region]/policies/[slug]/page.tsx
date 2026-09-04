@@ -10,15 +10,23 @@ import { regionalSlugs } from "@/config/regions";
 import { buildMetadata } from "@/lib/seo";
 import { getPolicyContent } from "@/lib/cms/content";
 
+/**
+ * Rendered on request, not at build.
+ *
+ * The page's content comes from Sanity, and a prerendered page keeps whatever
+ * the CMS held when the deploy ran — so a change published in the Studio only
+ * appeared on the next deploy. Rendering on request means a publish is on the
+ * page at the next refresh.
+ *
+ * Temporary, and paired with `CMS_REVALIDATE_SECONDS = 0`: once the publish
+ * webhook is configured, both go back and the site is cached again with the
+ * webhook purging it on publish.
+ */
+export const dynamic = "force-dynamic";
+
 type Params = { params: Promise<{ region: string; slug: string }> };
 
 const isPolicySlug = (v: string): v is PolicySlug => v in policies;
-
-export function generateStaticParams() {
-  return regionalSlugs.flatMap((region) =>
-    Object.keys(policies).map((slug) => ({ region, slug }))
-  );
-}
 
 export async function generateMetadata({ params }: Params) {
   const { region: regionSlug, slug } = await params;
