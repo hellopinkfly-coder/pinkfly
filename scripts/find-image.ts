@@ -114,6 +114,21 @@ async function main() {
     const mb = asset.size ? (asset.size / 1_000_000).toFixed(2) : "?";
     console.log(`  ${asset._createdAt}  ${mb} MB  ${asset.originalFilename ?? asset._id}`);
     console.log(`      ${asset._id}`);
+
+    // The decisive question: does any document point at this file? An upload
+    // that reached Sanity but that nothing references was never saved onto a
+    // document — the Studio showed it and the write did not land.
+    const users = await withToken.fetch<{ _id: string; title?: string }[]>(
+      `*[references($id)]{ _id, title }`,
+      { id: asset._id }
+    );
+    if (users.length === 0) {
+      console.log("      ⚠ no document references this image — the upload");
+      console.log("        reached Sanity but was never saved onto a document");
+    }
+    for (const user of users) {
+      console.log(`      used by  ${user._id}  ${user.title ?? ""}`);
+    }
   }
 }
 
