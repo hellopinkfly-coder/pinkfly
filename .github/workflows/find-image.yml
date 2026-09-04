@@ -1,0 +1,26 @@
+# Locate the document holding an image, when the Studio and the website
+# disagree about what it is.
+name: Find image
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "Part of the document title to search for"
+        required: false
+        default: "Bootstrapper"
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Find
+        env:
+          SANITY_API_WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+        run: npm run find:image -- "${{ inputs.title }}"

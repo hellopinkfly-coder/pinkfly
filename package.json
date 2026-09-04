@@ -13,6 +13,7 @@
     "seed:sanity": "tsx scripts/seed-sanity.ts",
     "typecheck": "tsc --noEmit",
     "report:sanity": "tsx scripts/report-sanity.ts",
+    "find:image": "tsx scripts/find-image.ts",
     "migrate:ids": "tsx scripts/migrate-doc-ids.ts",
     "rename:brand": "tsx scripts/rename-brand.ts",
     "migrate:bodies": "tsx scripts/migrate-article-bodies.ts"
