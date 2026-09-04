@@ -15,9 +15,24 @@ import { projectId, dataset, cmsEnabled } from "../../../sanity/env";
 
 const builder = cmsEnabled ? imageUrlBuilder({ projectId, dataset }) : null;
 
-/** Sanity's `figure` object, as it comes back from GROQ. */
-export type CmsFigure = {
+/** A Sanity image value: the asset reference, plus crop and hotspot. */
+type SanityImage = {
+  _type?: string;
+  _ref?: string;
   asset?: { _ref?: string; _type?: string } | null;
+  crop?: unknown;
+  hotspot?: unknown;
+};
+
+/**
+ * Sanity's `figure` object, as it comes back from GROQ.
+ *
+ * `asset` is the figure's *upload* field, and its type is `image` — so the
+ * asset reference sits one level further in, at `asset.asset._ref`. The flat
+ * shape is accepted too, for figures written directly as an image.
+ */
+export type CmsFigure = {
+  asset?: SanityImage | null;
   url?: string | null;
   alt?: string | null;
   label?: string | null;
@@ -51,8 +66,9 @@ export function resolveImage(
   if (!figure) return seed;
 
   let src: string | undefined;
-  if (figure.asset?._ref && builder) {
-    src = builder.image(figure.asset as { _ref: string }).auto("format").fit("crop").width(2000).quality(85).url();
+  const image = uploaded(figure.asset);
+  if (image && builder) {
+    src = builder.image(image).auto("format").fit("crop").width(2000).quality(85).url();
   } else if (figure.url) {
     src = figure.url;
   }
@@ -65,6 +81,21 @@ export function resolveImage(
     label: figure.label || seed?.label,
     focal: figure.focal || seed?.focal,
   };
+}
+
+/**
+ * The uploaded image on a figure, whichever way round it was written.
+ *
+ * The `figure` schema names its upload field `asset` and types it `image`, so
+ * a real upload arrives as `asset.asset._ref`. Returning the object the URL
+ * builder wants — reference plus crop and hotspot — keeps the editor's chosen
+ * focal point instead of centring every crop.
+ */
+function uploaded(value: SanityImage | null | undefined): SanityImage | undefined {
+  if (!value) return undefined;
+  if (value.asset?._ref) return value;
+  if (value._ref) return { asset: { _ref: value._ref, _type: "reference" } };
+  return undefined;
 }
 
 /** Empty is the same as missing — an editor clearing a field gets the seed. */
