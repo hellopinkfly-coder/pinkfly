@@ -129,7 +129,34 @@ async function main() {
     for (const user of users) {
       console.log(`      used by  ${user._id}  ${user.title ?? ""}`);
     }
+
+    // Which field actually holds the reference? A document can reference an
+    // asset from its body, an inline image or an attachment, none of which
+    // the card or the article header reads — so name the field outright
+    // rather than inferring it from the fact that a reference exists.
+    for (const user of users) {
+      const [raw, published] = await Promise.all([
+        withToken.fetch<Record<string, unknown> | null>(
+          `*[_id == $id][0]`,
+          { id: user._id }
+        ),
+        anon.fetch<Record<string, unknown> | null>(`*[_id == $id][0]`, {
+          id: user._id,
+        }),
+      ]);
+      console.log(`\n      --- ${user._id} as the token sees it ---`);
+      console.log(indent(JSON.stringify(raw, null, 2)));
+      console.log(`      --- ${user._id} as the website sees it ---`);
+      console.log(indent(JSON.stringify(published, null, 2)));
+    }
   }
+}
+
+function indent(text: string) {
+  return text
+    .split("\n")
+    .map((line) => `      ${line}`)
+    .join("\n");
 }
 
 main().catch((error) => {
