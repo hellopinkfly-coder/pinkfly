@@ -400,6 +400,40 @@ async function reportImages() {
     console.log(`        ${source}`);
   }
 
+  // The same field read with drafts visible. An upload that appears here but
+  // not above was saved and never published, which looks exactly like "the
+  // image did not change" from the website.
+  const withToken = createClient({
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "5t0hmzzq",
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
+    apiVersion: "2024-10-01",
+    useCdn: false,
+    perspective: "raw",
+    ...(process.env.SANITY_API_WRITE_TOKEN
+      ? { token: process.env.SANITY_API_WRITE_TOKEN }
+      : {}),
+  });
+
+  try {
+    const drafts = await withToken.fetch<Entry[]>(
+      `*[_type == "kbEntry" && _id in path("drafts.**")]{
+         _id, title, "assetRef": image.asset._ref, "externalUrl": image.url
+       }`
+    );
+    console.log("\n=== unpublished drafts of Knowledge Base entries ===");
+    if (drafts.length === 0) {
+      console.log("    none — every edit has been published");
+    }
+    for (const draft of drafts) {
+      console.log(`  ⚠ ${draft.title ?? draft._id}`);
+      console.log(
+        `        ${draft.assetRef ? `upload  ${draft.assetRef}` : draft.externalUrl ? "external URL" : "no image"} — NOT published, so the site cannot see it`
+      );
+    }
+  } catch (error) {
+    console.log(`\n  ⚠ could not read drafts: ${(error as Error).message}`);
+  }
+
   const withUpload = entries.filter((entry) => entry.assetRef);
   if (withUpload.length === 0) {
     console.log("\n  ⚠ No entry has an uploaded image, so every card and hero is");
