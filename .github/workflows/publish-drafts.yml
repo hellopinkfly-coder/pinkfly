@@ -1,0 +1,35 @@
+# Publish drafts from the server, when the Studio will not.
+#
+# Publishing copies the draft over the published document. The Studio does
+# that from the browser, and a browser that cannot hold a connection to the
+# API leaves the draft holding the edit while the website keeps showing the
+# old content. This does the same thing server-side.
+name: Publish drafts
+
+on:
+  push:
+    paths:
+      - "scripts/publish-drafts.ts"
+      - ".github/workflows/publish-drafts.yml"
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Publish them (unchecked = dry run)"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Publish
+        env:
+          SANITY_API_WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+        run: npm run publish:drafts ${{ inputs.apply && '-- --apply' || '' }}
