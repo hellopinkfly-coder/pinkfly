@@ -380,13 +380,27 @@ async function reportImages() {
     externalUrl?: string;
   };
 
-  const entries = await anon.fetch<Entry[]>(
+  const entries = await anon.fetch<(Entry & { inlineRef?: string })[]>(
     `*[_type == "kbEntry" && hidden != true]{
        _id, title, category, "slug": slug.current,
        "assetRef": image.asset._ref,
-       "externalUrl": image.url
+       "externalUrl": image.url,
+       "inlineRef": inlineImage.asset._ref
      }`
   );
+
+  // An upload in the wrong field is invisible in exactly the way a missing one
+  // is: the card and hero read `image`, while `inlineImage` only ever appears
+  // between the paragraphs of the article body.
+  const misplaced = entries.filter((e) => !e.assetRef && e.inlineRef);
+  if (misplaced.length > 0) {
+    console.log("\n=== uploads in the body image, not the card image ===");
+    for (const entry of misplaced) {
+      console.log(`  ⚠ ${entry.title ?? entry._id}`);
+      console.log("        has an upload in 'Image — between the paragraphs'");
+      console.log("        but the card and hero read the 'Image' field, which is empty");
+    }
+  }
 
   console.log("\n=== the image each Knowledge Base entry holds ===");
   console.log("(upload wins over external URL — that is what the site renders)");
