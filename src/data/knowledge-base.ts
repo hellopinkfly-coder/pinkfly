@@ -12,6 +12,8 @@ export type KbCategory = "articles" | "business-news" | "government-policies";
 /** One block of an entry's body. */
 export type KbBlock =
   | { kind: "paragraph"; text: string }
+  /** Portable Text from Sanity — paragraphs that may carry links. */
+  | { kind: "rich"; value: unknown[] }
   | { kind: "image"; src: string; alt: string; caption?: string }
   | { kind: "video"; url: string; title?: string }
   | {

@@ -79,6 +79,22 @@ if (!token) {
   process.exit(1);
 }
 
+/**
+ * One paragraph of Portable Text.
+ *
+ * Body copy is Portable Text so an editor can put links into it, and Sanity
+ * cannot hold plain strings in a block array, so the seed writes blocks too.
+ */
+function portableParagraph(text: string, i: number) {
+  return {
+    _key: `b${i}`,
+    _type: "block",
+    style: "normal",
+    markDefs: [],
+    children: [{ _key: `s${i}`, _type: "span", text, marks: [] }],
+  };
+}
+
 const client = createClient({
   projectId,
   dataset,
@@ -471,7 +487,7 @@ async function seed() {
       ...(event.registrationUrl ? { registrationUrl: event.registrationUrl } : {}),
       whoShouldJoin: event.whoShouldJoin,
       whyJoin: event.whyJoin,
-      description: event.description,
+      description: event.description.map((p, i) => portableParagraph(String(p), i)),
       speakers: keyed(
         event.speakers.map((s) => ({
           _type: "speaker",
@@ -498,10 +514,9 @@ async function seed() {
       author: entry.author,
       publishedAt: entry.publishedAt,
       readingTime: entry.readingTime,
-      // Plain strings: the paragraphs live in their own array, and the image,
-      // video and downloads each have their own field beside it.
-      body: entry.body.flatMap((block) =>
-        block.kind === "paragraph" ? [block.text] : []
+      // Portable Text, so an editor can put links into the copy.
+      body: entry.body.flatMap((b, i) =>
+        b.kind === "paragraph" ? [portableParagraph(b.text, i)] : []
       ),
       ...(entry.source ? { source: entry.source } : {}),
       ...(entry.policy

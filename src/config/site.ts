@@ -5,12 +5,37 @@
  * file holds only what is true for Pinkfly globally.
  */
 
+/**
+ * The site's own address, which every canonical, hreflang and share URL is
+ * built from.
+ *
+ * The previous default was `http://localhost:3000`, so any deploy without
+ * NEXT_PUBLIC_APP_URL set published canonicals and hreflang pointing at a
+ * developer's own machine — invisible to a crawler and wrong in every shared
+ * link. The production address is now the default, and localhost is used only
+ * while actually developing. `NODE_ENV` is inlined into the client bundle by
+ * Next, so this resolves identically on the server and in the browser.
+ *
+ * NEXT_PUBLIC_APP_URL still wins where it is set, which is what a preview
+ * deployment or a staging domain needs. A trailing slash is trimmed so
+ * `${url}${path}` never produces a double slash.
+ */
+export const PRODUCTION_URL = "https://pinkfly.com";
+
+function siteUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_APP_URL?.trim();
+  if (configured) return configured.replace(/\/+$/, "");
+  return process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : PRODUCTION_URL;
+}
+
 export const siteConfig = {
   name: "Pinkfly",
   tagline: "Building Dreams",
   description:
     "Pinkfly is a community for ambitious women founders — mentorship, network, events and education to help you launch, scale and conquer.",
-  url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
+  url: siteUrl(),
   parent: "Noboru World",
   parentUrl: "https://noboruworld.com",
   contactEmail: "hello.pinkfly@gmail.com",

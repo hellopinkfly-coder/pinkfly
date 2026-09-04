@@ -82,7 +82,14 @@ export const event = defineType({
 
     defineField({ name: "whoShouldJoin", type: "array", of: [{ type: "string" }], group: "content" }),
     defineField({ name: "whyJoin", type: "array", of: [{ type: "string" }], group: "content" }),
-    defineField({ name: "description", title: "Paragraphs", type: "array", of: [{ type: "text" }], group: "content" }),
+    defineField({
+      name: "description",
+      title: "About this event",
+      type: "richText",
+      group: "content",
+      description:
+        "Highlight text and use the link button to turn it into a link.",
+    }),
     defineField({
       name: "speakers",
       type: "array",

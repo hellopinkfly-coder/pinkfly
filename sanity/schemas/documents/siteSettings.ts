@@ -35,6 +35,14 @@ export const siteSettings = defineType({
       type: "figure",
       group: "identity",
     }),
+    defineField({
+      name: "placeholderImage",
+      title: "Placeholder image",
+      type: "figure",
+      group: "identity",
+      description:
+        "Stands in wherever an article, event, card or team member has no image of its own. Change it here and it changes everywhere.",
+    }),
 
     defineField({ name: "contactEmail", type: "string", group: "contact" }),
     defineField({
