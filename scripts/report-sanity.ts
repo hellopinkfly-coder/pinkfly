@@ -103,6 +103,7 @@ async function main() {
   await reportLivePage();
   await reportFreshness();
   await reportRecentEdits();
+  await reportImages();
 }
 
 /**
@@ -347,6 +348,82 @@ async function reportRecentEdits() {
         (problem ? `\n        ${problem}` : "")
     );
   }
+}
+
+/**
+ * Which image each Knowledge Base entry actually holds, and whether the live
+ * page is serving it.
+ *
+ * "I changed the image and the old one is still there" has several possible
+ * causes that look identical from the outside: the edit was never published,
+ * it landed on a document the site cannot read, the field the site renders is
+ * not the field that was edited, or the page is cached. Printing the asset id
+ * Sanity holds beside the asset id in the page HTML separates them — if the
+ * ids match, the site is current and the browser is not.
+ */
+async function reportImages() {
+  const base = process.env.SITE_URL ?? "https://pinkfly.vercel.app";
+  const anon = createClient({
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "5t0hmzzq",
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
+    apiVersion: "2024-10-01",
+    useCdn: false,
+    perspective: "published",
+  });
+
+  type Entry = {
+    _id: string;
+    title?: string;
+    category?: string;
+    slug?: string;
+    assetRef?: string;
+    externalUrl?: string;
+  };
+
+  const entries = await anon.fetch<Entry[]>(
+    `*[_type == "kbEntry" && hidden != true]{
+       _id, title, category, "slug": slug.current,
+       "assetRef": image.asset._ref,
+       "externalUrl": image.url
+     }`
+  );
+
+  console.log("\n=== the image each Knowledge Base entry holds ===");
+  console.log("(upload wins over external URL — that is what the site renders)");
+  for (const entry of entries) {
+    const source = entry.assetRef
+      ? `upload  ${entry.assetRef}`
+      : entry.externalUrl
+        ? `external  ${entry.externalUrl.slice(0, 70)}`
+        : "none — falls back to the site placeholder";
+    console.log(`    ${entry.title ?? entry._id}`);
+    console.log(`        ${source}`);
+  }
+
+  const withUpload = entries.filter((entry) => entry.assetRef);
+  if (withUpload.length === 0) {
+    console.log("\n  ⚠ No entry has an uploaded image, so every card and hero is");
+    console.log("    showing the seeded external photo. An upload in the Studio's");
+    console.log("    Image field is what replaces it.");
+    return;
+  }
+
+  console.log("\n=== is the live page serving that image? ===");
+  for (const entry of withUpload.slice(0, 4)) {
+    const path = `/knowledge-base/${entry.category}/${entry.slug}`;
+    const page = await get(base + path);
+    if (page.status !== 200) {
+      console.log(`  ⚠ ${path} → HTTP ${page.status}`);
+      continue;
+    }
+    // The asset id survives into the optimiser's URL, percent-encoded.
+    const id = entry.assetRef!.replace(/^image-/, "").split("-")[0];
+    const present = page.body.includes(id);
+    console.log(
+      `${present ? "    " : "  ⚠ "}${present ? "serving it   " : "NOT serving it"} ${path}`
+    );
+  }
+  console.log("");
 }
 
 function escapeHtml(value: string) {
