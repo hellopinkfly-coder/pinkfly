@@ -1,0 +1,26 @@
+# Does the comment form actually save a comment on a deployment?
+name: Check comments
+
+on:
+  push:
+    paths:
+      - "scripts/check-comments.ts"
+      - ".github/workflows/check-comments.yml"
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: "Deployment to check"
+        required: false
+        default: "https://pinkfly-git-claude-oinkfly-brand-website-54qps3-pinkfly.vercel.app"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check:comments -- "${{ inputs.site_url || 'https://pinkfly-git-claude-oinkfly-brand-website-54qps3-pinkfly.vercel.app' }}"

@@ -18,7 +18,8 @@
     "migrate:ids": "tsx scripts/migrate-doc-ids.ts",
     "rename:brand": "tsx scripts/rename-brand.ts",
     "migrate:bodies": "tsx scripts/migrate-article-bodies.ts",
-    "check:supabase": "tsx scripts/check-supabase.ts"
+    "check:supabase": "tsx scripts/check-supabase.ts",
+    "check:comments": "tsx scripts/check-comments.ts"
   },
   "dependencies": {
     "@portabletext/react": "^8.0.1",
