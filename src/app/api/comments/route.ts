@@ -16,6 +16,24 @@ import { apiVersion, dataset, projectId, cmsEnabled } from "../../../../sanity/e
  * site until someone approves it in the Studio, so the form cannot be used to
  * publish anything.
  */
+/**
+ * Is the form open, and if not, why?
+ *
+ * "Comments are not open" has two possible causes that look identical from
+ * the outside — no write token in this deployment, or no Sanity project
+ * configured — and knowing which one it is saves guessing at the hosting
+ * settings. It reports only whether the values are present, never what they
+ * are.
+ */
+export async function GET() {
+  const hasToken = Boolean(process.env.SANITY_API_WRITE_TOKEN);
+  return NextResponse.json({
+    open: hasToken && cmsEnabled,
+    writeToken: hasToken ? "present" : "missing",
+    sanityProject: cmsEnabled ? "configured" : "not configured",
+  });
+}
+
 export async function POST(request: Request) {
   const token = process.env.SANITY_API_WRITE_TOKEN;
   if (!token || !cmsEnabled) {

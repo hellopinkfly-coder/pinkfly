@@ -53,7 +53,7 @@ export const kbEntry = defineType({
      */
     defineField({
       name: "image",
-      title: "Card image — Knowledge Base listing",
+      title: "Card image — Knowledge Base grid (1200 × 900)",
       type: "figure",
       group: "main",
       description:
@@ -64,7 +64,7 @@ export const kbEntry = defineType({
 
     defineField({
       name: "articleImage",
-      title: "Header image — the article page",
+      title: "Header image — the article page (1600 × 900)",
       type: "figure",
       group: "main",
       description:

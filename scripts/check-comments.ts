@@ -37,6 +37,15 @@ async function main() {
     return;
   }
 
+  // Ask the deployment what it can see before trying to write, so a refusal
+  // can be attributed rather than guessed at.
+  try {
+    const status = await fetch(`${base}/api/comments`);
+    if (status.ok) console.log(`status   ${(await status.text()).slice(0, 200)}`);
+  } catch {
+    // The write attempt below reports the failure well enough.
+  }
+
   console.log(`site     ${base}`);
   console.log(`article  ${entry.title ?? entry._id}\n`);
 

@@ -35,7 +35,7 @@ export const event = defineType({
      */
     defineField({
       name: "image",
-      title: "Card image — Events listing",
+      title: "Card image — Events listing (1600 × 1000)",
       type: "figure",
       group: "main",
       description:
@@ -46,7 +46,7 @@ export const event = defineType({
 
     defineField({
       name: "detailImage",
-      title: "Header image — the event page",
+      title: "Header image — the event page (1600 × 900)",
       type: "figure",
       group: "main",
       description:
