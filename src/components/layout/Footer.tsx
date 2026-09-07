@@ -42,8 +42,8 @@ export function Footer({
 
   return (
     <footer className="mt-20 border-t border-[var(--pf-border)] bg-[var(--pf-surface)]">
-      <Container className="py-16">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
+      <Container className="py-12 sm:py-16">
+        <div className="grid gap-10 sm:gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
           {/* Brand, socials, address */}
           <div className="max-w-sm">
             <Link href={regionPath(region, "/")} aria-label={`${site.name} — home`}>
@@ -79,7 +79,7 @@ export function Footer({
               {region.phone ? (
                 <a
                   href={`tel:${region.phone.replace(/[^\d+]/g, "")}`}
-                  className="mt-2 block transition-colors hover:text-[var(--pf-accent)]"
+                  className="mt-2 inline-flex min-h-11 items-center transition-colors hover:text-[var(--pf-accent)] sm:min-h-0"
                 >
                   {region.phone}
                 </a>
@@ -90,7 +90,7 @@ export function Footer({
               )}
               <a
                 href={`mailto:${email}`}
-                className="mt-1 block transition-colors hover:text-[var(--pf-accent)]"
+                className="mt-1 inline-flex min-h-11 items-center break-all transition-colors hover:text-[var(--pf-accent)] sm:min-h-0 sm:break-normal"
               >
                 {email}
               </a>
@@ -102,7 +102,7 @@ export function Footer({
               <h2 className="font-[family-name:var(--font-display)] text-xs font-bold uppercase tracking-[0.16em] text-[var(--pf-heading)]">
                 {column.title}
               </h2>
-              <ul className="mt-5 space-y-3">
+              <ul className="mt-4 space-y-1 sm:mt-5 sm:space-y-3">
                 {column.links.map((item) => {
                   const href = isExternal(item.href)
                     ? item.href
@@ -112,7 +112,7 @@ export function Footer({
                     <li key={item.label}>
                       <Link
                         href={href}
-                        className="text-sm text-[var(--pf-text)] transition-colors hover:text-[var(--pf-accent)]"
+                        className="-mx-2 inline-flex min-h-11 items-center px-2 text-sm text-[var(--pf-text)] transition-colors hover:text-[var(--pf-accent)] sm:mx-0 sm:min-h-0 sm:px-0"
                       >
                         {item.label}
                       </Link>
@@ -124,8 +124,8 @@ export function Footer({
           ))}
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-[var(--pf-border)] pt-8 text-xs text-[var(--pf-muted)] sm:flex-row sm:items-center">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-[var(--pf-border)] pt-6 text-xs text-[var(--pf-muted)] sm:mt-14 sm:flex-row sm:items-center sm:pt-8">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <p>
               © {new Date().getFullYear()} {site.name}. All rights
               reserved.
@@ -134,7 +134,7 @@ export function Footer({
               <Link
                 key={item.href}
                 href={regionPath(region, item.href)}
-                className="transition-colors hover:text-[var(--pf-accent)]"
+                className="inline-flex min-h-10 items-center transition-colors hover:text-[var(--pf-accent)] sm:min-h-0"
               >
                 {item.label}
               </Link>

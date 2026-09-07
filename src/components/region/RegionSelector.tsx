@@ -118,7 +118,8 @@ export function RegionSelector({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="pf-glass absolute right-0 top-12 z-50 w-52 overflow-hidden rounded-[var(--pf-radius-lg)] p-1.5 shadow-[var(--pf-shadow-md)]"
+            // Solid, to match the navbar it hangs from.
+            className="absolute right-0 top-12 z-50 w-52 overflow-hidden rounded-[var(--pf-radius-lg)] border border-[var(--pf-border)] bg-[var(--pf-surface)] p-1.5 shadow-[var(--pf-shadow-md)]"
           >
             {regionList.map((region) => {
               const active = region.slug === current.slug;

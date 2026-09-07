@@ -13,7 +13,16 @@ export const eventsPage = defineType({
       rows: 2,
       description: "The region's own events line is appended to this.",
     }),
-    defineField({ name: "bannerImage", title: "Banner image", type: "figure" }),
+    defineField({
+      name: "bannerImage",
+      title: "Banner image — top of the Events page",
+      type: "figure",
+      description:
+        "The full-width photograph behind the Events page heading. It fills the screen's width " +
+        "and about two thirds of its height, and is cropped to whatever shape that is — on a " +
+        "phone a tall slice, on a desktop a wide one. Upload 2400 × 1600 (3:2) and keep the " +
+        "subject near the centre, since the edges go first.",
+    }),
     defineField({
       name: "emptyState",
       title: "Message when no events match",

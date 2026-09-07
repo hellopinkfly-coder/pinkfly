@@ -13,7 +13,13 @@ import {
   type CmsFigure,
   type ResolvedImage,
 } from "./resolve";
-import { eventsQuery, kbEntriesQuery, regionsQuery, siteSettingsQuery } from "./queries";
+import {
+  commentsQuery,
+  eventsQuery,
+  kbEntriesQuery,
+  regionsQuery,
+  siteSettingsQuery,
+} from "./queries";
 
 import {
   events as seedEvents,
@@ -61,6 +67,7 @@ type CmsEvent = {
   description?: unknown[];
   speakers?: { name?: string; designation?: string; image?: CmsFigure }[];
   image?: CmsFigure;
+  detailImage?: CmsFigure;
 };
 
 export async function getEvents(): Promise<PinkflyEvent[]> {
@@ -85,6 +92,9 @@ export async function getEvents(): Promise<PinkflyEvent[]> {
     format: e.format ?? "In person",
     price: typeof e.price === "number" ? e.price : null,
     image: resolveImage(e.image, placeholder),
+    // No seed fallback: an empty header image is an editor's real answer, and
+    // the page then shows the card image rather than a stranger's photograph.
+    heroImage: resolveImage(e.detailImage),
     registrationUrl: e.registrationUrl ?? "",
     whoShouldJoin: e.whoShouldJoin ?? [],
     whyJoin: e.whyJoin ?? [],
@@ -119,6 +129,8 @@ type CmsKbEntry = {
   source?: { name?: string; url?: string };
   policy?: KbEntry["policy"];
   image?: CmsFigure;
+  articleImage?: CmsFigure;
+  id?: string;
 };
 
 type CmsBodyFile = {
@@ -198,6 +210,7 @@ export async function getKbEntries(): Promise<KbEntry[]> {
   const placeholder = await placeholderImage();
 
   return cms.map((e) => ({
+    id: e.id,
     slug: e.slug ?? "",
     category: e.category ?? "articles",
     title: e.title ?? "",
@@ -212,6 +225,7 @@ export async function getKbEntries(): Promise<KbEntry[]> {
       e.image,
       placeholder ?? { src: teamPlaceholder, alt: e.title ?? "Knowledge Base entry" }
     ),
+    heroImage: resolveImage(e.articleImage),
     tag: e.tag ?? "",
     body: resolveBody(e),
     source: e.source?.name ? { name: e.source.name, url: e.source.url } : undefined,
@@ -278,4 +292,27 @@ export async function getRegionContent(region: Region): Promise<Region> {
 /** Every region, with CMS overlays applied. Used by the sitemap and selector. */
 export async function getRegionList(): Promise<Region[]> {
   return Promise.all(Object.values(seedRegions).map(getRegionContent));
+}
+
+/* ================================================================ comments */
+
+export type ArticleComment = {
+  id: string;
+  name: string;
+  body: string;
+  /** The reply written in the Studio, when there is one. */
+  reply?: string;
+  createdAt: string;
+};
+
+/**
+ * The approved comments on one article.
+ *
+ * An unreachable Sanity means no comments rather than seeded ones: there is no
+ * honest stand-in for what a real person wrote.
+ */
+export async function getComments(entryId?: string): Promise<ArticleComment[]> {
+  if (!entryId) return [];
+  const { data } = await cmsFetch<ArticleComment[]>(commentsQuery, { entryId });
+  return data ?? [];
 }

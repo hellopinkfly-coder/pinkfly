@@ -59,6 +59,39 @@ export const structure: StructureResolver = (S) =>
       collection(S, "initiative", "Initiatives"),
       S.documentTypeListItem("partner").title("Partners"),
       S.divider(),
+      // Comments split by what needs doing: everything waiting on a decision
+      // in one list, everything already live in the other.
+      S.listItem()
+        .title("Comments")
+        .id("comments")
+        .schemaType("comment")
+        .child(
+          S.list()
+            .title("Comments")
+            .items([
+              S.listItem()
+                .title("Awaiting approval")
+                .id("comments-pending")
+                .schemaType("comment")
+                .child(
+                  S.documentTypeList("comment")
+                    .title("Awaiting approval")
+                    .filter('_type == "comment" && approved != true')
+                    .defaultOrdering([{ field: "createdAt", direction: "desc" }])
+                ),
+              S.listItem()
+                .title("Published")
+                .id("comments-published")
+                .schemaType("comment")
+                .child(
+                  S.documentTypeList("comment")
+                    .title("Published")
+                    .filter('_type == "comment" && approved == true')
+                    .defaultOrdering([{ field: "createdAt", direction: "desc" }])
+                ),
+            ])
+        ),
+      S.divider(),
       collection(S, "policyPage", "Policy pages"),
       collection(S, "region", "Regions"),
       S.listItem()

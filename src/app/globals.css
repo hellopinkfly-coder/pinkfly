@@ -171,13 +171,22 @@
   color: var(--pf-accent);
 }
 
+/* The lower bound of each clamp is the phone size, not a desktop size the
+   viewport is too narrow to honour: at 320px a 40px headline wrapped after
+   two words. The upper bound and the desktop rendering are unchanged. */
 .pf-display {
-  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
-  line-height: 1.05;
+  font-size: clamp(2.1rem, 7.5vw, 4.5rem);
+  line-height: 1.08;
+}
+
+@media (min-width: 640px) {
+  .pf-display {
+    line-height: 1.05;
+  }
 }
 
 .pf-h2 {
-  font-size: clamp(1.85rem, 3.6vw, 2.9rem);
+  font-size: clamp(1.6rem, 5vw, 2.9rem);
 }
 
 .pf-link {
@@ -308,16 +317,30 @@
 /* Long-form article body rhythm. */
 .pf-prose p {
   margin-bottom: 1.35em;
-  font-size: 1.0625rem;
-  line-height: 1.85;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+@media (min-width: 640px) {
+  .pf-prose p {
+    font-size: 1.0625rem;
+    line-height: 1.85;
+  }
 }
 .pf-prose p:last-child {
   margin-bottom: 0;
 }
 .pf-prose p:first-of-type {
-  font-size: 1.2rem;
-  line-height: 1.7;
+  font-size: 1.1rem;
+  line-height: 1.65;
   color: var(--pf-heading);
+}
+
+@media (min-width: 640px) {
+  .pf-prose p:first-of-type {
+    font-size: 1.2rem;
+    line-height: 1.7;
+  }
 }
 
 

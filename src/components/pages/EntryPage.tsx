@@ -9,9 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { ArticleBody } from "@/features/knowledge-base/ArticleBody";
 import { ArticleCard } from "@/features/knowledge-base/ArticleCard";
 import { FinalCTA } from "@/features/final-cta/FinalCTA";
+import { Comments } from "@/features/comments/Comments";
 import { flags } from "@/config/flags";
 import { relatedEntries, type KbEntry } from "@/data/knowledge-base";
-import { getKbEntries } from "@/lib/cms/collections";
+import { getComments, getKbEntries } from "@/lib/cms/collections";
 import {
   getKnowledgeBaseContent,
   getFinalCta,
@@ -35,13 +36,16 @@ export async function EntryPage({
   entry: KbEntry;
   region: Region;
 }) {
-  const [entries, kb, finalCta, site] = await Promise.all([
+  const [entries, kb, finalCta, site, comments] = await Promise.all([
     getKbEntries(),
     getKnowledgeBaseContent(),
     getFinalCta(),
     getSiteContent(),
+    getComments(entry.id),
   ]);
   const related = relatedEntries(entries, entry);
+  // The article's own banner when there is one, the card image otherwise.
+  const banner = entry.heroImage ?? entry.image;
   const category = kb.categories.find((c) => c.id === entry.category);
   const publishedLabel = new Date(entry.publishedAt).toLocaleDateString(
     region.locale,
@@ -55,12 +59,12 @@ export async function EntryPage({
         <Container className="max-w-7xl">
           <Reveal className="group">
             <ImageFrame
-              src={entry.image.src}
-              alt={entry.image.alt}
+              src={banner.src}
+              alt={banner.alt}
               label={entry.tag}
               shape="rect"
               aspect="aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]"
-              ratio={entry.image.ratio}
+              ratio={banner.ratio}
               sizes="(max-width: 1280px) 94vw, 1240px"
               priority
               hoverZoom={false}
@@ -139,22 +143,27 @@ export async function EntryPage({
         </div>
       </Section>
 
-      {/* Comment section */}
-      <Section className="border-t border-[var(--pf-border)] bg-[var(--pf-surface)] py-12 sm:py-16">
-        <div className="mx-auto max-w-4xl">
-          <Reveal className="flex flex-col items-start gap-3 rounded-[var(--pf-radius-xl)] border border-dashed border-[var(--pf-border-strong)] p-8 text-left">
-            <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)]">
-              <MessageCircle size={19} />
-            </span>
-            <h2 className="text-lg">Comments</h2>
-            <p className="max-w-lg text-sm leading-relaxed text-[var(--pf-text)]">
-              {flags.articleComments
-                ? "Be the first to comment on this piece."
-                : kb.commentsClosedMessage}
-            </p>
-          </Reveal>
+      {/* Comments — approved ones, then the form. Everything about them is
+          moderated in the Studio. */}
+      {flags.articleComments ? (
+        <div className="border-t border-[var(--pf-border)] bg-[var(--pf-surface)]">
+          <Comments entryId={entry.id} comments={comments} />
         </div>
-      </Section>
+      ) : (
+        <Section className="border-t border-[var(--pf-border)] bg-[var(--pf-surface)] py-12 sm:py-16">
+          <div className="mx-auto max-w-4xl">
+            <Reveal className="flex flex-col items-start gap-3 rounded-[var(--pf-radius-xl)] border border-dashed border-[var(--pf-border-strong)] p-6 text-left sm:p-8">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)]">
+                <MessageCircle size={19} />
+              </span>
+              <h2 className="text-lg">Comments</h2>
+              <p className="max-w-lg text-sm leading-relaxed text-[var(--pf-text)]">
+                {kb.commentsClosedMessage}
+              </p>
+            </Reveal>
+          </div>
+        </Section>
+      )}
 
       {/* Recent in this category */}
       {related.length > 0 && (
