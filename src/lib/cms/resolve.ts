@@ -44,7 +44,27 @@ export type ResolvedImage = {
   alt: string;
   label?: string;
   focal?: string;
+  /** The picture's own shape (width ÷ height), when it is known. */
+  ratio?: number;
 };
+
+/**
+ * The picture's proportions, read from the asset id.
+ *
+ * Sanity encodes the pixel dimensions in the reference itself — an id ends
+ * `-1920x512-png` — so the shape of an uploaded image is known on the server
+ * without fetching the file. That is what lets a frame take the shape of
+ * whatever was uploaded instead of cropping it to a fixed one.
+ */
+export function assetRatio(ref: string | undefined | null): number | undefined {
+  if (!ref) return undefined;
+  const match = /-(\d+)x(\d+)-[a-z]+$/.exec(ref);
+  if (!match) return undefined;
+  const width = Number(match[1]);
+  const height = Number(match[2]);
+  if (!width || !height) return undefined;
+  return width / height;
+}
 
 /**
  * An uploaded asset beats an external URL, which beats the seed image. This
@@ -80,6 +100,7 @@ export function resolveImage(
     alt: figure.alt || seed?.alt || "",
     label: figure.label || seed?.label,
     focal: figure.focal || seed?.focal,
+    ratio: assetRatio(image?.asset?._ref) ?? seed?.ratio,
   };
 }
 

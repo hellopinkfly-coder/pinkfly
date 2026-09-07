@@ -48,6 +48,10 @@ export function ArticleCard({
           label={entry.tag}
           shape="rect"
           aspect="aspect-[4/3]"
+          // The card keeps one shape so the grid stays even, and the picture
+          // is shown whole inside it — an upload of any proportions arrives
+          // intact rather than being cropped down to this frame.
+          fit="contain"
           sizes="(max-width: 640px) 78vw, 340px"
           className="shadow-[var(--pf-shadow-sm)] transition-shadow duration-500 group-hover:shadow-[var(--pf-shadow-md)]"
         />

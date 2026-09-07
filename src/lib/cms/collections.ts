@@ -162,7 +162,13 @@ function resolveBody(entry: CmsKbEntry): KbBlock[] {
   const blocks: KbBlock[] = [
     ...copy(entry.body),
     ...(image
-      ? [{ kind: "image", src: image.src, alt: image.alt, caption: image.label } as const]
+      ? [{
+          kind: "image",
+          src: image.src,
+          alt: image.alt,
+          caption: image.label,
+          ratio: image.ratio,
+        } as const]
       : []),
     ...copy(entry.bodyAfterImage),
   ];

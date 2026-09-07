@@ -14,7 +14,14 @@ export type KbBlock =
   | { kind: "paragraph"; text: string }
   /** Portable Text from Sanity — paragraphs that may carry links. */
   | { kind: "rich"; value: unknown[] }
-  | { kind: "image"; src: string; alt: string; caption?: string }
+  | {
+      kind: "image";
+      src: string;
+      alt: string;
+      caption?: string;
+      /** The picture's own shape, so the frame can take it rather than crop. */
+      ratio?: number;
+    }
   | { kind: "video"; url: string; title?: string }
   | {
       kind: "file";
@@ -40,7 +47,8 @@ export type KbEntry = {
   /** ISO date. */
   publishedAt: string;
   readingTime: string;
-  image: { src: string; alt: string };
+  /** `ratio` is the upload's own shape, absent for the seeded stock photos. */
+  image: { src: string; alt: string; ratio?: number };
   /** Small label rendered in the corner of the card image. */
   tag: string;
   /**

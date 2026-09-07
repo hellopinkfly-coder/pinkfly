@@ -60,6 +60,7 @@ export async function EntryPage({
               label={entry.tag}
               shape="rect"
               aspect="aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]"
+              ratio={entry.image.ratio}
               sizes="(max-width: 1280px) 94vw, 1240px"
               priority
               hoverZoom={false}
