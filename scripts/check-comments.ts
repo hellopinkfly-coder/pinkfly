@@ -54,13 +54,22 @@ async function main() {
   const text = (await res.text()).slice(0, 300);
   console.log(`POST /api/comments  HTTP ${res.status}  ${text}`);
 
+  // A preview deployment sits behind Vercel Authentication, so a request from
+  // outside a signed-in browser never reaches the route. That says nothing
+  // about the token or the code, and must not be reported as if it did.
+  if (res.status === 401 && text.includes("Protected deployment")) {
+    console.log("\n  ⚠ This deployment is protected by Vercel Authentication,");
+    console.log("    so the check cannot reach it. Test it in a signed-in browser,");
+    console.log("    or run this against production.");
+    return;
+  }
   if (res.status === 503) {
     console.log("\n  ⚠ The deployment has no write token. Set SANITY_API_WRITE_TOKEN");
     console.log("    for this environment in Vercel and redeploy.");
     return;
   }
   if (!res.ok) {
-    console.log("\n  ⚠ The write failed. The message above is what Sanity said.");
+    console.log("\n  ⚠ The write failed. The response above says why.");
     return;
   }
 
