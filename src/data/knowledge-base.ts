@@ -49,6 +49,11 @@ export type KbEntry = {
   readingTime: string;
   /** `ratio` is the upload's own shape, absent for the seeded stock photos. */
   image: { src: string; alt: string; ratio?: number };
+  /**
+   * The banner on the article's own page, where the picture is shown whole.
+   * Absent when the editor uploaded only the card image, which then stands in.
+   */
+  heroImage?: { src: string; alt: string; ratio?: number };
   /** Small label rendered in the corner of the card image. */
   tag: string;
   /**

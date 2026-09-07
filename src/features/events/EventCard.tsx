@@ -80,14 +80,19 @@ export function EventCard({
           </li>
         </ul>
 
-        <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[var(--pf-border)] pt-5 text-sm">
+        {/* Both links carry a full tap height on a phone — a bare line of
+            text is too small a target for a thumb. */}
+        <div className="mt-5 flex flex-wrap items-center gap-x-5 border-t border-[var(--pf-border)] pt-3 text-sm sm:mt-6 sm:pt-5">
           <Link
             href={href}
-            className="relative z-10 font-bold text-[var(--pf-heading)] transition-colors hover:text-[var(--pf-accent)]"
+            className="relative z-10 inline-flex min-h-11 items-center font-bold text-[var(--pf-heading)] transition-colors hover:text-[var(--pf-accent)] sm:min-h-0"
           >
             Details
           </Link>
-          <Link href={`${href}#register`} className="pf-link relative z-10 font-bold">
+          <Link
+            href={`${href}#register`}
+            className="pf-link relative z-10 inline-flex min-h-11 items-center font-bold sm:min-h-0"
+          >
             Register
           </Link>
         </div>

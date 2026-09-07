@@ -29,7 +29,31 @@ export const event = defineType({
       validation: (r) => r.required(),
     }),
     defineField({ name: "excerpt", type: "text", rows: 3, group: "main" }),
-    defineField({ name: "image", type: "figure", group: "main" }),
+    /**
+     * As with articles: the listing card crops to a fixed shape, the event's
+     * own page shows the picture whole, so each gets its own file.
+     */
+    defineField({
+      name: "image",
+      title: "Card image — Events listing",
+      type: "figure",
+      group: "main",
+      description:
+        "Shown on the event's card in the Events listing. Upload 1600 × 1000 (16:10). The card " +
+        "fills this shape and trims anything outside it, so keep the subject centred and keep " +
+        "text out of the picture.",
+    }),
+
+    defineField({
+      name: "detailImage",
+      title: "Header image — the event page",
+      type: "figure",
+      group: "main",
+      description:
+        "The banner at the top of the event's own page. Shown whole, at its own proportions — " +
+        "nothing is cropped. Upload 1600 × 900 (16:9), or any shape you prefer at about 1600px " +
+        "wide. Leave empty to use the card image here too.",
+    }),
     defineField({
       name: "regions",
       title: "Show in regions",

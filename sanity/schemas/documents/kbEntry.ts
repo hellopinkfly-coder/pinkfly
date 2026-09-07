@@ -42,7 +42,36 @@ export const kbEntry = defineType({
       validation: (r) => r.required(),
     }),
     defineField({ name: "excerpt", type: "text", rows: 3, group: "main" }),
-    defineField({ name: "image", type: "figure", group: "main" }),
+    /**
+     * Two images, because the two places crop differently.
+     *
+     * The card sits in a grid where every tile is the same 4:3 and the
+     * picture fills it, so a wide banner loses its sides there. The article
+     * header shows the picture whole, at whatever proportions it was
+     * uploaded at. One file cannot be right for both, so each has its own
+     * field and its own stated size.
+     */
+    defineField({
+      name: "image",
+      title: "Card image — Knowledge Base listing",
+      type: "figure",
+      group: "main",
+      description:
+        "Shown on the article's card in the Knowledge Base grid. Upload 1200 × 900 (4:3). " +
+        "The card fills this shape and trims anything outside it, so keep the subject centred " +
+        "and keep text out of the picture.",
+    }),
+
+    defineField({
+      name: "articleImage",
+      title: "Header image — the article page",
+      type: "figure",
+      group: "main",
+      description:
+        "The banner at the top of the article itself. Shown whole, at its own proportions — " +
+        "nothing is cropped. Upload 1600 × 900 (16:9) for a standard banner, or any shape you " +
+        "prefer at about 1600px wide. Leave empty to use the card image here too.",
+    }),
     defineField({ name: "tag", title: "Card label", type: "string", group: "main" }),
     defineField({
       name: "author",

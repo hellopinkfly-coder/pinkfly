@@ -202,8 +202,8 @@ export function HeroCarousel({
 
         {/* ---- Controls: dots left, arrows right ------------------- */}
         {slides.length > 1 && (
-          <div className="mt-10 flex items-center justify-between gap-4">
-            <div className="flex gap-2" role="tablist" aria-label="Slides">
+          <div className="mt-8 flex items-center justify-between gap-4 sm:mt-10">
+            <div className="-ml-2 flex" role="tablist" aria-label="Slides">
               {slides.map((slide, i) => (
                 <button
                   key={slide.headline}
@@ -212,11 +212,19 @@ export function HeroCarousel({
                   aria-selected={i === index}
                   aria-label={slide.headline}
                   onClick={() => goTo(i)}
-                  className={cn(
-                    "h-1.5 rounded-full transition-all duration-300 ease-[var(--pf-ease)]",
-                    i === index ? "w-9 bg-white" : "w-2 bg-white/40 hover:bg-white/70"
-                  )}
-                />
+                  // The dot is the mark; the button around it is the target,
+                  // sized for a thumb rather than for the mark's height.
+                  className="group/dot inline-flex h-11 items-center justify-center px-2"
+                >
+                  <span
+                    className={cn(
+                      "block h-1.5 rounded-full transition-all duration-300 ease-[var(--pf-ease)]",
+                      i === index
+                        ? "w-9 bg-white"
+                        : "w-2 bg-white/40 group-hover/dot:bg-white/70"
+                    )}
+                  />
+                </button>
               ))}
             </div>
 

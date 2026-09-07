@@ -33,6 +33,8 @@ export async function EventDetailPage({
 }) {
   const upcoming = upcomingEvents(await getEvents(), region.slug, event.slug);
   const price = formatPrice(region, event.price);
+  // The event page's own banner when there is one, the card image otherwise.
+  const banner = event.heroImage ?? event.image;
   const registerHref =
     event.registrationUrl || regionPath(region, "/join");
 
@@ -72,11 +74,12 @@ export async function EventDetailPage({
 
             <Reveal className="group">
               <ImageFrame
-                src={event.image.src}
-                alt={event.image.alt}
+                src={banner.src}
+                alt={banner.alt}
                 label={event.city}
                 shape="arch"
                 aspect="aspect-[4/5] lg:aspect-[5/6]"
+                ratio={banner.ratio}
                 sizes="(max-width: 1024px) 92vw, 46vw"
                 priority
                 className="shadow-[var(--pf-shadow-lg)]"

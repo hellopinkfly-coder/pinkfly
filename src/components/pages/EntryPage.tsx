@@ -42,6 +42,8 @@ export async function EntryPage({
     getSiteContent(),
   ]);
   const related = relatedEntries(entries, entry);
+  // The article's own banner when there is one, the card image otherwise.
+  const banner = entry.heroImage ?? entry.image;
   const category = kb.categories.find((c) => c.id === entry.category);
   const publishedLabel = new Date(entry.publishedAt).toLocaleDateString(
     region.locale,
@@ -55,12 +57,12 @@ export async function EntryPage({
         <Container className="max-w-7xl">
           <Reveal className="group">
             <ImageFrame
-              src={entry.image.src}
-              alt={entry.image.alt}
+              src={banner.src}
+              alt={banner.alt}
               label={entry.tag}
               shape="rect"
               aspect="aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]"
-              ratio={entry.image.ratio}
+              ratio={banner.ratio}
               sizes="(max-width: 1280px) 94vw, 1240px"
               priority
               hoverZoom={false}

@@ -68,32 +68,48 @@ export function Navbar({
   const joinHref = regionPath(region, site.navCta.href);
   const ctaLabel =
     variant === "knowledge" ? site.navCta.knowledgeLabel : site.navCta.label;
-  // Light type only while genuinely over the image — the glass bar takes over
-  // the moment the visitor scrolls.
+  // Light type only while the bar is still floating clear of the page, over
+  // the hero image. Once it lands it is a solid surface and takes the page's
+  // own type colours.
   const onDark = overHero && !scrolled && !open;
+  const solid = !onDark;
 
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-[var(--pf-ease)]",
-        scrolled ? "py-2" : "py-4"
+        scrolled ? "py-2" : "py-2.5 sm:py-4"
       )}
     >
       <Container>
         <nav
           aria-label="Primary"
           className={cn(
-            "flex items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all duration-300 ease-[var(--pf-ease)] sm:px-6",
-            scrolled || open
-              ? "pf-glass shadow-[var(--pf-shadow-sm)]"
+            "flex items-center justify-between gap-2 rounded-full px-3 py-2 transition-all duration-300 ease-[var(--pf-ease)] sm:gap-4 sm:px-6 sm:py-2.5",
+            // Solid, never frosted: an opaque surface with a hairline
+            // border. A translucent bar over long-form text is hard to read
+            // on a phone, where the bar covers a bigger share of the screen.
+            // The one place it stays clear is a page that opens on a
+            // full-bleed hero, and only until the visitor scrolls off it.
+            solid
+              ? "border border-[var(--pf-border)] bg-[var(--pf-surface)] shadow-[var(--pf-shadow-sm)]"
               : "border border-transparent"
           )}
         >
+          {/* The full lockup needs width the phone bar does not have, so the
+              tagline is dropped below `sm` rather than shrunk to nothing. */}
+          <Logo
+            href={regionPath(region, "/")}
+            onDark={onDark}
+            size="sm"
+            className="sm:hidden"
+          />
           <Logo
             href={regionPath(region, "/")}
             onDark={onDark}
             size="md"
             withTagline
+            className="hidden sm:inline-flex"
           />
 
           {items.length > 0 && (
@@ -132,13 +148,14 @@ export function Navbar({
             </Button>
           </div>
 
-          {/* Mobile controls */}
-          <div className="flex items-center gap-1.5 lg:hidden">
-            <RegionSelector current={region} rest={rest} onDark={onDark} />
+          {/* Mobile controls. The region selector is not repeated here — it
+              is in the menu panel, and at 320px the three together overflowed
+              the bar. */}
+          <div className="flex items-center lg:hidden">
             <button
               type="button"
               className={cn(
-                "inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors",
+                "-mr-1 inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors",
                 onDark ? "text-white" : "text-[var(--pf-heading)]"
               )}
               aria-label={open ? "Close menu" : "Open menu"}
@@ -161,7 +178,7 @@ export function Navbar({
             className="lg:hidden"
           >
             <Container className="mt-2">
-              <div className="pf-glass flex max-h-[75vh] flex-col gap-1 overflow-y-auto rounded-[var(--pf-radius-xl)] p-4 shadow-[var(--pf-shadow-md)]">
+              <div className="flex max-h-[75vh] flex-col gap-1 overflow-y-auto rounded-[var(--pf-radius-xl)] border border-[var(--pf-border)] bg-[var(--pf-surface)] p-3 shadow-[var(--pf-shadow-md)] sm:p-4">
                 {/* The minimal variant still needs a way into the site. */}
                 {(items.length > 0
                   ? items
@@ -171,7 +188,7 @@ export function Navbar({
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="rounded-xl px-4 py-3 text-[var(--pf-heading)] transition-colors hover:bg-[var(--pf-surface-muted)]"
+                      className="flex min-h-12 items-center rounded-xl px-4 py-3 text-[var(--pf-heading)] transition-colors hover:bg-[var(--pf-surface-muted)]"
                     >
                       {item.label}
                     </Link>

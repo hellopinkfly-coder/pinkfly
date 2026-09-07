@@ -22,7 +22,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={cn("scroll-mt-24 py-10 sm:py-14", className)}
+      className={cn("scroll-mt-20 py-9 sm:scroll-mt-24 sm:py-14", className)}
       {...props}
     >
       {bleed ? children : <Container className={containerClassName}>{children}</Container>}

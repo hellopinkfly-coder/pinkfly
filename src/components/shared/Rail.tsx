@@ -59,7 +59,7 @@ export function Rail({ children, label, className }: RailProps) {
         role="region"
         aria-label={label}
         tabIndex={0}
-        className="pf-rail -mx-6 px-6 sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0"
+        className="pf-rail -mx-5 px-5 sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0"
       >
         {children}
         {/* Trailing spacer so the last card clears the gutter on mobile. */}

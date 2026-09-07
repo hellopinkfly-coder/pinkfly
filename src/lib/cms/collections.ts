@@ -61,6 +61,7 @@ type CmsEvent = {
   description?: unknown[];
   speakers?: { name?: string; designation?: string; image?: CmsFigure }[];
   image?: CmsFigure;
+  detailImage?: CmsFigure;
 };
 
 export async function getEvents(): Promise<PinkflyEvent[]> {
@@ -85,6 +86,9 @@ export async function getEvents(): Promise<PinkflyEvent[]> {
     format: e.format ?? "In person",
     price: typeof e.price === "number" ? e.price : null,
     image: resolveImage(e.image, placeholder),
+    // No seed fallback: an empty header image is an editor's real answer, and
+    // the page then shows the card image rather than a stranger's photograph.
+    heroImage: resolveImage(e.detailImage),
     registrationUrl: e.registrationUrl ?? "",
     whoShouldJoin: e.whoShouldJoin ?? [],
     whyJoin: e.whyJoin ?? [],
@@ -119,6 +123,7 @@ type CmsKbEntry = {
   source?: { name?: string; url?: string };
   policy?: KbEntry["policy"];
   image?: CmsFigure;
+  articleImage?: CmsFigure;
 };
 
 type CmsBodyFile = {
@@ -212,6 +217,7 @@ export async function getKbEntries(): Promise<KbEntry[]> {
       e.image,
       placeholder ?? { src: teamPlaceholder, alt: e.title ?? "Knowledge Base entry" }
     ),
+    heroImage: resolveImage(e.articleImage),
     tag: e.tag ?? "",
     body: resolveBody(e),
     source: e.source?.name ? { name: e.source.name, url: e.source.url } : undefined,

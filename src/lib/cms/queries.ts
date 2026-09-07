@@ -106,7 +106,8 @@ export const eventsQuery = groq`*[_type == "event" && hidden != true] | order(st
   startsAt, durationMinutes, format, price, registrationUrl,
   whoShouldJoin, whyJoin, description,
   speakers[]{ name, designation, image ${FIGURE} },
-  image ${FIGURE}
+  image ${FIGURE},
+  detailImage ${FIGURE}
 }`;
 
 export const kbEntriesQuery = groq`*[_type == "kbEntry" && hidden != true] | order(publishedAt desc){
@@ -116,6 +117,7 @@ export const kbEntriesQuery = groq`*[_type == "kbEntry" && hidden != true] | ord
   inlineImage ${FIGURE},
   video,
   image ${FIGURE},
+  articleImage ${FIGURE},
   // Files are the one part needing a dereference: the image builder resolves a
   // figure from its reference alone, but a download needs the asset's real
   // URL, name and size.
