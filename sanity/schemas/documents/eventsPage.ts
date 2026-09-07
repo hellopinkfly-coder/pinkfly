@@ -15,7 +15,7 @@ export const eventsPage = defineType({
     }),
     defineField({
       name: "bannerImage",
-      title: "Banner image — top of the Events page",
+      title: "Banner image — top of the Events page (2400 × 1600)",
       type: "figure",
       description:
         "The full-width photograph behind the Events page heading. It fills the screen's width " +

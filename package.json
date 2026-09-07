@@ -19,7 +19,8 @@
     "rename:brand": "tsx scripts/rename-brand.ts",
     "migrate:bodies": "tsx scripts/migrate-article-bodies.ts",
     "check:supabase": "tsx scripts/check-supabase.ts",
-    "check:comments": "tsx scripts/check-comments.ts"
+    "check:comments": "tsx scripts/check-comments.ts",
+    "check:studio": "tsx scripts/check-studio.ts"
   },
   "dependencies": {
     "@portabletext/react": "^8.0.1",

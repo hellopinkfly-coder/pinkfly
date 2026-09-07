@@ -38,7 +38,7 @@ export function Community({
       <Reveal
         as="ul"
         variants={staggerContainer}
-        className="mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4"
+        className="mt-10 grid gap-x-8 gap-y-9 sm:mt-14 sm:gap-y-12 sm:grid-cols-2 lg:grid-cols-4"
       >
         {content.cards.map((card, i) => (
           <Reveal
@@ -60,11 +60,16 @@ export function Community({
                 alt={card.image.alt}
                 label={card.image.label ?? card.title}
                 shape={card.shape}
-                aspect="aspect-[4/5]"
+                // Four portraits stacked on a phone made the section roughly
+                // three screens long. A square is a third shorter and still
+                // suits the arch and leaf silhouettes, which a wide crop turns
+                // into a squat dome. The portrait returns as soon as the cards
+                // sit side by side.
+                aspect="aspect-square sm:aspect-[4/5]"
                 sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 23vw"
                 className="shadow-[var(--pf-shadow-md)] transition-shadow duration-500 group-hover:shadow-[var(--pf-shadow-lg)]"
               />
-              <h3 className="mt-6 text-lg transition-colors duration-300 group-hover:text-[var(--pf-accent)]">
+              <h3 className="mt-4 text-lg sm:mt-6 transition-colors duration-300 group-hover:text-[var(--pf-accent)]">
                 {card.title}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-[var(--pf-text)]">

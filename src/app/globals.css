@@ -300,6 +300,12 @@
   gap: 1.5rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  /* A snap point lands on the scrollport's edge, not on the rail's padding,
+     so at rest the browser scrolled the first card's gutter away and the card
+     sat flush against the screen edge — the first one in every row looked
+     clipped while the rest were inset. Scroll padding puts the snap line where
+     the gutter is, so the first card starts on the page's own margin. */
+  scroll-padding-left: var(--pf-rail-gutter, 0px);
   scroll-behavior: smooth;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
