@@ -8,9 +8,10 @@ import { defineField, defineType } from "sanity";
  * The whole of moderation is this document: tick Approved to publish it, write
  * in Reply to answer it, delete the document to remove it.
  *
- * The email address is collected so a commenter can be contacted, and is never
- * queried by the site — the public GROQ selects the name, the body, the reply
- * and the date, and nothing else.
+ * A name and the comment is all the form asks for. The email field remains so
+ * that comments left while it was asked for still show what was given, and is
+ * never queried by the site — the public GROQ selects the name, the body, the
+ * reply and the date, and nothing else.
  */
 export const comment = defineType({
   name: "comment",
@@ -48,7 +49,9 @@ export const comment = defineType({
       title: "Email",
       type: "string",
       readOnly: true,
-      description: "Never shown on the site. For contacting the commenter.",
+      hidden: ({ value }) => !value,
+      description:
+        "No longer asked for. Shown only on comments left while it was.",
     }),
 
     defineField({
