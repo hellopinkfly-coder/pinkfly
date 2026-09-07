@@ -48,10 +48,12 @@ export function ArticleCard({
           label={entry.tag}
           shape="rect"
           aspect="aspect-[4/3]"
-          // The card keeps one shape so the grid stays even, and the picture
-          // is shown whole inside it — an upload of any proportions arrives
-          // intact rather than being cropped down to this frame.
-          fit="contain"
+          // The grid is the one place the frame's shape is the design: every
+          // card is the same 4:3 so the rows line up, and the picture fills it
+          // and is trimmed. Showing an upload whole here would letterbox each
+          // card differently and break the run of the grid. The article page
+          // is where the picture is the subject, so that is where it is shown
+          // in full.
           sizes="(max-width: 640px) 78vw, 340px"
           className="shadow-[var(--pf-shadow-sm)] transition-shadow duration-500 group-hover:shadow-[var(--pf-shadow-md)]"
         />
