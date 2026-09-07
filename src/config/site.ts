@@ -59,9 +59,20 @@ export const siteConfig = {
  * invented — where a URL has not been provided the value stays empty and the
  * UI falls back to the on-site Join Community page.
  */
+/**
+ * The membership form every join CTA opens.
+ *
+ * A Google Form URL is public by nature — it is what visitors are sent to —
+ * so it lives here rather than in an environment variable, and the site works
+ * the same on a fresh checkout as it does in production. A region-specific
+ * form, an environment variable, or Sanity still overrides it.
+ */
+export const JOIN_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdSkVItIeWSkszUEJ3vLeag-lF5eWnZftGhS2EX25WERlphBg/viewform";
+
 export const integrations = {
   /** Google Form that backs every join CTA. */
-  joinFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL ?? "",
+  joinFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL ?? JOIN_FORM_URL,
 } as const;
 
 /** Primary navigation, per the homepage wireframe. */
