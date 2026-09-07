@@ -17,7 +17,6 @@ type Status = "idle" | "loading" | "success" | "error";
  */
 export function CommentForm({ entryId }: { entryId: string }) {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [body, setBody] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +25,7 @@ export function CommentForm({ entryId }: { entryId: string }) {
     e.preventDefault();
     setError(null);
 
-    const parsed = commentSchema.safeParse({ entryId, name, email, body });
+    const parsed = commentSchema.safeParse({ entryId, name, body });
     if (!parsed.success) {
       setError(parsed.error.issues[0].message);
       return;
@@ -43,7 +42,6 @@ export function CommentForm({ entryId }: { entryId: string }) {
       if (!res.ok) throw new Error(payload?.error);
       setStatus("success");
       setName("");
-      setEmail("");
       setBody("");
     } catch (err) {
       setStatus("error");
@@ -69,26 +67,15 @@ export function CommentForm({ entryId }: { entryId: string }) {
 
   return (
     <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Your name"
-          aria-label="Your name"
-          autoComplete="name"
-          required
-        />
-        <Input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Your email"
-          aria-label="Your email"
-          autoComplete="email"
-          required
-        />
-      </div>
+      <Input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Your name"
+        aria-label="Your name"
+        autoComplete="name"
+        required
+      />
 
       <textarea
         value={body}
@@ -102,8 +89,7 @@ export function CommentForm({ entryId }: { entryId: string }) {
       />
 
       <p className="text-xs leading-relaxed text-[var(--pf-muted)]">
-        Your email is not published — it is only so we can reach you. Comments
-        appear once they have been read.
+        Comments appear once they have been read.
       </p>
 
       {error && (

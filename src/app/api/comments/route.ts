@@ -15,6 +15,9 @@ import { apiVersion, dataset, projectId, cmsEnabled } from "../../../../sanity/e
  * Every comment is created unapproved. Nothing a stranger writes reaches the
  * site until someone approves it in the Studio, so the form cannot be used to
  * publish anything.
+ *
+ * A name and the comment is all that is asked for. An email address the site
+ * has no use for is one more thing to collect, store and be responsible for.
  */
 export async function POST(request: Request) {
   const token = process.env.SANITY_API_WRITE_TOKEN;
@@ -40,7 +43,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { entryId, name, email, body: text } = parsed.data;
+  const { entryId, name, body: text } = parsed.data;
 
   try {
     const client = createClient({
@@ -56,7 +59,6 @@ export async function POST(request: Request) {
       approved: false,
       entry: { _type: "reference", _ref: entryId },
       name,
-      email: email.trim().toLowerCase(),
       body: text,
       createdAt: new Date().toISOString(),
     });

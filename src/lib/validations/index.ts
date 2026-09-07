@@ -13,7 +13,6 @@ export const contactSchema = z.object({
 export const commentSchema = z.object({
   entryId: z.string().min(1),
   name: z.string().trim().min(2, "Please tell us your name.").max(80),
-  email: z.string().email("Please enter a valid email address."),
   body: z
     .string()
     .trim()
