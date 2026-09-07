@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Download, FileText } from "lucide-react";
 import { RichText } from "@/components/shared/RichText";
+import { cn } from "@/lib/utils";
 import type { KbBlock } from "@/data/knowledge-base";
 
 /**
@@ -27,7 +28,15 @@ export function ArticleBody({ blocks }: { blocks: KbBlock[] }) {
               // reading measure on larger screens, so it carries weight
               // without the prose losing its line length.
               <figure key={i} className="my-11 lg:-mx-16 xl:-mx-24">
-                <div className="relative aspect-[3/2] overflow-hidden rounded-[var(--pf-radius-lg)]">
+                {/* The uploaded picture's own shape when it is known, so
+                    nothing is cropped away and nothing is stretched. */}
+                <div
+                  className={cn(
+                    "relative overflow-hidden rounded-[var(--pf-radius-lg)]",
+                    !block.ratio && "aspect-[3/2]"
+                  )}
+                  style={block.ratio ? { aspectRatio: block.ratio } : undefined}
+                >
                   <Image
                     src={block.src}
                     alt={block.alt}

@@ -12,12 +12,30 @@ type ImageFrameProps = {
   shape?: FrameShape;
   /** Tailwind aspect utility, e.g. `aspect-[4/5]`. */
   aspect?: string;
+  /**
+   * The uploaded picture's own shape (width ÷ height).
+   *
+   * When given, the frame takes this shape instead of `aspect`, so the whole
+   * image is shown at its own proportions — nothing cropped, nothing
+   * stretched, whatever size was uploaded. Pass it only where the layout can
+   * absorb a changing height; a row of cards needs one fixed shape.
+   */
+  ratio?: number;
   className?: string;
   /** Responsive `sizes` hint for the image optimiser. */
   sizes?: string;
   priority?: boolean;
   /** Subtle zoom on hover — enable inside interactive cards. */
   hoverZoom?: boolean;
+  /**
+   * How the picture meets the frame.
+   *
+   * `cover` fills it and trims the overflow — right where the frame's shape
+   * is the design. `contain` shows the whole picture inside the frame, so an
+   * upload of any proportions arrives intact, at the cost of the frame's
+   * background showing beside it.
+   */
+  fit?: "cover" | "contain";
 };
 
 /**
@@ -33,19 +51,22 @@ export function ImageFrame({
   label,
   shape = "rect",
   aspect = "aspect-[4/3]",
+  ratio,
   className,
   sizes = "(max-width: 768px) 100vw, 50vw",
   priority = false,
   hoverZoom = true,
+  fit = "cover",
 }: ImageFrameProps) {
   return (
     <div
       className={cn(
         "pf-shape relative isolate bg-[var(--pf-surface-muted)]",
         `pf-shape-${shape}`,
-        aspect,
+        ratio ? undefined : aspect,
         className
       )}
+      style={ratio ? { aspectRatio: ratio } : undefined}
     >
       <Image
         src={src}
@@ -54,7 +75,8 @@ export function ImageFrame({
         sizes={sizes}
         priority={priority}
         className={cn(
-          "object-cover transition-transform duration-700 ease-[var(--pf-ease)]",
+          "transition-transform duration-700 ease-[var(--pf-ease)]",
+          fit === "contain" ? "object-contain" : "object-cover",
           hoverZoom && "group-hover:scale-[1.04]"
         )}
       />
