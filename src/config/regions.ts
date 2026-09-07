@@ -13,6 +13,8 @@
  * yet, so theirs stay null.
  */
 
+import { JOIN_FORM_URL } from "./site";
+
 export type RegionSlug = "global" | "india" | "dubai" | "usa";
 
 export type Region = {
@@ -83,7 +85,7 @@ const GLOBAL: Region = {
     eventsIntro: "Meetups, webinars and coffee chats, across every region.",
   },
   form: {
-    googleFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL ?? "",
+    googleFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL ?? JOIN_FORM_URL,
     crmSegment: "global",
   },
   seo: {
