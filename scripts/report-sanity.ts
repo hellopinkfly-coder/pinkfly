@@ -383,9 +383,9 @@ async function reportImages() {
   const entries = await anon.fetch<(Entry & { inlineRef?: string })[]>(
     `*[_type == "kbEntry" && hidden != true]{
        _id, title, category, "slug": slug.current,
-       "assetRef": image.asset._ref,
+       "assetRef": image.asset.asset._ref,
        "externalUrl": image.url,
-       "inlineRef": inlineImage.asset._ref
+       "inlineRef": inlineImage.asset.asset._ref
      }`
   );
 
@@ -431,7 +431,7 @@ async function reportImages() {
   try {
     const drafts = await withToken.fetch<Entry[]>(
       `*[_type == "kbEntry" && _id in path("drafts.**")]{
-         _id, title, "assetRef": image.asset._ref, "externalUrl": image.url
+         _id, title, "assetRef": image.asset.asset._ref, "externalUrl": image.url
        }`
     );
     console.log("\n=== unpublished drafts of Knowledge Base entries ===");
