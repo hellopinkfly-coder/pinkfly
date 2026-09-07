@@ -61,9 +61,9 @@ type Doc = {
 
 const PROJECTION = `{
   _id, _type, _updatedAt, title,
-  "imageRef": image.asset._ref,
+  "imageRef": image.asset.asset._ref,
   "imageUrl": image.url,
-  "inlineRef": inlineImage.asset._ref
+  "inlineRef": inlineImage.asset.asset._ref
 }`;
 
 function describe(doc: Doc) {

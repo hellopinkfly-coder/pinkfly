@@ -77,7 +77,7 @@ async function main() {
 
     // What the draft changes, in the terms that matter here: the image.
     const published = await client.fetch<{ imageRef?: string } | null>(
-      `*[_id == $id][0]{ "imageRef": image.asset._ref }`,
+      `*[_id == $id][0]{ "imageRef": image.asset.asset._ref }`,
       { id: publishedId }
     );
     const draftImage = (draft as { image?: { asset?: { _ref?: string } } }).image
