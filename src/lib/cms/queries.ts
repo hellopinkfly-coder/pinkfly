@@ -111,6 +111,7 @@ export const eventsQuery = groq`*[_type == "event" && hidden != true] | order(st
 }`;
 
 export const kbEntriesQuery = groq`*[_type == "kbEntry" && hidden != true] | order(publishedAt desc){
+  "id": _id,
   "slug": slug.current, category, title, excerpt, tag,
   author, publishedAt, readingTime, source, policy,
   body, bodyAfterImage,
@@ -131,4 +132,17 @@ export const kbEntriesQuery = groq`*[_type == "kbEntry" && hidden != true] | ord
 
 export const partnersQuery = groq`*[_type == "partner"] | order(order asc){
   name, url, logo ${FIGURE}
+}`;
+
+/**
+ * The approved comments on one article, oldest first.
+ *
+ * Only the four fields the page renders are selected: the email address a
+ * commenter gave is never part of this projection, so it cannot reach the
+ * browser even by accident.
+ */
+export const commentsQuery = groq`*[
+  _type == "comment" && approved == true && entry._ref == $entryId
+] | order(createdAt asc){
+  "id": _id, name, body, reply, createdAt
 }`;

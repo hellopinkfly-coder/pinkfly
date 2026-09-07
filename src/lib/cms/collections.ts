@@ -13,7 +13,13 @@ import {
   type CmsFigure,
   type ResolvedImage,
 } from "./resolve";
-import { eventsQuery, kbEntriesQuery, regionsQuery, siteSettingsQuery } from "./queries";
+import {
+  commentsQuery,
+  eventsQuery,
+  kbEntriesQuery,
+  regionsQuery,
+  siteSettingsQuery,
+} from "./queries";
 
 import {
   events as seedEvents,
@@ -124,6 +130,7 @@ type CmsKbEntry = {
   policy?: KbEntry["policy"];
   image?: CmsFigure;
   articleImage?: CmsFigure;
+  id?: string;
 };
 
 type CmsBodyFile = {
@@ -203,6 +210,7 @@ export async function getKbEntries(): Promise<KbEntry[]> {
   const placeholder = await placeholderImage();
 
   return cms.map((e) => ({
+    id: e.id,
     slug: e.slug ?? "",
     category: e.category ?? "articles",
     title: e.title ?? "",
@@ -284,4 +292,27 @@ export async function getRegionContent(region: Region): Promise<Region> {
 /** Every region, with CMS overlays applied. Used by the sitemap and selector. */
 export async function getRegionList(): Promise<Region[]> {
   return Promise.all(Object.values(seedRegions).map(getRegionContent));
+}
+
+/* ================================================================ comments */
+
+export type ArticleComment = {
+  id: string;
+  name: string;
+  body: string;
+  /** The reply written in the Studio, when there is one. */
+  reply?: string;
+  createdAt: string;
+};
+
+/**
+ * The approved comments on one article.
+ *
+ * An unreachable Sanity means no comments rather than seeded ones: there is no
+ * honest stand-in for what a real person wrote.
+ */
+export async function getComments(entryId?: string): Promise<ArticleComment[]> {
+  if (!entryId) return [];
+  const { data } = await cmsFetch<ArticleComment[]>(commentsQuery, { entryId });
+  return data ?? [];
 }

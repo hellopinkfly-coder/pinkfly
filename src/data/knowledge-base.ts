@@ -43,6 +43,8 @@ export type KbEntry = {
   title: string;
   /** One-line summary used on cards and in metadata. */
   excerpt: string;
+  /** The Sanity document id, used to attach comments. Empty for seed entries. */
+  id?: string;
   author: { name: string; role: string };
   /** ISO date. */
   publishedAt: string;
