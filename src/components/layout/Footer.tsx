@@ -41,7 +41,10 @@ export function Footer({
   const email = region.email ?? site.contactEmail;
 
   return (
-    <footer className="mt-20 border-t border-[var(--pf-border)] bg-[var(--pf-surface)]">
+    // No top margin: every page ends on a section that already carries its
+    // own padding, so the old 80px on top of that read as a gap between the
+    // closing call to action and the footer rather than as breathing room.
+    <footer className="border-t border-[var(--pf-border)] bg-[var(--pf-surface)]">
       <Container className="py-12 sm:py-16">
         <div className="grid gap-10 sm:gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
           {/* Brand, socials, address */}
