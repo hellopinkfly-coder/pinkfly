@@ -37,6 +37,7 @@ export async function KnowledgeBasePage({ region }: { region: Region }) {
           <CategoryRail
             key={category.id}
             id={category.anchor}
+            category={category.id}
             title={category.title}
             intro={category.intro}
             entries={entriesByCategory(entries, category.id as KbCategory)}

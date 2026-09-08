@@ -6,20 +6,34 @@ import { Testimonials } from "@/features/testimonials/Testimonials";
 import { Mission } from "@/features/mission/Mission";
 import { Join } from "@/features/join/Join";
 import { SocialWall } from "@/features/social/SocialWall";
-import { getHomeContent, getSiteContent } from "@/lib/cms/content";
+import { HomeEvents } from "@/features/home/HomeEvents";
+import { HomeKnowledge } from "@/features/home/HomeKnowledge";
+import { getEvents, getKbEntries } from "@/lib/cms/collections";
+import {
+  getHomeContent,
+  getKnowledgeBaseContent,
+  getSiteContent,
+} from "@/lib/cms/content";
 import type { Region } from "@/lib/region";
 
 /**
  * The homepage, in the order the wireframe sets out:
  * hero carousel → join CTA → impact → how we gather →
- * testimonials → why Pinkfly → social wall → join + newsletter.
+ * testimonials → why Pinkfly → social wall → join + newsletter →
+ * upcoming events → Knowledge Base.
  *
  * One component serves every region; only the `region` object changes.
  * All copy, imagery and section visibility come from Sanity — this file
  * fetches the page's content once and hands each section its own slice.
  */
 export async function HomePage({ region }: { region: Region }) {
-  const [content, site] = await Promise.all([getHomeContent(), getSiteContent()]);
+  const [content, site, events, entries, kb] = await Promise.all([
+    getHomeContent(),
+    getSiteContent(),
+    getEvents(),
+    getKbEntries(),
+    getKnowledgeBaseContent(),
+  ]);
   const formUrl = region.form.googleFormUrl || site.joinFormUrl;
 
   return (
@@ -42,6 +56,11 @@ export async function HomePage({ region }: { region: Region }) {
       )}
       {content.social.visible && <SocialWall content={content.social} />}
       {content.joinCtaVisible && <Join region={region} content={content.joinCta} />}
+
+      {/* What is on, and what has been written — each a taste, with the way
+          through to the full listing. */}
+      <HomeEvents region={region} events={events} />
+      <HomeKnowledge region={region} entries={entries} categories={kb.categories} />
     </>
   );
 }

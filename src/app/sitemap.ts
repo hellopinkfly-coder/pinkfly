@@ -3,7 +3,7 @@ import { siteConfig } from "@/config/site";
 import { regionList } from "@/config/regions";
 import { regionPath } from "@/lib/region";
 import { events } from "@/data/events";
-import { getAllEntryPaths } from "@/data/knowledge-base";
+import { getAllEntryPaths, kbCategories } from "@/data/knowledge-base";
 
 /**
  * Every region's every page, so each regional variant is independently
@@ -17,6 +17,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/join",
     "/events",
     "/knowledge-base",
+    // Each category is a page in its own right — where "Show all" leads.
+    ...kbCategories.map((category) => `/knowledge-base/${category.id}`),
     "/policies/terms",
     "/policies/refund",
     "/policies/privacy",
