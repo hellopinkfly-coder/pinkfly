@@ -48,12 +48,12 @@ export function ArticleCard({
           label={entry.tag}
           shape="rect"
           aspect="aspect-[4/3]"
-          // The grid is the one place the frame's shape is the design: every
-          // card is the same 4:3 so the rows line up, and the picture fills it
-          // and is trimmed. Showing an upload whole here would letterbox each
-          // card differently and break the run of the grid. The article page
-          // is where the picture is the subject, so that is where it is shown
-          // in full.
+          // Every card is the same 4:3 so the rows line up — but the picture
+          // inside it is shown whole rather than trimmed to that shape, and
+          // the space beside it is filled by a blurred copy of the picture.
+          // A banner uploaded at any proportions is therefore complete on the
+          // card and complete on the article, without the grid going ragged.
+          fit="contain"
           sizes="(max-width: 640px) 78vw, 340px"
           className="shadow-[var(--pf-shadow-sm)] transition-shadow duration-500 group-hover:shadow-[var(--pf-shadow-md)]"
         />
