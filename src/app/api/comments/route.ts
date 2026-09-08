@@ -81,9 +81,15 @@ export async function POST(request: Request) {
       createdAt: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("[comments] could not save comment:", error);
+    // Sanity's own words, passed through. Refusing a write has a handful of
+    // causes — a token without create permission being the usual one — and
+    // they are indistinguishable from a generic message, which is what made
+    // this take several rounds to place. The message describes the API's
+    // decision; it never contains the token.
+    const reason = error instanceof Error ? error.message : String(error);
+    console.error("[comments] could not save comment:", reason);
     return NextResponse.json(
-      { error: "Something went wrong. Please try again." },
+      { error: "Something went wrong. Please try again.", reason },
       { status: 502 }
     );
   }
