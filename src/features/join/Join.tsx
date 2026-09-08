@@ -57,18 +57,24 @@ export function Join({
   }
 
   return (
-    <Section id="join" bleed className="relative overflow-hidden">
+    // Tighter than a standard section: one line, one field, one button —
+    // it does not need a full section's height to say it.
+    <Section
+      id="join"
+      bleed
+      className="relative overflow-hidden py-8 sm:py-12"
+    >
       <GradientBackdrop />
       <Container>
         <Reveal className="mx-auto flex max-w-2xl flex-col items-center text-center">
           <span className="pf-eyebrow">{content.eyebrow}</span>
-          <h2 className="pf-h2 mt-4">{content.headline}</h2>
-          <p className="mt-5 max-w-md text-lg leading-relaxed text-[var(--pf-text)]">
+          <h2 className="pf-h2 mt-3">{content.headline}</h2>
+          <p className="mt-3 max-w-md text-base leading-relaxed text-[var(--pf-text)] sm:text-lg">
             {content.body}
           </p>
 
           {status === "success" ? (
-            <p className="mt-8 inline-flex items-center gap-2 rounded-full bg-[var(--pf-accent-soft)] px-5 py-3 text-sm font-bold text-[var(--pf-accent-hover)]">
+            <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--pf-accent-soft)] px-5 py-3 text-sm font-bold text-[var(--pf-accent-hover)]">
               <CheckCircle2 size={18} />
               {content.success}
             </p>
@@ -76,7 +82,7 @@ export function Join({
             <form
               onSubmit={handleSubmit}
               noValidate
-              className="mt-8 flex w-full max-w-md flex-col gap-3 sm:flex-row"
+              className="mt-6 flex w-full max-w-md flex-col gap-3 sm:flex-row"
             >
               <div className="flex-1 text-left">
                 <label htmlFor="join-email" className="sr-only">
@@ -111,7 +117,7 @@ export function Join({
           )}
 
           {/* The form is the low-commitment door; this is the full one. */}
-          <p className="mt-6 text-sm text-[var(--pf-muted)]">
+          <p className="mt-4 text-sm text-[var(--pf-muted)]">
             Want the whole picture?{" "}
             <Link href={regionPath(region, "/join")} className="pf-link">
               See what membership includes

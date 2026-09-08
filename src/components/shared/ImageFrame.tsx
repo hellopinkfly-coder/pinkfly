@@ -32,8 +32,10 @@ type ImageFrameProps = {
    *
    * `cover` fills it and trims the overflow — right where the frame's shape
    * is the design. `contain` shows the whole picture inside the frame, so an
-   * upload of any proportions arrives intact, at the cost of the frame's
-   * background showing beside it.
+   * upload of any proportions arrives intact. What would otherwise be an
+   * empty band beside it is filled by a blurred copy of the picture itself,
+   * so the frame keeps its shape and the grid its rhythm while nothing is
+   * cropped away.
    */
   fit?: "cover" | "contain";
 };
@@ -68,6 +70,22 @@ export function ImageFrame({
       )}
       style={ratio ? { aspectRatio: ratio } : undefined}
     >
+      {/* The backdrop, only where the picture does not fill the frame: the
+          same image, blown out and blurred, so a portrait in a landscape
+          frame sits on its own colours instead of a grey band. Hidden from
+          assistive technology — it carries no information the real image
+          does not. */}
+      {fit === "contain" && (
+        <Image
+          src={src}
+          alt=""
+          aria-hidden
+          fill
+          sizes={sizes}
+          className="scale-110 object-cover opacity-60 blur-2xl saturate-150"
+        />
+      )}
+
       <Image
         src={src}
         alt={alt}
