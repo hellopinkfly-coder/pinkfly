@@ -62,19 +62,24 @@ export function Join({
     <Section
       id="join"
       bleed
-      className="relative overflow-hidden py-8 sm:py-12"
+      className="relative overflow-hidden py-7 sm:py-10"
     >
       <GradientBackdrop />
       <Container>
         <Reveal className="mx-auto flex max-w-2xl flex-col items-center text-center">
           <span className="pf-eyebrow">{content.eyebrow}</span>
-          <h2 className="pf-h2 mt-3">{content.headline}</h2>
-          <p className="mt-3 max-w-md text-base leading-relaxed text-[var(--pf-text)] sm:text-lg">
+          {/* Deliberately below the site's h2 scale: this is a closing line,
+              not a section opening, and at the full size it took three lines
+              and half a screen to say one sentence. */}
+          <h2 className="mt-2 text-2xl leading-tight sm:text-3xl">
+            {content.headline}
+          </h2>
+          <p className="mt-2 max-w-lg text-sm leading-relaxed text-[var(--pf-text)] sm:text-base">
             {content.body}
           </p>
 
           {status === "success" ? (
-            <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--pf-accent-soft)] px-5 py-3 text-sm font-bold text-[var(--pf-accent-hover)]">
+            <p className="mt-5 inline-flex items-center gap-2 rounded-full bg-[var(--pf-accent-soft)] px-5 py-3 text-sm font-bold text-[var(--pf-accent-hover)]">
               <CheckCircle2 size={18} />
               {content.success}
             </p>
@@ -82,7 +87,7 @@ export function Join({
             <form
               onSubmit={handleSubmit}
               noValidate
-              className="mt-6 flex w-full max-w-md flex-col gap-3 sm:flex-row"
+              className="mt-5 flex w-full max-w-md flex-col gap-3 sm:flex-row"
             >
               <div className="flex-1 text-left">
                 <label htmlFor="join-email" className="sr-only">
@@ -117,7 +122,7 @@ export function Join({
           )}
 
           {/* The form is the low-commitment door; this is the full one. */}
-          <p className="mt-4 text-sm text-[var(--pf-muted)]">
+          <p className="mt-3 text-xs text-[var(--pf-muted)] sm:text-sm">
             Want the whole picture?{" "}
             <Link href={regionPath(region, "/join")} className="pf-link">
               See what membership includes
