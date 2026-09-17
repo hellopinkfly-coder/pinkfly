@@ -102,6 +102,8 @@ export function Navbar({
             href={regionPath(region, "/")}
             onDark={onDark}
             size="sm"
+            logo={site.logo}
+            logoDark={site.logoDark}
             className="sm:hidden"
           />
           <Logo
@@ -109,6 +111,8 @@ export function Navbar({
             onDark={onDark}
             size="md"
             withTagline
+            logo={site.logo}
+            logoDark={site.logoDark}
             className="hidden sm:inline-flex"
           />
 

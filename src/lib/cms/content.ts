@@ -815,6 +815,7 @@ export type SiteContent = {
   phone: string | null;
   socials: { instagram: string; youtube: string; linkedin: string; twitter: string };
   logo: ResolvedImage | undefined;
+  logoDark: ResolvedImage | undefined;
   mainNav: { label: string; href: string }[];
   knowledgeBaseNav: { label: string; href: string }[];
   footerNav: {
@@ -843,6 +844,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     parent?: string;
     parentUrl?: string;
     logo?: CmsFigure;
+    logoDark?: CmsFigure;
     contactEmail?: string;
     address?: string[];
     phone?: string;
@@ -874,6 +876,7 @@ export async function getSiteContent(): Promise<SiteContent> {
       twitter: pick(cms?.socials?.twitter, siteConfig.socials.twitter),
     },
     logo: resolveImage(cms?.logo),
+    logoDark: resolveImage(cms?.logoDark),
     mainNav: links(cms?.mainNav, mainNav),
     knowledgeBaseNav: links(cms?.knowledgeBaseNav, knowledgeBaseNav),
     footerNav: {

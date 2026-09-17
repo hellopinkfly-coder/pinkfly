@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import type { ResolvedImage } from "@/lib/cms/resolve";
 
 /**
  * Pinkfly logo.
@@ -21,10 +22,20 @@ import { cn } from "@/lib/utils";
  *
  * The mark takes a fixed height per size and derives its width from the
  * artwork's aspect ratio, so placements never need layout changes.
+ *
+ * A logo uploaded in the Studio (Site settings → Logo) replaces the shipped
+ * artwork wherever this renders, which is every placement. Its width comes
+ * from the asset's own dimensions, so a new lockup of any proportions drops
+ * in without a code change; a second upload covers the dark theme, and when
+ * there is only one it serves both.
  */
 
 type LogoProps = {
   className?: string;
+  /** The logo from Sanity, when one has been uploaded. */
+  logo?: ResolvedImage;
+  /** Its dark-theme counterpart. Falls back to `logo`. */
+  logoDark?: ResolvedImage;
   /** Visual size. `sm` is the navbar, `md` the footer. */
   size?: "sm" | "md" | "lg";
   /** Where the logo links to — region-aware callers pass a prefixed path. */
@@ -53,11 +64,51 @@ export function LogoMark({
   size = "sm",
   onDark = false,
   withTagline = false,
+  logo,
+  logoDark,
 }: Omit<LogoProps, "href">) {
   const height = heights[size];
   const cut = withTagline ? art.full : art.compact;
   const width = Math.round((height * cut.width) / cut.height);
   const alt = withTagline ? "Pinkfly — Building Dreams" : "Pinkfly";
+
+  // An uploaded logo wins, and both themes are drawn the same way as the
+  // shipped artwork: one for each, with CSS showing the right one, so the
+  // theme can change without a reload or a flash of the wrong lockup.
+  if (logo) {
+    const light = logo;
+    const dark = logoDark ?? logo;
+    const uploadedWidth = Math.round(height * (light.ratio ?? cut.width / cut.height));
+
+    return (
+      <span
+        className={cn("inline-block", onDark && "pf-logo--on-dark", className)}
+        style={{ width: uploadedWidth, height }}
+      >
+        <Image
+          src={light.src}
+          alt={light.alt || alt}
+          width={uploadedWidth}
+          height={height}
+          priority
+          unoptimized
+          className="pf-logo__on-light object-contain"
+          style={{ width: uploadedWidth, height }}
+        />
+        <Image
+          src={dark.src}
+          alt=""
+          aria-hidden
+          width={uploadedWidth}
+          height={height}
+          priority
+          unoptimized
+          className="pf-logo__on-dark object-contain"
+          style={{ width: uploadedWidth, height }}
+        />
+      </span>
+    );
+  }
 
   return (
     <span
@@ -97,6 +148,8 @@ export function Logo({
   href = "/",
   onDark = false,
   withTagline = false,
+  logo,
+  logoDark,
 }: LogoProps) {
   return (
     <Link
@@ -107,7 +160,13 @@ export function Logo({
         className
       )}
     >
-      <LogoMark size={size} onDark={onDark} withTagline={withTagline} />
+      <LogoMark
+        size={size}
+        onDark={onDark}
+        withTagline={withTagline}
+        logo={logo}
+        logoDark={logoDark}
+      />
     </Link>
   );
 }
