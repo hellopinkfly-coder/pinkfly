@@ -23,7 +23,8 @@
     "check:studio": "tsx scripts/check-studio.ts",
     "build:logo": "node scripts/build-logo.mjs",
     "check:logo": "tsx scripts/check-logo.ts",
-    "check:token": "tsx scripts/check-token.ts"
+    "check:token": "tsx scripts/check-token.ts",
+    "check:contact": "tsx scripts/check-contact.ts"
   },
   "dependencies": {
     "@portabletext/react": "^8.0.1",

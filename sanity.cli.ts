@@ -16,5 +16,11 @@ import { projectId, dataset } from "./sanity/env";
  */
 export default defineCliConfig({
   api: { projectId, dataset },
+  // Which hosted Studio to upload to. Without it the command asks
+  // interactively, which a CI runner cannot answer: the first attempt sat at
+  // the prompt and uploaded nothing while reporting success. This names the
+  // Studio that already exists, so a deploy replaces it rather than creating
+  // a second one beside it.
+  studioHost: "pinkfly-cms-studio",
   autoUpdates: true,
 });

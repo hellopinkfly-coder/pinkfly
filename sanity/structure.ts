@@ -91,6 +91,38 @@ export const structure: StructureResolver = (S) =>
                 ),
             ])
         ),
+      // Contact messages, split the same way as comments: what still needs a
+      // reply first, everything dealt with behind it.
+      S.listItem()
+        .title("Messages")
+        .id("messages")
+        .schemaType("contactMessage")
+        .child(
+          S.list()
+            .title("Messages")
+            .items([
+              S.listItem()
+                .title("Needs a reply")
+                .id("messages-open")
+                .schemaType("contactMessage")
+                .child(
+                  S.documentTypeList("contactMessage")
+                    .title("Needs a reply")
+                    .filter('_type == "contactMessage" && handled != true')
+                    .defaultOrdering([{ field: "receivedAt", direction: "desc" }])
+                ),
+              S.listItem()
+                .title("Dealt with")
+                .id("messages-handled")
+                .schemaType("contactMessage")
+                .child(
+                  S.documentTypeList("contactMessage")
+                    .title("Dealt with")
+                    .filter('_type == "contactMessage" && handled == true')
+                    .defaultOrdering([{ field: "receivedAt", direction: "desc" }])
+                ),
+            ])
+        ),
       S.divider(),
       collection(S, "policyPage", "Policy pages"),
       collection(S, "region", "Regions"),
