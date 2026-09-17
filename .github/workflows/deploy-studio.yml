@@ -1,0 +1,40 @@
+# Keep the Studio hosted by Sanity in step with the schema in this repo.
+#
+# The Studio at /studio on the website rebuilds with every Vercel deploy, but
+# the copy Sanity hosts is a separate upload that only changes when someone
+# runs `sanity deploy` — so it silently kept showing an older schema.
+#
+# Needs the SANITY_AUTH_TOKEN repository secret: a token with the Deploy
+# Studio permission, created at sanity.io/manage under the project's API tab.
+name: Deploy Studio
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "sanity/**"
+      - "sanity.config.ts"
+      - "sanity.cli.ts"
+      - ".github/workflows/deploy-studio.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Deploy
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        run: |
+          if [ -z "$SANITY_AUTH_TOKEN" ]; then
+            echo "SANITY_AUTH_TOKEN is not set — add it as a repository secret."
+            echo "Until then the hosted Studio keeps whatever schema it was last deployed with."
+            exit 1
+          fi
+          npx sanity deploy
