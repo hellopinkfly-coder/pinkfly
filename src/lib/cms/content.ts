@@ -816,6 +816,8 @@ export type SiteContent = {
   socials: { instagram: string; youtube: string; linkedin: string; twitter: string };
   logo: ResolvedImage | undefined;
   logoDark: ResolvedImage | undefined;
+  /** The header height an editor set for an uploaded logo, in pixels. */
+  logoHeight: number | undefined;
   mainNav: { label: string; href: string }[];
   knowledgeBaseNav: { label: string; href: string }[];
   footerNav: {
@@ -845,6 +847,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     parentUrl?: string;
     logo?: CmsFigure;
     logoDark?: CmsFigure;
+    logoHeight?: number;
     contactEmail?: string;
     address?: string[];
     phone?: string;
@@ -877,6 +880,10 @@ export async function getSiteContent(): Promise<SiteContent> {
     },
     logo: resolveImage(cms?.logo),
     logoDark: resolveImage(cms?.logoDark),
+    logoHeight:
+      typeof cms?.logoHeight === "number" && cms.logoHeight > 0
+        ? cms.logoHeight
+        : undefined,
     mainNav: links(cms?.mainNav, mainNav),
     knowledgeBaseNav: links(cms?.knowledgeBaseNav, knowledgeBaseNav),
     footerNav: {

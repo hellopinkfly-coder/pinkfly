@@ -104,6 +104,7 @@ export function Navbar({
             size="sm"
             logo={site.logo}
             logoDark={site.logoDark}
+            logoHeight={site.logoHeight}
             className="sm:hidden"
           />
           <Logo
@@ -113,6 +114,7 @@ export function Navbar({
             withTagline
             logo={site.logo}
             logoDark={site.logoDark}
+            logoHeight={site.logoHeight}
             className="hidden sm:inline-flex"
           />
 
