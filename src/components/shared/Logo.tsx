@@ -40,6 +40,15 @@ type LogoProps = {
   logo?: ResolvedImage;
   /** Its dark-theme counterpart. Falls back to `logo`. */
   logoDark?: ResolvedImage;
+  /**
+   * The height an uploaded logo is drawn at, in pixels.
+   *
+   * The size steps below are sized to the shipped artwork, which is cropped
+   * tight. An upload carrying its own margin draws the lockup smaller than
+   * the frame, and no code can know how much margin that is — so it is a
+   * number an editor can turn until it looks right.
+   */
+  logoHeight?: number;
   /** Visual size. `sm` is the navbar, `md` the footer. */
   size?: "sm" | "md" | "lg";
   /** Where the logo links to — region-aware callers pass a prefixed path. */
@@ -81,6 +90,7 @@ export function LogoMark({
   withTagline = false,
   logo,
   logoDark,
+  logoHeight,
 }: Omit<LogoProps, "href">) {
   const height = heights[size];
   const cut = withTagline ? art.full : art.compact;
@@ -93,35 +103,40 @@ export function LogoMark({
   if (logo) {
     const light = logo;
     const dark = logoDark ?? logo;
+    // The editor's height applies to the full lockup; the compact cut keeps
+    // its proportion of it, so raising one raises both together.
+    const uploadedHeight = logoHeight
+      ? Math.round(logoHeight * (height / heights.md))
+      : height;
     const uploadedWidth = Math.round(
-      height * (light.ratio ?? cut.light.width / cut.light.height)
+      uploadedHeight * (light.ratio ?? cut.light.width / cut.light.height)
     );
 
     return (
       <span
         className={cn("inline-block", onDark && "pf-logo--on-dark", className)}
-        style={{ width: uploadedWidth, height }}
+        style={{ width: uploadedWidth, height: uploadedHeight }}
       >
         <Image
           src={light.src}
           alt={light.alt || alt}
           width={uploadedWidth}
-          height={height}
+          height={uploadedHeight}
           priority
           unoptimized
           className="pf-logo__on-light object-contain"
-          style={{ width: uploadedWidth, height }}
+          style={{ width: uploadedWidth, height: uploadedHeight }}
         />
         <Image
           src={dark.src}
           alt=""
           aria-hidden
           width={uploadedWidth}
-          height={height}
+          height={uploadedHeight}
           priority
           unoptimized
           className="pf-logo__on-dark object-contain"
-          style={{ width: uploadedWidth, height }}
+          style={{ width: uploadedWidth, height: uploadedHeight }}
         />
       </span>
     );
@@ -167,6 +182,7 @@ export function Logo({
   withTagline = false,
   logo,
   logoDark,
+  logoHeight,
 }: LogoProps) {
   return (
     <Link
@@ -183,6 +199,7 @@ export function Logo({
         withTagline={withTagline}
         logo={logo}
         logoDark={logoDark}
+        logoHeight={logoHeight}
       />
     </Link>
   );

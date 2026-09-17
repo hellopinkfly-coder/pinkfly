@@ -55,6 +55,7 @@ export function Footer({
                 withTagline
                 logo={site.logo}
                 logoDark={site.logoDark}
+                logoHeight={site.logoHeight}
               />
             </Link>
 
