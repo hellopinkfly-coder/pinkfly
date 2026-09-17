@@ -23,11 +23,24 @@ export const siteSettings = defineType({
     defineField({ name: "parentUrl", title: "Parent company URL", type: "url", group: "identity" }),
     defineField({
       name: "logo",
-      title: "Logo",
+      title: "Logo — for the light theme",
       type: "figure",
       group: "identity",
       description:
-        "Optional. Leave empty to keep the type-set Pinkfly wordmark.",
+        "Shown in the header and the footer. Upload a transparent PNG about " +
+        "1400px wide; the height on the page is fixed and the width follows " +
+        "the artwork, so any proportions work. Leave empty to keep the logo " +
+        "shipped with the site.",
+    }),
+
+    defineField({
+      name: "logoDark",
+      title: "Logo — for the dark theme",
+      type: "figure",
+      group: "identity",
+      description:
+        "The same lockup with its neutrals lightened, for the dark theme. " +
+        "Leave empty to use the light-theme logo on both.",
     }),
     defineField({
       name: "defaultOgImage",
