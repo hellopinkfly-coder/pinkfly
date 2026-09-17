@@ -38,13 +38,20 @@ async function main() {
   }
 
   // Ask the deployment what it can see before trying to write, so a refusal
-  // can be attributed rather than guessed at.
+  // can be attributed rather than guessed at. The status code is printed even
+  // when the answer is unusable: a 404 or 405 here means the deployment
+  // predates this endpoint, which is a different problem from a refused write
+  // and was invisible while only a successful answer was reported.
   try {
     const status = await fetch(`${base}/api/comments`);
-    if (status.ok) console.log(`status   ${(await status.text()).slice(0, 200)}`);
-  } catch {
-    // The write attempt below reports the failure well enough.
+    console.log(`status   HTTP ${status.status}  ${(await status.text()).slice(0, 200)}`);
+  } catch (error) {
+    console.log(`status   unreachable  ${error}`);
   }
+
+  // A page that exists only in recent code, to date the deployment.
+  const marker = await fetch(`${base}/knowledge-base/articles`);
+  console.log(`category page  HTTP ${marker.status}  (404 = deployment predates it)`);
 
   console.log(`site     ${base}`);
   console.log(`article  ${entry.title ?? entry._id}\n`);

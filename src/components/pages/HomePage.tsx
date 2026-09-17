@@ -19,8 +19,8 @@ import type { Region } from "@/lib/region";
 /**
  * The homepage, in the order the wireframe sets out:
  * hero carousel → join CTA → impact → how we gather →
- * testimonials → why Pinkfly → social wall → join + newsletter →
- * upcoming events → Knowledge Base.
+ * testimonials → why Pinkfly → social wall → upcoming events →
+ * Knowledge Base → join + newsletter.
  *
  * One component serves every region; only the `region` object changes.
  * All copy, imagery and section visibility come from Sanity — this file
@@ -55,12 +55,13 @@ export async function HomePage({ region }: { region: Region }) {
         <Mission region={region} content={content.mission} />
       )}
       {content.social.visible && <SocialWall content={content.social} />}
-      {content.joinCtaVisible && <Join region={region} content={content.joinCta} />}
-
       {/* What is on, and what has been written — each a taste, with the way
           through to the full listing. */}
       <HomeEvents region={region} events={events} />
       <HomeKnowledge region={region} entries={entries} categories={kb.categories} />
+
+      {/* The closing ask, last thing before the footer. */}
+      {content.joinCtaVisible && <Join region={region} content={content.joinCta} />}
     </>
   );
 }
