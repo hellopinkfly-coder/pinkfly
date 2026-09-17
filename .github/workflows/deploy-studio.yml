@@ -4,8 +4,10 @@
 # the copy Sanity hosts is a separate upload that only changes when someone
 # runs `sanity deploy` — so it silently kept showing an older schema.
 #
-# Needs the SANITY_AUTH_TOKEN repository secret: a token with the Deploy
-# Studio permission, created at sanity.io/manage under the project's API tab.
+# Needs a token that may deploy. It prefers a SANITY_AUTH_TOKEN secret and
+# falls back to SANITY_API_WRITE_TOKEN, which the repository already holds —
+# whether that one is allowed to deploy depends on the role it was given, and
+# the run says so either way.
 name: Deploy Studio
 
 on:
@@ -30,11 +32,19 @@ jobs:
       - run: npm ci
       - name: Deploy
         env:
-          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          DEPLOY_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
         run: |
-          if [ -z "$SANITY_AUTH_TOKEN" ]; then
-            echo "SANITY_AUTH_TOKEN is not set — add it as a repository secret."
-            echo "Until then the hosted Studio keeps whatever schema it was last deployed with."
+          if [ -n "$DEPLOY_TOKEN" ]; then
+            echo "Using SANITY_AUTH_TOKEN."
+            export SANITY_AUTH_TOKEN="$DEPLOY_TOKEN"
+          elif [ -n "$WRITE_TOKEN" ]; then
+            echo "SANITY_AUTH_TOKEN is not set; trying SANITY_API_WRITE_TOKEN."
+            echo "If this fails on permissions, that token cannot deploy and a"
+            echo "token with the Deploy Studio role is needed."
+            export SANITY_AUTH_TOKEN="$WRITE_TOKEN"
+          else
+            echo "No token available — add SANITY_AUTH_TOKEN as a repository secret."
             exit 1
           fi
           npx sanity deploy
