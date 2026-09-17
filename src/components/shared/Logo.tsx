@@ -48,8 +48,8 @@ type LogoProps = {
 
 /** Intrinsic artwork sizes, used to keep each cut's aspect ratio exact. */
 const art = {
-  compact: { src: "/brand/pinkfly-lockup", width: 1310, height: 220 },
-  full: { src: "/brand/pinkfly-logo", width: 1425, height: 366 },
+  compact: { src: "/brand/pinkfly-lockup", width: 807, height: 220 },
+  full: { src: "/brand/pinkfly-logo", width: 976, height: 366 },
 } as const;
 
 /** Rendered height in pixels per size step. */

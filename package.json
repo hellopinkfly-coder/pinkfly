@@ -20,7 +20,8 @@
     "migrate:bodies": "tsx scripts/migrate-article-bodies.ts",
     "check:supabase": "tsx scripts/check-supabase.ts",
     "check:comments": "tsx scripts/check-comments.ts",
-    "check:studio": "tsx scripts/check-studio.ts"
+    "check:studio": "tsx scripts/check-studio.ts",
+    "build:logo": "node scripts/build-logo.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^8.0.1",
@@ -46,8 +47,10 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "opentype.js": "^1.3.4",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.23.12",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "wawoff2": "^2.0.1"
   }
 }

@@ -28,9 +28,10 @@ export const siteSettings = defineType({
       group: "identity",
       description:
         "Shown in the header and the footer. Upload a transparent PNG about " +
-        "1400px wide; the height on the page is fixed and the width follows " +
-        "the artwork, so any proportions work. Leave empty to keep the logo " +
-        "shipped with the site.",
+        "1400px wide. If the file has empty space around the lockup, open " +
+        "Crop and drag the box tight to the artwork — the page takes its " +
+        "proportions from the crop, so an uncropped square canvas would be " +
+        "drawn as a square. Leave empty to keep the logo shipped with the site.",
     }),
 
     defineField({
