@@ -1,0 +1,50 @@
+# Keep the Studio hosted by Sanity in step with the schema in this repo.
+#
+# The Studio at /studio on the website rebuilds with every Vercel deploy, but
+# the copy Sanity hosts is a separate upload that only changes when someone
+# runs `sanity deploy` — so it silently kept showing an older schema.
+#
+# Needs a token that may deploy. It prefers a SANITY_AUTH_TOKEN secret and
+# falls back to SANITY_API_WRITE_TOKEN, which the repository already holds —
+# whether that one is allowed to deploy depends on the role it was given, and
+# the run says so either way.
+name: Deploy Studio
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "sanity/**"
+      - "sanity.config.ts"
+      - "sanity.cli.ts"
+      - ".github/workflows/deploy-studio.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Deploy
+        env:
+          DEPLOY_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+        run: |
+          if [ -n "$DEPLOY_TOKEN" ]; then
+            echo "Using SANITY_AUTH_TOKEN."
+            export SANITY_AUTH_TOKEN="$DEPLOY_TOKEN"
+          elif [ -n "$WRITE_TOKEN" ]; then
+            echo "SANITY_AUTH_TOKEN is not set; trying SANITY_API_WRITE_TOKEN."
+            echo "If this fails on permissions, that token cannot deploy and a"
+            echo "token with the Deploy Studio role is needed."
+            export SANITY_AUTH_TOKEN="$WRITE_TOKEN"
+          else
+            echo "No token available — add SANITY_AUTH_TOKEN as a repository secret."
+            exit 1
+          fi
+          npx sanity deploy
