@@ -11,6 +11,15 @@ type EventCardProps = {
   event: PinkflyEvent;
   region: Region;
   layout?: "grid" | "rail";
+  /**
+   * Draw the card tighter.
+   *
+   * The homepage shows three events as a taste of the Events page, above a
+   * Knowledge Base section and a closing CTA, so the cards there are the
+   * middle of a long page rather than its subject. The Events page keeps the
+   * roomier card: there the cards *are* the page.
+   */
+  compact?: boolean;
   className?: string;
 };
 
@@ -27,6 +36,7 @@ export function EventCard({
   event,
   region,
   layout = "grid",
+  compact = false,
   className,
 }: EventCardProps) {
   const href = regionPath(region, `/events/${event.slug}`);
@@ -45,18 +55,23 @@ export function EventCard({
         alt={event.image.alt}
         label={event.type}
         shape="rect"
-        aspect="aspect-[16/10]"
+        aspect={compact ? "aspect-[16/9]" : "aspect-[16/10]"}
         sizes="(max-width: 640px) 88vw, 340px"
         className="rounded-none"
       />
 
-      <div className="flex flex-1 flex-col p-6">
+      <div className={cn("flex flex-1 flex-col", compact ? "p-5" : "p-6")}>
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="neutral">{event.format}</Badge>
           {price && <Badge variant="outline">{price}</Badge>}
         </div>
 
-        <h3 className="mt-4 text-lg leading-snug transition-colors duration-300 group-hover:text-[var(--pf-accent)]">
+        <h3
+          className={cn(
+            "leading-snug transition-colors duration-300 group-hover:text-[var(--pf-accent)]",
+            compact ? "mt-3 text-base" : "mt-4 text-lg"
+          )}
+        >
           <Link
             href={href}
             className="after:absolute after:inset-0 after:rounded-[var(--pf-radius-xl)] after:content-[''] focus-visible:outline-none"
@@ -65,11 +80,21 @@ export function EventCard({
           </Link>
         </h3>
 
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-[var(--pf-text)]">
+        <p
+          className={cn(
+            "mt-2 line-clamp-2 text-sm text-[var(--pf-text)]",
+            compact ? "leading-snug" : "leading-relaxed"
+          )}
+        >
           {event.excerpt}
         </p>
 
-        <ul className="mt-4 flex flex-col gap-1.5 text-xs text-[var(--pf-muted)]">
+        <ul
+          className={cn(
+            "flex flex-col text-xs text-[var(--pf-muted)]",
+            compact ? "mt-3 gap-1" : "mt-4 gap-1.5"
+          )}
+        >
           <li className="flex items-center gap-2">
             <CalendarDays size={13} aria-hidden />
             {formatEventDate(event.startsAt, region)}
@@ -82,7 +107,12 @@ export function EventCard({
 
         {/* Both links carry a full tap height on a phone — a bare line of
             text is too small a target for a thumb. */}
-        <div className="mt-5 flex flex-wrap items-center gap-x-5 border-t border-[var(--pf-border)] pt-3 text-sm sm:mt-6 sm:pt-5">
+        <div
+          className={cn(
+            "flex flex-wrap items-center gap-x-5 border-t border-[var(--pf-border)] text-sm",
+            compact ? "mt-4 pt-2 sm:pt-3" : "mt-5 pt-3 sm:mt-6 sm:pt-5"
+          )}
+        >
           <Link
             href={href}
             className="relative z-10 inline-flex min-h-11 items-center font-bold text-[var(--pf-heading)] transition-colors hover:text-[var(--pf-accent)] sm:min-h-0"
