@@ -1,5 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+import lockupLight from "../../../public/brand/pinkfly-lockup.png";
+import lockupDark from "../../../public/brand/pinkfly-lockup-dark.png";
+import logoLight from "../../../public/brand/pinkfly-logo.png";
+import logoDarkArt from "../../../public/brand/pinkfly-logo-dark.png";
 import { cn } from "@/lib/utils";
 import type { ResolvedImage } from "@/lib/cms/resolve";
 
@@ -46,10 +50,21 @@ type LogoProps = {
   withTagline?: boolean;
 };
 
-/** Intrinsic artwork sizes, used to keep each cut's aspect ratio exact. */
+/**
+ * The two cuts, imported rather than referenced by path.
+ *
+ * An import gives the file a content-hashed URL, so redrawing the artwork
+ * changes the address and every browser and cache fetches it. Referenced by a
+ * fixed path, a redrawn logo kept the old address and kept being served from
+ * cache — the file in the repository had changed and no one could see it.
+ *
+ * The dimensions come with the import too, so the aspect ratio is whatever
+ * the file actually is; the numbers written here by hand had already drifted
+ * from the artwork.
+ */
 const art = {
-  compact: { src: "/brand/pinkfly-lockup", width: 807, height: 220 },
-  full: { src: "/brand/pinkfly-logo", width: 976, height: 366 },
+  compact: { light: lockupLight, dark: lockupDark },
+  full: { light: logoLight, dark: logoDarkArt },
 } as const;
 
 /** Rendered height in pixels per size step. */
@@ -69,7 +84,7 @@ export function LogoMark({
 }: Omit<LogoProps, "href">) {
   const height = heights[size];
   const cut = withTagline ? art.full : art.compact;
-  const width = Math.round((height * cut.width) / cut.height);
+  const width = Math.round((height * cut.light.width) / cut.light.height);
   const alt = withTagline ? "Pinkfly — Building Dreams" : "Pinkfly";
 
   // An uploaded logo wins, and both themes are drawn the same way as the
@@ -78,7 +93,9 @@ export function LogoMark({
   if (logo) {
     const light = logo;
     const dark = logoDark ?? logo;
-    const uploadedWidth = Math.round(height * (light.ratio ?? cut.width / cut.height));
+    const uploadedWidth = Math.round(
+      height * (light.ratio ?? cut.light.width / cut.light.height)
+    );
 
     return (
       <span
@@ -120,7 +137,7 @@ export function LogoMark({
       style={{ width, height }}
     >
       <Image
-        src={`${cut.src}.png`}
+        src={cut.light}
         alt={alt}
         width={width}
         height={height}
@@ -129,7 +146,7 @@ export function LogoMark({
         style={{ width, height }}
       />
       <Image
-        src={`${cut.src}-dark.png`}
+        src={cut.dark}
         alt=""
         aria-hidden
         width={width}
