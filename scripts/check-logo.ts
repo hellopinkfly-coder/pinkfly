@@ -84,6 +84,49 @@ async function main() {
     const body = Buffer.from(await response.arrayBuffer());
     console.log("served:", response.status, pixelSize(body), `${body.length} bytes`);
   }
+
+  await checkLive();
+}
+
+/**
+ * What the live site serves: the logo tag in the HTML, and the image behind
+ * it. A frame narrower than the artwork's proportions is what crops a logo,
+ * so both numbers have to be read from production rather than from a local
+ * render, which has been correct throughout.
+ */
+async function checkLive() {
+  const site = process.env.SITE_URL ?? "https://pinkfly.vercel.app";
+  console.log(`\n=== ${site} ===`);
+  const response = await fetch(site, { headers: { "user-agent": "pinkfly-check-logo" } });
+  console.log("page:", response.status, "age:", response.headers.get("age"), response.headers.get("x-vercel-cache"));
+  const html = await response.text();
+
+  const tags = html.match(/<img[^>]*pf-logo[^>]*>/g) ?? [];
+  if (tags.length === 0) {
+    console.log("no logo tag found in the HTML");
+    return;
+  }
+  for (const tag of tags) {
+    const width = /\bwidth="(\d+)"/.exec(tag)?.[1];
+    const height = /\bheight="(\d+)"/.exec(tag)?.[1];
+    const src = /\bsrc="([^"]+)"/.exec(tag)?.[1]?.replace(/&amp;/g, "&");
+    const style = /\bstyle="([^"]*)"/.exec(tag)?.[1];
+    console.log(`\nframe: ${width}x${height}  style: ${style}`);
+    console.log("src:", src);
+    if (!src) continue;
+    const image = await fetch(new URL(src, site).toString());
+    const body = Buffer.from(await image.arrayBuffer());
+    const served = pixelSize(body);
+    console.log("served:", image.status, served, `${body.length} bytes`);
+    const [sw, sh] = served.split("x").map(Number);
+    if (sw && sh && width && height) {
+      const frameRatio = Number(width) / Number(height);
+      console.log(
+        `ratios — frame ${frameRatio.toFixed(3)}, image ${(sw / sh).toFixed(3)}`,
+        Math.abs(frameRatio - sw / sh) > 0.05 ? "  <-- MISMATCH, this is what crops it" : ""
+      );
+    }
+  }
 }
 
 main().catch((error) => {
