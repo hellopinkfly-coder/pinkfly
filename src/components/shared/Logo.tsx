@@ -84,11 +84,17 @@ const art = {
  * margin — the frame is the file's height, so the artwork inside it lands
  * smaller. The extra room costs the header a few pixels and gives every logo,
  * shipped or uploaded, more presence.
+ *
+ * The step from 48 to 62 is the tagline's doing. "Building Dreams" is a third
+ * the height of the wordmark above it, so at 48 it drew at around 5px and read
+ * as a grey smudge; the lockup has to be this tall for it to be legible at all.
+ * The phone bar keeps its own step, which carries no tagline and has no room
+ * to grow.
  */
 const heights = {
-  sm: 32,
-  md: 48,
-  lg: 60,
+  sm: 34,
+  md: 62,
+  lg: 76,
 } as const;
 
 export function LogoMark({
