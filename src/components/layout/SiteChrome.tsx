@@ -41,6 +41,15 @@ export function SiteChrome({
   site: SiteContent;
 }) {
   const pathname = usePathname() || "/";
+
+  // The Studio is an application, not a page of the site: it draws its own
+  // full-height chrome and its own navigation. Wrapped in the site header and
+  // footer it sat under a floating navbar that covered its toolbar, so the
+  // route renders bare.
+  if (pathname === "/studio" || pathname.startsWith("/studio/")) {
+    return <>{children}</>;
+  }
+
   const { region, rest } = parsePathname(pathname);
 
   return (
