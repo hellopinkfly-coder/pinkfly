@@ -15,6 +15,10 @@ import type { FinalCtaContent } from "@/lib/cms/content";
  * Join page, which carries the same membership form — so the CTA always
  * leads somewhere a visitor can actually join, and no URL is invented.
  *
+ * The card is kept tight: it sits on six pages, most of them just above the
+ * footer, so its padding and inner spacing are a step below the usual section
+ * rhythm rather than the generous hero measure.
+ *
  * Set `NEXT_PUBLIC_JOIN_FORM_URL` (or the per-region variable in
  * `src/config/regions.ts`) to switch it over. Nothing here needs to change.
  */
@@ -30,17 +34,17 @@ export function FinalCTA({
 }) {
 
   return (
-    <Section id="join" className="relative overflow-hidden">
+    <Section id="join" className="relative overflow-hidden py-7 sm:py-10">
       <GradientBackdrop />
       <Reveal className="mx-auto max-w-3xl">
-        <div className="pf-glass rounded-[var(--pf-radius-2xl)] p-8 text-left shadow-[var(--pf-shadow-md)] sm:p-12">
+        <div className="pf-glass rounded-[var(--pf-radius-2xl)] p-6 text-left shadow-[var(--pf-shadow-md)] sm:p-9">
           <span className="pf-eyebrow">{content.eyebrow}</span>
-          <h2 className="pf-h2 mt-4">{content.headline}</h2>
-          <p className="mt-5 max-w-xl text-base leading-[1.85] text-[var(--pf-text)] sm:text-lg">
+          <h2 className="pf-h2 mt-3">{content.headline}</h2>
+          <p className="mt-4 max-w-xl text-base leading-[1.7] text-[var(--pf-text)]">
             {content.body}
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="mt-6 flex flex-wrap items-center gap-4">
             {formUrl ? (
               <Button
                 href={formUrl}
