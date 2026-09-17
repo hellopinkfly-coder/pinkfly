@@ -1,0 +1,27 @@
+# What the Sanity token in the repository secrets can actually do.
+#
+# Comments and the hosted Studio deploy both fail in confusing ways when the
+# token is not a member of the project, or lacks the role the action needs.
+# This asks Sanity and prints the answer. It writes nothing.
+name: Check token
+
+on:
+  push:
+    paths:
+      - "scripts/check-token.ts"
+      - ".github/workflows/check-token.yml"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - env:
+          SANITY_API_WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
+        run: npm run check:token
