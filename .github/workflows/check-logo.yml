@@ -1,0 +1,24 @@
+# What the site is drawing the header logo from — the upload, its crop, and
+# the image the built URL actually returns.
+name: Check logo
+
+on:
+  # Runs on push as well: a workflow that exists only on a branch cannot be
+  # dispatched until it reaches the default branch.
+  push:
+    paths:
+      - "scripts/check-logo.ts"
+      - ".github/workflows/check-logo.yml"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check:logo
