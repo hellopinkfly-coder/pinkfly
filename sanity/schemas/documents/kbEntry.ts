@@ -45,10 +45,12 @@ export const kbEntry = defineType({
     /**
      * Two images, because the two places crop differently.
      *
-     * The card sits in a grid where every tile is the same 4:3 and the
-     * picture fills it, so a wide banner loses its sides there. The article
-     * header shows the picture whole, at whatever proportions it was
-     * uploaded at. One file cannot be right for both, so each has its own
+     * The card sits in a grid where every tile is the same 4:3. The whole
+     * picture is shown inside it — nothing is trimmed — so a banner uploaded
+     * there lands as a letterboxed strip with blurred bands above and below
+     * it. Only a 4:3 file fills the tile edge to edge. The article header
+     * shows the picture whole at its own proportions, where a banner is
+     * exactly right. One file cannot be right for both, so each has its own
      * field and its own stated size.
      */
     defineField({
@@ -57,9 +59,10 @@ export const kbEntry = defineType({
       type: "figure",
       group: "main",
       description:
-        "Shown on the article's card in the Knowledge Base grid. Upload 1200 × 900 (4:3). " +
-        "The card fills this shape and trims anything outside it, so keep the subject centred " +
-        "and keep text out of the picture.",
+        "Shown on the article's card in the Knowledge Base grid, and on the homepage. " +
+        "Upload 1200 × 900 (4:3) — that fills the tile edge to edge. Any other shape is " +
+        "shown whole and centred, with blurred bands filling the rest of the tile, so a wide " +
+        "banner here becomes a thin strip. Use the header image field below for banners.",
     }),
 
     defineField({
@@ -69,8 +72,8 @@ export const kbEntry = defineType({
       group: "main",
       description:
         "The banner at the top of the article itself. Shown whole, at its own proportions — " +
-        "nothing is cropped. Upload 1600 × 900 (16:9) for a standard banner, or any shape you " +
-        "prefer at about 1600px wide. Leave empty to use the card image here too.",
+        "nothing is cropped. Upload 1600 × 900 (16:9) for a standard banner; a wider banner " +
+        "such as 1600 × 600 works here too. Leave empty to use the card image here instead.",
     }),
     defineField({ name: "tag", title: "Card label", type: "string", group: "main" }),
     defineField({
