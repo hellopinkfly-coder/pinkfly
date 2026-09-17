@@ -128,6 +128,35 @@ async function build({ height, withTagline, dark, out }) {
   console.log(`${out}  ${meta.width}x${meta.height}`);
 }
 
+/**
+ * The share image: the lockup centred on the dark surface.
+ *
+ * It is what a link to the site unfurls as, and it carried the old wordmark
+ * long after the site stopped using it — nobody sees it on the site itself,
+ * which is exactly why it went unnoticed.
+ */
+async function buildShareImage({ width, height, out }) {
+  const background = "#1e1a17";
+  const lockup = await sharp("public/brand/pinkfly-logo-dark.png")
+    .resize({ width: Math.round(width * 0.62) })
+    .toBuffer();
+
+  await sharp({
+    create: {
+      width,
+      height,
+      channels: 4,
+      background,
+    },
+  })
+    .composite([{ input: lockup, gravity: "centre" }])
+    .png()
+    .toFile(out);
+
+  const meta = await sharp(out).metadata();
+  console.log(`${out}  ${meta.width}x${meta.height}`);
+}
+
 const FULL = { height: 366, withTagline: true };
 const COMPACT = { height: 220, withTagline: false };
 
@@ -135,3 +164,7 @@ await build({ ...FULL, dark: false, out: "public/brand/pinkfly-logo.png" });
 await build({ ...FULL, dark: true, out: "public/brand/pinkfly-logo-dark.png" });
 await build({ ...COMPACT, dark: false, out: "public/brand/pinkfly-lockup.png" });
 await build({ ...COMPACT, dark: true, out: "public/brand/pinkfly-lockup-dark.png" });
+
+// The share image, and the copy Next serves by file convention.
+await buildShareImage({ width: 1200, height: 630, out: "public/brand/og-image.png" });
+await buildShareImage({ width: 1200, height: 630, out: "src/app/opengraph-image.png" });

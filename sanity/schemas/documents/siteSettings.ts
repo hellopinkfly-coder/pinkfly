@@ -48,9 +48,9 @@ export const siteSettings = defineType({
       title: "Logo height in the header (pixels)",
       type: "number",
       group: "identity",
-      initialValue: 40,
+      initialValue: 48,
       description:
-        "40 by default. A file with empty space around the lockup draws the " +
+        "48 by default. A file with empty space around the lockup draws the " +
         "artwork smaller than this, because the height is the file's, not the " +
         "lockup's — raise it until the logo looks right, or crop the upload " +
         "tight to the artwork above. The footer and the phone header follow " +

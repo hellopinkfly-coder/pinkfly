@@ -76,11 +76,19 @@ const art = {
   full: { light: logoLight, dark: logoDarkArt },
 } as const;
 
-/** Rendered height in pixels per size step. */
+/**
+ * Rendered height in pixels per size step.
+ *
+ * `md` is the header and the footer. It was 40, which is generous for a
+ * wordmark cropped tight and mean for an uploaded lockup carrying its own
+ * margin — the frame is the file's height, so the artwork inside it lands
+ * smaller. The extra room costs the header a few pixels and gives every logo,
+ * shipped or uploaded, more presence.
+ */
 const heights = {
-  sm: 28,
-  md: 40,
-  lg: 52,
+  sm: 32,
+  md: 48,
+  lg: 60,
 } as const;
 
 export function LogoMark({
