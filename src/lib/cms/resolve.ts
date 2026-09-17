@@ -15,12 +15,20 @@ import { projectId, dataset, cmsEnabled } from "../../../sanity/env";
 
 const builder = cmsEnabled ? imageUrlBuilder({ projectId, dataset }) : null;
 
+/** The crop an editor dragged in the Studio, as fractions of each edge. */
+type SanityCrop = {
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
 /** A Sanity image value: the asset reference, plus crop and hotspot. */
 type SanityImage = {
   _type?: string;
   _ref?: string;
   asset?: { _ref?: string; _type?: string } | null;
-  crop?: unknown;
+  crop?: SanityCrop | null;
   hotspot?: unknown;
 };
 
@@ -56,13 +64,30 @@ export type ResolvedImage = {
  * without fetching the file. That is what lets a frame take the shape of
  * whatever was uploaded instead of cropping it to a fixed one.
  */
-export function assetRatio(ref: string | undefined | null): number | undefined {
+export function assetRatio(
+  ref: string | undefined | null,
+  crop?: SanityCrop | null
+): number | undefined {
   if (!ref) return undefined;
   const match = /-(\d+)x(\d+)-[a-z]+$/.exec(ref);
   if (!match) return undefined;
-  const width = Number(match[1]);
-  const height = Number(match[2]);
+  let width = Number(match[1]);
+  let height = Number(match[2]);
   if (!width || !height) return undefined;
+
+  // The crop dragged in the Studio is what the page shows, so it is the crop's
+  // proportions that matter, not the file's. Without this, cropping a logo out
+  // of a square canvas left the square's shape behind: the frame stayed square
+  // and the artwork sat as a small strip inside it.
+  if (crop) {
+    const keptWidth = 1 - (crop.left ?? 0) - (crop.right ?? 0);
+    const keptHeight = 1 - (crop.top ?? 0) - (crop.bottom ?? 0);
+    if (keptWidth > 0 && keptHeight > 0) {
+      width *= keptWidth;
+      height *= keptHeight;
+    }
+  }
+
   return width / height;
 }
 
@@ -100,7 +125,7 @@ export function resolveImage(
     alt: figure.alt || seed?.alt || "",
     label: figure.label || seed?.label,
     focal: figure.focal || seed?.focal,
-    ratio: assetRatio(image?.asset?._ref) ?? seed?.ratio,
+    ratio: assetRatio(image?.asset?._ref, image?.crop) ?? seed?.ratio,
   };
 }
 
