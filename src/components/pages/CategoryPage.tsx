@@ -76,10 +76,12 @@ export async function CategoryPage({
         )}
       </Section>
 
+      {/* Tight, to match the Knowledge Base page these categories belong to. */}
       <FinalCTA
         region={region}
         content={finalCta}
         formUrl={region.form.googleFormUrl || site.joinFormUrl}
+        compact
       />
     </>
   );
