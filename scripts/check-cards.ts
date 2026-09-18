@@ -30,7 +30,12 @@ async function main() {
   // written: the figure object nests the upload, an older plain image field
   // does not. Reading only one depth is what made an upload look missing
   // when it was there — so read every shape the field has ever had.
-  const entries: { title: string; ref?: string; updated?: string }[] = await client.fetch(
+  const entries: {
+    title: string;
+    ref?: string;
+    headerRef?: string;
+    updated?: string;
+  }[] = await client.fetch(
     `*[_type == "kbEntry" && count(string::split(_id, ".")) == 1] | order(_updatedAt desc)[0...6]{
        title,
        "ref": coalesce(
@@ -38,13 +43,31 @@ async function main() {
          image.asset._ref,
          image._ref
        ),
+       "headerRef": coalesce(
+         articleImage.asset.asset._ref,
+         articleImage.asset._ref,
+         articleImage._ref
+       ),
        "updated": _updatedAt
      }`
   );
 
   console.log("--- what Sanity holds (newest first) ---");
   for (const e of entries) {
-    console.log(`${e.updated?.slice(0, 19)}  ${e.ref ?? "no upload"}  ${e.title}`);
+    console.log(
+      `${e.updated?.slice(0, 19)}  card: ${e.ref ? e.ref.slice(6, 26) + "…" : "EMPTY"}` +
+        `  header: ${e.headerRef ? e.headerRef.slice(6, 26) + "…" : "EMPTY"}  ${e.title}`
+    );
+  }
+
+  // A card image field left empty is not a caching problem: the grid falls
+  // back to the shipped stock photograph, which is exactly what "the old
+  // image" looks like on a phone.
+  const cardless = entries.filter((e) => !e.ref && e.headerRef);
+  if (cardless.length) {
+    console.log("\n  ⚠ Header image uploaded but CARD image empty:");
+    for (const e of cardless) console.log(`    ${e.title}`);
+    console.log("    The grid shows the seeded photograph for these.");
   }
 
   console.log(`\n--- what ${base}/knowledge-base serves ---`);
