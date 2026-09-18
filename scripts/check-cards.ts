@@ -26,10 +26,18 @@ const client = createClient({
 });
 
 async function main() {
+  // The reference sits at a different depth depending on how the field was
+  // written: the figure object nests the upload, an older plain image field
+  // does not. Reading only one depth is what made an upload look missing
+  // when it was there — so read every shape the field has ever had.
   const entries: { title: string; ref?: string; updated?: string }[] = await client.fetch(
     `*[_type == "kbEntry" && count(string::split(_id, ".")) == 1] | order(_updatedAt desc)[0...6]{
        title,
-       "ref": image.asset.asset._ref,
+       "ref": coalesce(
+         image.asset.asset._ref,
+         image.asset._ref,
+         image._ref
+       ),
        "updated": _updatedAt
      }`
   );
@@ -49,8 +57,15 @@ async function main() {
   );
 
   const html = await response.text();
-  // The asset id inside each optimised image URL the grid references.
-  const ids = [...new Set([...html.matchAll(/image-([a-f0-9]{30,})-(\d+x\d+)-(\w+)/g)].map((m) => m[0]))];
+  // Sanity serves an asset at cdn.sanity.io/images/<project>/<dataset>/<id>-WxH.ext,
+  // and Next wraps that in /_next/image?url=... — so the id appears in the
+  // page URL-encoded. Match the id itself rather than the document's
+  // "image-..." reference, which is spelled differently.
+  const ids = [
+    ...new Set(
+      [...decodeURIComponent(html).matchAll(/([a-f0-9]{32,})-(\d+x\d+)\.(\w+)/g)].map((m) => m[1])
+    ),
+  ];
   console.log(`\n${ids.length} distinct Sanity asset(s) referenced by the grid:`);
   for (const id of ids) {
     const known = entries.find((e) => e.ref?.includes(id));

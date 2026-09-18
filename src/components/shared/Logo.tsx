@@ -57,6 +57,17 @@ type LogoProps = {
   onDark?: boolean;
   /** Use the full lockup, which carries the "Building Dreams" tagline. */
   withTagline?: boolean;
+  /**
+   * Preload the artwork.
+   *
+   * Off by default, which is what a phone wants. Every placement renders
+   * four files — two cuts, each with an on-light and an on-dark variant —
+   * and CSS hides three of them; preloading fetched all four on every page,
+   * about 28KB of pictures nobody sees, ahead of the one image that is
+   * actually on screen. Left to load normally, the browser skips what is
+   * `display: none` and the footer's copy waits until it is scrolled to.
+   */
+  priority?: boolean;
 };
 
 /**
@@ -105,6 +116,7 @@ export function LogoMark({
   logo,
   logoDark,
   logoHeight,
+  priority = false,
 }: Omit<LogoProps, "href">) {
   const height = heights[size];
   const cut = withTagline ? art.full : art.compact;
@@ -136,7 +148,7 @@ export function LogoMark({
           alt={light.alt || alt}
           width={uploadedWidth}
           height={uploadedHeight}
-          priority
+          priority={priority}
           unoptimized
           className="pf-logo__on-light object-contain"
           style={{ width: uploadedWidth, height: uploadedHeight }}
@@ -147,7 +159,7 @@ export function LogoMark({
           aria-hidden
           width={uploadedWidth}
           height={uploadedHeight}
-          priority
+          priority={priority}
           unoptimized
           className="pf-logo__on-dark object-contain"
           style={{ width: uploadedWidth, height: uploadedHeight }}
@@ -170,7 +182,7 @@ export function LogoMark({
         alt={alt}
         width={width}
         height={height}
-        priority
+        priority={priority}
         className="pf-logo__on-light object-contain"
         style={{ width, height }}
       />
@@ -180,7 +192,7 @@ export function LogoMark({
         aria-hidden
         width={width}
         height={height}
-        priority
+        priority={priority}
         className="pf-logo__on-dark object-contain"
         style={{ width, height }}
       />
@@ -197,6 +209,7 @@ export function Logo({
   logo,
   logoDark,
   logoHeight,
+  priority = false,
 }: LogoProps) {
   return (
     <Link
@@ -214,6 +227,7 @@ export function Logo({
         logo={logo}
         logoDark={logoDark}
         logoHeight={logoHeight}
+        priority={priority}
       />
     </Link>
   );
