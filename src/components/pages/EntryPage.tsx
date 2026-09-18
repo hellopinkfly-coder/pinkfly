@@ -73,13 +73,19 @@ export async function EntryPage({
         bottom again — the taller the display, the more of it the picture took.
         The cap keeps the title on the first screen at any size.
 
-        A capped height also narrows the box: with an aspect ratio, a browser
-        that cannot make the frame taller makes it correspondingly less wide,
-        and a block that is narrower than its container sits flush left. The
-        frame is centred so the banner stays a banner.
+        A capped height would otherwise narrow the box: with an aspect ratio,
+        a browser that cannot make the frame taller makes it correspondingly
+        less wide. `w-full` fixes the width first, so the cap takes height off
+        the frame and the picture letterboxes inside it instead of the whole
+        frame shrinking away from the page's edges.
+
+        The container is the site's default — the same one the navbar uses —
+        so the banner and the bar above it line up exactly. It used to be a
+        step wider, which, once the frame shrank, read as a banner narrower
+        than the bar rather than the same width.
       */}
       <section className="pt-28 sm:pt-32">
-        <Container className="max-w-7xl">
+        <Container>
           <Reveal className="group">
             <ImageFrame
               src={banner.src}
@@ -88,11 +94,11 @@ export async function EntryPage({
               shape="rect"
               aspect="aspect-[3/2] sm:aspect-[2/1] lg:aspect-[64/21]"
               maxHeight="clamp(200px, 38vh, 420px)"
-              sizes="(max-width: 1280px) 94vw, 1240px"
+              sizes="(max-width: 1152px) 94vw, 1088px"
               priority
               hoverZoom={false}
               fit="contain"
-              className="mx-auto shadow-[var(--pf-shadow-lg)]"
+              className="w-full shadow-[var(--pf-shadow-lg)]"
             />
           </Reveal>
         </Container>

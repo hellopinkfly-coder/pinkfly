@@ -96,16 +96,16 @@ const art = {
  * smaller. The extra room costs the header a few pixels and gives every logo,
  * shipped or uploaded, more presence.
  *
- * The step from 48 to 62 is the tagline's doing. "Building Dreams" is a third
- * the height of the wordmark above it, so at 48 it drew at around 5px and read
- * as a grey smudge; the lockup has to be this tall for it to be legible at all.
- * The phone bar keeps its own step, which carries no tagline and has no room
- * to grow.
+ * The tagline sets the floor: it has to be legible, and it is a fraction of
+ * the lockup's height. The supplied artwork draws it larger than the drawn-in
+ * one did, so 46 reads where the old lockup needed 62 — and 62 with this
+ * wider artwork made the logo 241px, which pushed the navigation onto two
+ * lines. The phone bar keeps its own step and carries no tagline.
  */
 const heights = {
   sm: 34,
-  md: 62,
-  lg: 76,
+  md: 46,
+  lg: 58,
 } as const;
 
 export function LogoMark({
