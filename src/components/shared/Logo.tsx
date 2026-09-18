@@ -18,8 +18,11 @@ import type { ResolvedImage } from "@/lib/cms/resolve";
  * Dreams" tagline. The tagline is unreadable at navbar height, so the compact
  * cut is the default and the full one is opt-in via `withTagline`.
  *
- * Each cut has an on-light and an on-dark variant — only the neutrals differ,
- * the pink is identical, so the brand colour never shifts between surfaces.
+ * Each cut has an on-light and an on-dark variant, and each is its own
+ * supplied file rather than one recoloured into the other: on light the
+ * wordmark is pink throughout with a charcoal balloon and a grey tagline, on
+ * dark the "fly" and the tagline are cream. The mark and the layout are the
+ * same in both, so nothing shifts between surfaces.
  * Being a raster, the logo can't read the theme tokens, so both variants are
  * rendered and CSS in globals.css shows one: by `data-theme`, or forced to the
  * on-dark variant by `.pf-logo--on-dark` for placements over a dark hero.
@@ -120,8 +123,19 @@ export function LogoMark({
 }: Omit<LogoProps, "href">) {
   const height = heights[size];
   const cut = withTagline ? art.full : art.compact;
-  const width = Math.round((height * cut.light.width) / cut.light.height);
   const alt = withTagline ? "Pinkfly — Building Dreams" : "Pinkfly";
+
+  // Each theme's file is drawn by hand, so the two trim to slightly different
+  // proportions — the light balloon reaches a little further down than the
+  // dark one. Sizing both from the light cut's ratio squeezed the dark one
+  // inside a box that was the wrong shape for it, so each gets its own width
+  // and the box takes the wider of the two. The height is identical either
+  // way, which is what keeps the bar from moving when the theme changes.
+  const widthOf = (img: { width: number; height: number }) =>
+    Math.round((height * img.width) / img.height);
+  const lightWidth = widthOf(cut.light);
+  const darkWidth = widthOf(cut.dark);
+  const width = Math.max(lightWidth, darkWidth);
 
   // An uploaded logo wins, and both themes are drawn the same way as the
   // shipped artwork: one for each, with CSS showing the right one, so the
@@ -180,21 +194,21 @@ export function LogoMark({
       <Image
         src={cut.light}
         alt={alt}
-        width={width}
+        width={lightWidth}
         height={height}
         priority={priority}
         className="pf-logo__on-light object-contain"
-        style={{ width, height }}
+        style={{ width: lightWidth, height }}
       />
       <Image
         src={cut.dark}
         alt=""
         aria-hidden
-        width={width}
+        width={darkWidth}
         height={height}
         priority={priority}
         className="pf-logo__on-dark object-contain"
-        style={{ width, height }}
+        style={{ width: darkWidth, height }}
       />
     </span>
   );
