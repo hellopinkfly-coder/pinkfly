@@ -54,7 +54,19 @@ export async function EntryPage({
 
   return (
     <>
-      {/* Banner */}
+      {/*
+        Banner.
+
+        A fixed wide frame rather than the picture's own proportions. Taking
+        the upload's ratio meant a 16:9 photograph drew about 700px tall at
+        full width and filled the screen before a word of the article showed;
+        a banner is a strip above the headline, not a page of its own. The
+        frame is 3:2 on a phone, where width is scarce, and widens from there.
+
+        Fitted rather than cropped, so the whole picture is still visible —
+        anything narrower than the frame sits on a blurred copy of itself
+        instead of a grey band.
+      */}
       <section className="pt-28 sm:pt-32">
         <Container className="max-w-7xl">
           <Reveal className="group">
@@ -63,11 +75,11 @@ export async function EntryPage({
               alt={banner.alt}
               label={entry.tag}
               shape="rect"
-              aspect="aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]"
-              ratio={banner.ratio}
+              aspect="aspect-[3/2] sm:aspect-[2/1] lg:aspect-[64/21]"
               sizes="(max-width: 1280px) 94vw, 1240px"
               priority
               hoverZoom={false}
+              fit="contain"
               className="shadow-[var(--pf-shadow-lg)]"
             />
           </Reveal>
