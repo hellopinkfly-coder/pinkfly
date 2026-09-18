@@ -66,6 +66,12 @@ export async function EntryPage({
         Fitted rather than cropped, so the whole picture is still visible —
         anything narrower than the frame sits on a blurred copy of itself
         instead of a grey band.
+
+        Its height is capped against the viewport rather than derived from the
+        container's width alone. A ratio sets height from width, so on a wide
+        monitor the strip grew with the screen and pushed the headline off the
+        bottom again — the taller the display, the more of it the picture took.
+        The cap keeps the title on the first screen at any size.
       */}
       <section className="pt-28 sm:pt-32">
         <Container className="max-w-7xl">
@@ -76,6 +82,7 @@ export async function EntryPage({
               label={entry.tag}
               shape="rect"
               aspect="aspect-[3/2] sm:aspect-[2/1] lg:aspect-[64/21]"
+              maxHeight="clamp(200px, 38vh, 420px)"
               sizes="(max-width: 1280px) 94vw, 1240px"
               priority
               hoverZoom={false}

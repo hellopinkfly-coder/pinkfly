@@ -42,10 +42,13 @@ export async function EventsPage({ region }: { region: Region }) {
         types={eventTypesForRegion(all, region.slug)}
         emptyState={content.emptyState}
       />
+      {/* Every card above already offers a registration, so the closing
+          invitation is a reminder here rather than the pitch. */}
       <FinalCTA
         region={region}
         content={finalCta}
         formUrl={region.form.googleFormUrl || site.joinFormUrl}
+        compact
       />
     </>
   );

@@ -38,6 +38,16 @@ type ImageFrameProps = {
    * cropped away.
    */
   fit?: "cover" | "contain";
+  /**
+   * A ceiling on the frame's height, as any CSS length.
+   *
+   * An aspect ratio derives height from width, which on a wide monitor makes
+   * a full-width banner tall enough to push the page's own heading out of
+   * sight. A cap expressed against the viewport keeps a banner a banner on
+   * any screen. The frame still takes its shape from `aspect`; this only
+   * stops it growing past the given height.
+   */
+  maxHeight?: string;
 };
 
 /**
@@ -59,6 +69,7 @@ export function ImageFrame({
   priority = false,
   hoverZoom = true,
   fit = "cover",
+  maxHeight,
 }: ImageFrameProps) {
   return (
     <div
@@ -68,7 +79,10 @@ export function ImageFrame({
         ratio ? undefined : aspect,
         className
       )}
-      style={ratio ? { aspectRatio: ratio } : undefined}
+      style={{
+        ...(ratio ? { aspectRatio: ratio } : null),
+        ...(maxHeight ? { maxHeight } : null),
+      }}
     >
       {/* The backdrop, only where the picture does not fill the frame: the
           same image, blown out and blurred, so a portrait in a landscape
