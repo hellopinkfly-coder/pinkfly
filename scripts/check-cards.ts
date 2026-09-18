@@ -61,9 +61,12 @@ async function main() {
   // and Next wraps that in /_next/image?url=... — so the id appears in the
   // page URL-encoded. Match the id itself rather than the document's
   // "image-..." reference, which is spelled differently.
+  // decodeURIComponent throws on a stray percent anywhere in the page, and a
+  // page of marketing copy has plenty; decode only the escapes that matter.
+  const readable = html.replace(/%2F/gi, "/").replace(/%3A/gi, ":");
   const ids = [
     ...new Set(
-      [...decodeURIComponent(html).matchAll(/([a-f0-9]{32,})-(\d+x\d+)\.(\w+)/g)].map((m) => m[1])
+      [...readable.matchAll(/([a-f0-9]{32,})-(\d+x\d+)\.(\w+)/g)].map((m) => m[1])
     ),
   ];
   console.log(`\n${ids.length} distinct Sanity asset(s) referenced by the grid:`);
