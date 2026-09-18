@@ -103,10 +103,13 @@ async function main() {
     console.log("\n  ⚠ In Sanity but NOT referenced by the live grid:");
     for (const e of missing) console.log(`    ${e.title}`);
     console.log("  That is a stale page, not a stale browser.");
+  } else if (entries.some((e) => e.ref)) {
+    console.log("\n  ✓ Every uploaded card image is referenced by the live grid.");
+    console.log("    A device showing an older picture is holding its own cached");
+    console.log("    copy: the page being served is current.");
   } else {
-    console.log("\n  ✓ Every recent entry's current image is referenced by the live grid.");
-    console.log("    A phone showing an older picture is holding its own cached copy:");
-    console.log("    the page being served is current.");
+    console.log("\n  No entry has a card image, so the grid is showing the seeded");
+    console.log("  photographs. Nothing here is a caching problem.");
   }
 }
 
