@@ -72,6 +72,11 @@ export async function EntryPage({
         monitor the strip grew with the screen and pushed the headline off the
         bottom again — the taller the display, the more of it the picture took.
         The cap keeps the title on the first screen at any size.
+
+        A capped height also narrows the box: with an aspect ratio, a browser
+        that cannot make the frame taller makes it correspondingly less wide,
+        and a block that is narrower than its container sits flush left. The
+        frame is centred so the banner stays a banner.
       */}
       <section className="pt-28 sm:pt-32">
         <Container className="max-w-7xl">
@@ -87,7 +92,7 @@ export async function EntryPage({
               priority
               hoverZoom={false}
               fit="contain"
-              className="shadow-[var(--pf-shadow-lg)]"
+              className="mx-auto shadow-[var(--pf-shadow-lg)]"
             />
           </Reveal>
         </Container>

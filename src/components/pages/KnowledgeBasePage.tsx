@@ -46,10 +46,13 @@ export async function KnowledgeBasePage({ region }: { region: Region }) {
           />
         ))}
 
+      {/* The Knowledge Base is something to read through, so the closing
+          invitation is drawn tight rather than as a second hero. */}
       <FinalCTA
         region={region}
         content={finalCta}
         formUrl={region.form.googleFormUrl || site.joinFormUrl}
+        compact
       />
     </>
   );
