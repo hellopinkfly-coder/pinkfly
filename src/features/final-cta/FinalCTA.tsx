@@ -3,6 +3,7 @@ import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
 import { GradientBackdrop } from "@/components/shared/GradientBackdrop";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { regionPath, type Region } from "@/lib/region";
 import type { FinalCtaContent } from "@/lib/cms/content";
 
@@ -26,25 +27,67 @@ export function FinalCTA({
   region,
   content,
   formUrl,
+  compact = false,
 }: {
   region: Region;
   content: FinalCtaContent;
   /** The region's registration form, resolved by the page. */
   formUrl: string;
+  /**
+   * Draw the card tighter still.
+   *
+   * The Events page already asks for a registration on every card, so by the
+   * time a visitor reaches the bottom the invitation is a reminder rather
+   * than the pitch. Elsewhere it is the first time the page asks.
+   */
+  compact?: boolean;
 }) {
 
   return (
-    <Section id="join" className="relative overflow-hidden py-7 sm:py-10">
+    <Section
+      id="join"
+      className={cn(
+        "relative overflow-hidden",
+        compact ? "py-5 sm:py-7" : "py-7 sm:py-10"
+      )}
+    >
       <GradientBackdrop />
       <Reveal className="mx-auto max-w-3xl">
-        <div className="pf-glass rounded-[var(--pf-radius-2xl)] p-6 text-left shadow-[var(--pf-shadow-md)] sm:p-9">
+        <div
+          className={cn(
+            "pf-glass rounded-[var(--pf-radius-2xl)] text-left shadow-[var(--pf-shadow-md)]",
+            compact ? "p-5 sm:p-7" : "p-6 sm:p-9"
+          )}
+        >
           <span className="pf-eyebrow">{content.eyebrow}</span>
-          <h2 className="pf-h2 mt-3">{content.headline}</h2>
-          <p className="mt-4 max-w-xl text-base leading-[1.7] text-[var(--pf-text)]">
+          {/* A step down from pf-h2's clamp, which tops out at 2.9rem.
+              There is no pf-h3 in this codebase, so the smaller measure is
+              written out rather than invented as a class. */}
+          <h2
+            className="mt-3"
+            style={{
+              fontSize: compact
+                ? "clamp(1.4rem, 3.6vw, 2.1rem)"
+                : "clamp(1.6rem, 5vw, 2.9rem)",
+            }}
+          >
+            {content.headline}
+          </h2>
+          <p
+            className={cn(
+              "max-w-xl text-base text-[var(--pf-text)]",
+              compact ? "mt-3 leading-[1.6]" : "mt-4 leading-[1.7]"
+            )}
+          >
             {content.body}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4">
+          <div
+            className={cn(
+              "flex flex-wrap items-center gap-4",
+              compact ? "mt-5" : "mt-6"
+            )}
+          >
             {formUrl ? (
               <Button
                 href={formUrl}

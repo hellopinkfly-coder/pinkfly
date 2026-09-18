@@ -1,0 +1,26 @@
+# Does the live Knowledge Base grid reference the images Sanity holds?
+name: Check cards
+
+on:
+  push:
+    paths:
+      - "scripts/check-cards.ts"
+      - ".github/workflows/check-cards.yml"
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: "Deployment to check"
+        required: false
+        default: "https://pinkfly.vercel.app"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check:cards -- "${{ inputs.site_url || 'https://pinkfly.vercel.app' }}"
