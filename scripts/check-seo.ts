@@ -16,18 +16,34 @@ if (!base) {
   process.exit(1);
 }
 
-/** Every <loc> in the sitemap, as paths relative to the site. */
-function locs(xml: string, origin: string): string[] {
-  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)]
-    .map((m) => m[1].trim().replace(origin, ""))
-    .map((p) => (p === "" ? "/" : p));
+/** Every <loc> in the sitemap, split into the origin it names and its path. */
+function locs(xml: string): { origins: Set<string>; paths: string[] } {
+  const origins = new Set<string>();
+  const paths: string[] = [];
+  for (const m of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+    // Parsed rather than string-replaced. Stripping the checked site's own
+    // address left every path untouched when the sitemap named a different
+    // domain, and each one then read as an article missing from the sitemap —
+    // a wall of false findings hiding the one real fault, the wrong domain.
+    try {
+      const url = new URL(m[1].trim());
+      origins.add(url.origin);
+      paths.push(url.pathname === "" ? "/" : url.pathname.replace(/(.)\/$/, "$1"));
+    } catch {
+      origins.add("(unparseable)");
+      paths.push(m[1].trim());
+    }
+  }
+  return { origins, paths };
 }
 
 /** The article and event links a listing page actually renders. */
 function links(html: string, prefix: string): Set<string> {
   const found = new Set<string>();
   for (const m of html.matchAll(/href="([^"]+)"/g)) {
-    const href = m[1];
+    // An anchor and a query string lead to the same page, so "#register" is
+    // not a second URL the sitemap is missing.
+    const href = m[1].split(/[?#]/)[0].replace(/(.)\/$/, "$1");
     if (!href.startsWith(prefix)) continue;
     // Only leaf pages: /knowledge-base/<category>/<slug>, /events/<slug>.
     const depth = href.split("/").filter(Boolean).length;
@@ -57,8 +73,23 @@ async function main() {
   console.log(`  ${sitemapLine ? "✓" : "⚠"} sitemap: ${sitemapLine ?? "not advertised"}`);
 
   const xml = await text("/sitemap.xml");
-  const paths = locs(xml, base);
+  const { origins, paths } = locs(xml);
   console.log(`\nsitemap.xml  ${paths.length} URLs`);
+
+  // The address the sitemap advertises has to be the one the site answers on.
+  // Naming a domain that is not serving the site hands Google a list of URLs
+  // that lead nowhere, and nothing on the page itself would ever show it.
+  const wrong = [...origins].filter((origin) => origin !== base);
+  console.log(
+    wrong.length === 0
+      ? `  ✓ every URL is on ${base}`
+      : `  ⚠ URLs point at ${wrong.join(", ")}, not ${base} — set NEXT_PUBLIC_APP_URL\n` +
+          "      to the address the site actually answers on, or correct\n" +
+          "      PRODUCTION_URL in src/config/site.ts."
+  );
+  if (sitemapLine && !sitemapLine.startsWith(base)) {
+    console.log(`  ⚠ robots.txt advertises the sitemap at ${sitemapLine}`);
+  }
 
   const leaked = paths.filter((p) => p.startsWith("/studio") || p.startsWith("/api"));
   console.log(
@@ -104,7 +135,7 @@ async function main() {
       : `  ⚠ ${dead.length} listed but not reachable:\n      ${dead.join("\n      ")}`
   );
 
-  if (missing || dead.length || leaked.length) {
+  if (missing || dead.length || leaked.length || wrong.length) {
     console.log("\n⚠ The sitemap and the site disagree — the lines above say how.");
     process.exit(1);
   }
