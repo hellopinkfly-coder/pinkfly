@@ -55,7 +55,24 @@ function links(html: string, prefix: string): Set<string> {
 async function text(path: string) {
   const response = await fetch(`${base}${path}`);
   if (!response.ok) throw new Error(`${path} → HTTP ${response.status}`);
-  return response.text();
+  const body = await response.text();
+
+  // A protected Vercel preview answers every path with its login page, at
+  // HTTP 200. Everything downstream then finds nothing and reports nothing
+  // wrong — which is how this check once announced that a sitemap of zero
+  // URLs matched the site perfectly. An HTML page where a file belongs is a
+  // failure, not an empty result.
+  if (path !== "/knowledge-base" && path !== "/events") {
+    if (/^\s*<(!doctype|html)/i.test(body)) {
+      throw new Error(
+        `${path} returned an HTML page, not the file.\n` +
+          "  The deployment is probably behind Vercel's protection, which\n" +
+          "  answers every path with a login page. Check a public deployment,\n" +
+          "  or turn protection off for this one."
+      );
+    }
+  }
+  return body;
 }
 
 async function main() {
@@ -75,6 +92,9 @@ async function main() {
   const xml = await text("/sitemap.xml");
   const { origins, paths } = locs(xml);
   console.log(`\nsitemap.xml  ${paths.length} URLs`);
+  if (paths.length === 0) {
+    throw new Error("The sitemap lists nothing. That is a fault, not a pass.");
+  }
 
   // The address the sitemap advertises has to be the one the site answers on.
   // Naming a domain that is not serving the site hands Google a list of URLs
@@ -109,7 +129,12 @@ async function main() {
     const absent = [...live].filter((href) => !listed.has(href));
     missing += absent.length;
     console.log(`\n${page}  ${live.size} link(s) on the page`);
-    if (absent.length === 0) {
+    if (live.size === 0) {
+      // Nothing to compare against is not agreement. Either the page is
+      // empty, which is its own problem, or this check is not reading it.
+      console.log("  ⚠ no links found — nothing was actually compared");
+      missing += 1;
+    } else if (absent.length === 0) {
       console.log("  ✓ every one is in the sitemap");
     } else {
       console.log(`  ⚠ ${absent.length} not in the sitemap:`);
