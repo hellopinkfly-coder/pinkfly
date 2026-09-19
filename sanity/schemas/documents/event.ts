@@ -125,7 +125,12 @@ export const event = defineType({
           fields: [
             defineField({ name: "name", type: "string", validation: (r) => r.required() }),
             defineField({ name: "designation", type: "string" }),
-            defineField({ name: "image", type: "figure" }),
+            defineField({
+              name: "image",
+              title: "Portrait (1200 × 1500)",
+              type: "figure",
+              description: "Upright, 4:5.",
+            }),
           ],
           preview: { select: { title: "name", subtitle: "designation", media: "image.asset" } },
         },
