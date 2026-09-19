@@ -23,7 +23,13 @@ export const joinPage = defineType({
       group: "hero",
       description: "The region's own join line is appended to this.",
     }),
-    defineField({ name: "bannerImage", title: "Banner image", type: "figure", group: "hero" }),
+    defineField({
+      name: "bannerImage",
+      title: "Banner image — top of the page (2400 × 1000)",
+      type: "figure",
+      group: "hero",
+      description: "Wide, 21:9. It is a strip above the heading, so keep the subject central.",
+    }),
 
     defineField({ name: "whyJoinHeading", title: "Heading", type: "sectionHeading", group: "whyJoin" }),
     defineField({

@@ -26,7 +26,13 @@ export const aboutPage = defineType({
     defineField({ name: "missionCta", title: "Button", type: "cta", group: "mission" }),
     defineField({ ...visibleField, name: "missionVisible", group: "mission" }),
 
-    defineField({ name: "bannerImage", title: "Banner image", type: "figure", group: "banner" }),
+    defineField({
+      name: "bannerImage",
+      title: "Banner image — top of the page (2400 × 1000)",
+      type: "figure",
+      group: "banner",
+      description: "Wide, 21:9. It is a strip above the heading, so keep the subject central.",
+    }),
     defineField({ ...visibleField, name: "bannerVisible", group: "banner" }),
 
     defineField({
@@ -38,14 +44,25 @@ export const aboutPage = defineType({
         defineField({ name: "eyebrow", type: "string" }),
         defineField({ name: "name", type: "string" }),
         defineField({ name: "role", type: "string" }),
-        defineField({ name: "image", type: "figure" }),
+        defineField({
+          name: "image",
+          title: "Portrait (1200 × 1500)",
+          type: "figure",
+          description: "Upright, 4:5.",
+        }),
         defineField({ name: "body", title: "Paragraphs", type: "array", of: [{ type: "text" }] }),
       ],
     }),
     defineField({ ...visibleField, name: "founderVisible", group: "founder" }),
 
     defineField({ name: "guidelinesHeading", title: "Heading", type: "sectionHeading", group: "guidelines" }),
-    defineField({ name: "guidelinesImage", title: "Image", type: "figure", group: "guidelines" }),
+    defineField({
+      name: "guidelinesImage",
+      title: "Image (1500 × 1200)",
+      type: "figure",
+      group: "guidelines",
+      description: "Landscape, 5:4.",
+    }),
     defineField({
       name: "guidelines",
       title: "Guidelines",

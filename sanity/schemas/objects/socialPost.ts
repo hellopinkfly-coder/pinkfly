@@ -26,10 +26,10 @@ export const socialPost = defineType({
     }),
     defineField({
       name: "image",
-      title: "Thumbnail",
+      title: "Thumbnail (1080 × 1080)",
       type: "figure",
       description:
-        "Required for Instagram, LinkedIn, X and Facebook. YouTube links use the video's own still, so this can be left empty for those.",
+        "Square. Required for Instagram, LinkedIn, X and Facebook. YouTube links use the video's own still, so this can be left empty for those.",
     }),
     defineField({
       name: "caption",

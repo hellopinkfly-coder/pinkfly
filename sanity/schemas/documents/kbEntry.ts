@@ -105,11 +105,11 @@ export const kbEntry = defineType({
     }),
     defineField({
       name: "inlineImage",
-      title: "Image — between the paragraphs",
+      title: "Image — between the paragraphs (1600 × 1050)",
       type: "figure",
       group: "body",
       description:
-        "Sits between the paragraphs above and those below. Leave empty for an article with no picture in the middle.",
+        "Landscape, 3:2. Sits between the paragraphs above and those below. Leave empty for an article with no picture in the middle.",
     }),
     defineField({
       name: "bodyAfterImage",

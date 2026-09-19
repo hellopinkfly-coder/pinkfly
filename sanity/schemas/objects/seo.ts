@@ -16,8 +16,11 @@ export const seo = defineType({
     }),
     defineField({
       name: "ogImage",
-      title: "Social share image",
+      title: "Social share image (1200 × 630)",
       type: "figure",
+      description:
+        "What WhatsApp, LinkedIn and X show when this page is shared. Anything " +
+        "other than 1200 × 630 is cropped to it.",
     }),
   ],
 });
