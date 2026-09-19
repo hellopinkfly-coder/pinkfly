@@ -1,13 +1,10 @@
 # Do robots.txt and the sitemap describe the site as it actually is?
 name: Check SEO files
 
+# Run by hand. A push cannot check a deployment that has not been built
+# yet, and the default below is production, which a branch's push has not
+# reached — so an automatic run would report on the wrong site.
 on:
-  push:
-    paths:
-      - "scripts/check-seo.ts"
-      - "src/app/sitemap.ts"
-      - "src/app/robots.ts"
-      - ".github/workflows/check-seo.yml"
   workflow_dispatch:
     inputs:
       site_url:
