@@ -13,39 +13,19 @@ import { parsePathname, regionPath } from "@/lib/region";
 import type { SiteContent } from "@/lib/cms/content";
 
 /**
- * Only subscribing is remembered.
+ * Nothing is remembered between visits.
  *
- * Closing the dialog no longer suppresses it: it is shown on every visit, so
- * someone who was not ready the first time is asked again the next.
+ * Earlier versions kept a date in localStorage — a month after a dismissal,
+ * a year after subscribing — and that is exactly what made it look broken:
+ * anyone who had ever closed it or subscribed stopped seeing it, and the
+ * only way to see it again was a private window. It is shown on every visit,
+ * with no exceptions, which is what was asked for.
  *
- * Subscribing still is, and for good reason — asking a person who has just
- * given their address to give it again reads as a broken site, not a second
- * chance. That is the one case where showing it again makes the invitation
- * worse rather than more persistent.
+ * The old key is not read any more, so a browser still carrying one from
+ * before is not held back by it.
  */
-const KEY = "pf-welcome-dialog";
-const YEAR = 365 * 24 * 60 * 60 * 1000;
 
 type Status = "idle" | "loading" | "success" | "error";
-
-function suppressedUntil(): number {
-  try {
-    const raw = window.localStorage.getItem(KEY);
-    return raw ? Number(raw) || 0 : 0;
-  } catch {
-    // Private mode, or storage blocked. Treat it as never asked — which is
-    // the friendlier failure: the dialog can be dismissed either way.
-    return 0;
-  }
-}
-
-function suppress(ms: number) {
-  try {
-    window.localStorage.setItem(KEY, String(Date.now() + ms));
-  } catch {
-    // Nothing to do. The dialog closes for this visit regardless.
-  }
-}
 
 /**
  * The newsletter invitation, shown on every visit.
@@ -68,8 +48,8 @@ function suppress(ms: number) {
  *
  * It never appears on the Join page, where the visitor is already doing the
  * thing it would ask for, nor in the Studio, which renders without the site's
- * chrome at all. Someone who has already subscribed is not asked again — see
- * the note on the storage key.
+ * chrome at all. Those two are the only exceptions; an editor who wants it
+ * gone everywhere turns it off in the Studio.
  */
 export function WelcomeDialog({
   content,
@@ -93,7 +73,6 @@ export function WelcomeDialog({
 
   useEffect(() => {
     if (!content.enabled || onQuietRoute) return;
-    if (Date.now() < suppressedUntil()) return;
     const timer = window.setTimeout(() => setOpen(true), delay);
     return () => window.clearTimeout(timer);
   }, [content.enabled, onQuietRoute, delay]);
@@ -150,7 +129,6 @@ export function WelcomeDialog({
       if (!res.ok) throw new Error();
       setStatus("success");
       setEmail("");
-      suppress(YEAR);
     } catch {
       setStatus("error");
       setError("Something went wrong. Please try again.");

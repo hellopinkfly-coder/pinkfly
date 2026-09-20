@@ -1,6 +1,6 @@
-# Is the newsletter dialog in what a deployment actually serves?
-# Run by hand — a push cannot check a build that does not exist yet.
-name: Check newsletter popup
+# Does subscribing actually work on a deployment?
+# Run by hand — it posts a test address through the real form.
+name: Check newsletter
 
 on:
   workflow_dispatch:
@@ -20,7 +20,4 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run check:popup -- "${{ inputs.site_url || 'https://pinkfly.vercel.app' }}"
-      # TEMPORARY: check-newsletter.yml is not on main yet, so it cannot be
-      # dispatched. Removed before this branch merges.
       - run: npm run check:newsletter -- "${{ inputs.site_url || 'https://pinkfly.vercel.app' }}"
