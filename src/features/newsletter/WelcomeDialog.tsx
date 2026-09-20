@@ -11,7 +11,7 @@ import { newsletterSchema } from "@/lib/validations";
 import { parsePathname, regionPath } from "@/lib/region";
 
 /** How long after arriving the dialog appears, in milliseconds. */
-const DELAY = 12_000;
+const DELAY = 3_000;
 
 /**
  * Remembered per browser, so it asks once and then leaves people alone.
@@ -48,9 +48,11 @@ function suppress(ms: number) {
 /**
  * The newsletter invitation, shown once to a new visitor.
  *
- * It waits rather than interrupting: a dialog over a page someone has not
- * read yet is asking for a favour before giving anything, and gets dismissed.
- * Twelve seconds in, they have chosen to stay.
+ * It waits three seconds rather than opening on arrival: a dialog that is
+ * already there as the page paints reads as an ad and gets closed before it
+ * is read, and on a slow connection it can land before the page behind it
+ * has drawn at all. Three seconds is long enough that the page is there to
+ * come back to, and short enough to catch someone who is only passing.
  *
  * It offers both doors — the newsletter, which costs an email address, and
  * membership, which is the real invitation — because someone not ready to
