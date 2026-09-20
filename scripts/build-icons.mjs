@@ -29,6 +29,38 @@ const BACKGROUND = { r: 255, g: 255, b: 255, alpha: 1 };
  * artwork that touches the edge loses its corners. The margin is what keeps
  * the balloon whole under every mask.
  */
+/**
+ * The mark alone, on transparency.
+ *
+ * The icons need it on a square with a margin; the site needs it bare, to sit
+ * on whatever surface it lands on — the newsletter dialog uses it. The
+ * artwork was supplied on white, so white is made transparent: near-white and
+ * near-neutral only, which the envelope's dark and the pink both miss.
+ */
+async function transparentMark(out) {
+  const { data, info } = await sharp(SOURCE)
+    .extract(MARK)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const { width, height, channels } = info;
+
+  for (let i = 0; i < data.length; i += channels) {
+    const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
+    const bright = (r + g + b) / 3;
+    const spread = Math.max(r, g, b) - Math.min(r, g, b);
+    if (bright >= 242 && spread <= 12) data[i + 3] = 0;
+  }
+
+  await sharp(data, { raw: { width, height, channels } })
+    .trim({ threshold: 1 })
+    .png()
+    .toFile(out);
+
+  const meta = await sharp(out).metadata();
+  console.log(`${out}  ${meta.width}x${meta.height}`);
+}
+
 async function squareMark() {
   const side = Math.round(Math.max(MARK.width, MARK.height) * 1.18);
   const mark = await sharp(SOURCE).extract(MARK).toBuffer();
@@ -59,6 +91,8 @@ async function main() {
       .toFile(out);
     console.log(`${out}  ${size}x${size}`);
   }
+
+  await transparentMark("public/brand/pinkfly-balloon.png");
 }
 
 main().catch((error) => {

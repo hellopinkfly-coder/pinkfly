@@ -858,6 +858,21 @@ export type SiteContent = {
   navCta: { label: string; knowledgeLabel: string; href: string };
   policyNav: { label: string; href: string }[];
   joinFormUrl: string;
+  /** Every line of the newsletter popup, and whether it runs at all. */
+  newsletterPopup: {
+    enabled: boolean;
+    delaySeconds: number;
+    eyebrow: string;
+    headline: string;
+    body: string;
+    placeholder: string;
+    cta: string;
+    joinPrompt: string;
+    joinLabel: string;
+    joinNote: string;
+    successTitle: string;
+    successBody: string;
+  };
 };
 
 type CmsLinks = { label?: string; href?: string }[] | undefined;
@@ -890,6 +905,20 @@ export async function getSiteContent(): Promise<SiteContent> {
     navCta?: { label?: string; knowledgeLabel?: string; href?: string };
     policyNav?: CmsLinks;
     joinFormUrl?: string;
+    newsletterPopup?: Partial<{
+      enabled: boolean;
+      delaySeconds: number;
+      eyebrow: string;
+      headline: string;
+      body: string;
+      placeholder: string;
+      cta: string;
+      joinPrompt: string;
+      joinLabel: string;
+      joinNote: string;
+      successTitle: string;
+      successBody: string;
+    }>;
   } | null>(siteSettingsQuery);
 
   return {
@@ -934,6 +963,25 @@ export async function getSiteContent(): Promise<SiteContent> {
     },
     policyNav: links(cms?.policyNav, policyNav),
     joinFormUrl: pick(cms?.joinFormUrl, integrations.joinFormUrl),
+
+    newsletterPopup: {
+      // Off is a real answer, so only an explicit false turns it off.
+      enabled: pickBool(cms?.newsletterPopup?.enabled, seed.newsletterPopup.enabled),
+      delaySeconds:
+        typeof cms?.newsletterPopup?.delaySeconds === "number"
+          ? cms.newsletterPopup.delaySeconds
+          : seed.newsletterPopup.delaySeconds,
+      eyebrow: pick(cms?.newsletterPopup?.eyebrow, seed.newsletterPopup.eyebrow),
+      headline: pick(cms?.newsletterPopup?.headline, seed.newsletterPopup.headline),
+      body: pick(cms?.newsletterPopup?.body, seed.newsletterPopup.body),
+      placeholder: pick(cms?.newsletterPopup?.placeholder, seed.newsletterPopup.placeholder),
+      cta: pick(cms?.newsletterPopup?.cta, seed.newsletterPopup.cta),
+      joinPrompt: pick(cms?.newsletterPopup?.joinPrompt, seed.newsletterPopup.joinPrompt),
+      joinLabel: pick(cms?.newsletterPopup?.joinLabel, seed.newsletterPopup.joinLabel),
+      joinNote: pick(cms?.newsletterPopup?.joinNote, seed.newsletterPopup.joinNote),
+      successTitle: pick(cms?.newsletterPopup?.successTitle, seed.newsletterPopup.successTitle),
+      successBody: pick(cms?.newsletterPopup?.successBody, seed.newsletterPopup.successBody),
+    },
   };
 }
 
