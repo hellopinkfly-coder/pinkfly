@@ -65,6 +65,10 @@ export const joinPageQuery = groq`*[_type == "joinPage"][0]{
   seo ${SEO}
 }`;
 
+export const contactPageQuery = groq`*[_type == "contactPage"][0]{
+  eyebrow, title, intro, heading ${HEADING}, responseNote, seo ${SEO}
+}`;
+
 export const faqPageQuery = groq`*[_type == "faqPage"][0]{
   eyebrow, title, intro, contactNote,
   groups[]{ title, intro, items[]{ question, answer } },

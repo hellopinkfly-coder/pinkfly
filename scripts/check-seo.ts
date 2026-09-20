@@ -52,7 +52,7 @@ function links(html: string, prefix: string): Set<string> {
   return found;
 }
 
-async function text(path: string) {
+async function text(path: string, expectHtml = false) {
   const response = await fetch(`${base}${path}`);
   if (!response.ok) throw new Error(`${path} → HTTP ${response.status}`);
   const body = await response.text();
@@ -62,7 +62,7 @@ async function text(path: string) {
   // wrong — which is how this check once announced that a sitemap of zero
   // URLs matched the site perfectly. An HTML page where a file belongs is a
   // failure, not an empty result.
-  if (path !== "/knowledge-base" && path !== "/events") {
+  if (!expectHtml) {
     if (/^\s*<(!doctype|html)/i.test(body)) {
       throw new Error(
         `${path} returned an HTML page, not the file.\n` +
@@ -125,7 +125,7 @@ async function main() {
     ["/knowledge-base", "/knowledge-base/"],
     ["/events", "/events/"],
   ] as const) {
-    const live = links(await text(page), prefix);
+    const live = links(await text(page, true), prefix);
     const absent = [...live].filter((href) => !listed.has(href));
     missing += absent.length;
     console.log(`\n${page}  ${live.size} link(s) on the page`);
@@ -160,7 +160,46 @@ async function main() {
       : `  ⚠ ${dead.length} listed but not reachable:\n      ${dead.join("\n      ")}`
   );
 
-  if (missing || dead.length || leaked.length || wrong.length) {
+  // Structured data: present, parseable, and the right type per page. A
+  // malformed block is worse than none — search engines drop the lot.
+  const LD = /<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
+  let ldProblems = 0;
+  const ldTargets: [string, string][] = [
+    ["/", "Organization"],
+    ...(leaves.find((p) => p.startsWith("/knowledge-base/"))
+      ? ([[leaves.find((p) => p.startsWith("/knowledge-base/"))!, "Article"]] as [string, string][])
+      : []),
+    ...(leaves.find((p) => p.startsWith("/events/"))
+      ? ([[leaves.find((p) => p.startsWith("/events/"))!, "Event"]] as [string, string][])
+      : []),
+  ];
+
+  console.log("\nStructured data");
+  for (const [path, expected] of ldTargets) {
+    const html = await text(path, true);
+    const types: string[] = [];
+    let broken = false;
+    for (const match of html.matchAll(LD)) {
+      try {
+        const parsed = JSON.parse(match[1]);
+        const graph = parsed["@graph"] ?? [parsed];
+        for (const node of graph) if (node?.["@type"]) types.push(node["@type"]);
+      } catch {
+        broken = true;
+      }
+    }
+    if (broken) {
+      console.log(`  ⚠ ${path} has a JSON-LD block that does not parse`);
+      ldProblems += 1;
+    } else if (types.includes(expected)) {
+      console.log(`  ✓ ${path} — ${types.join(", ")}`);
+    } else {
+      console.log(`  ⚠ ${path} has no ${expected} block (found: ${types.join(", ") || "none"})`);
+      ldProblems += 1;
+    }
+  }
+
+  if (missing || dead.length || leaked.length || wrong.length || ldProblems) {
     console.log("\n⚠ The sitemap and the site disagree — the lines above say how.");
     process.exit(1);
   }

@@ -28,6 +28,7 @@ import {
 import {
   homePageQuery,
   faqPageQuery,
+  contactPageQuery,
   aboutPageQuery,
   joinPageQuery,
   eventsPageQuery,
@@ -435,7 +436,12 @@ export type AboutContent = {
   };
   initiatives: { visible: boolean; heading: Heading; items: Initiative[] };
   team: { visible: boolean; heading: Heading; members: TeamMember[] };
-  contact: { visible: boolean; heading: Heading };
+  contact: {
+    visible: boolean;
+    heading: Heading;
+    /** The short invitation shown on About, pointing at the Contact page. */
+    cta: { eyebrow: string; headline: string; body: string; label: string };
+  };
 };
 
 type CmsAbout = {
@@ -576,6 +582,7 @@ export async function getAboutContent(): Promise<AboutContent> {
         headline: seed.about.contact.headline,
         intro: seed.about.contact.intro,
       }),
+      cta: { ...seed.contact.aboutCta },
     },
   };
 }
@@ -949,6 +956,42 @@ export async function getPartners(): Promise<
   );
 }
 
+/* ================================================================= contact */
+
+export type ContactContent = {
+  hero: { eyebrow: string; title: string; intro: string };
+  heading: Heading;
+  responseNote: string;
+};
+
+type CmsContactPage = {
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  heading?: CmsHeading;
+  responseNote?: string;
+} | null;
+
+export async function getContactContent(): Promise<ContactContent> {
+  const { data: cms } = await cmsFetch<CmsContactPage>(contactPageQuery);
+
+  return {
+    hero: {
+      eyebrow: pick(cms?.eyebrow, seed.contact.hero.eyebrow),
+      title: pick(cms?.title, seed.contact.hero.title),
+      intro: pick(cms?.intro, seed.contact.hero.intro),
+    },
+    heading: heading(cms?.heading, {
+      eyebrow: seed.contact.heading.eyebrow,
+      headline: seed.contact.heading.headline,
+      intro: seed.contact.heading.intro,
+    }),
+    // Blank is a real answer: an editor who does not want to promise a reply
+    // time clears the field and nothing is shown.
+    responseNote: cms?.responseNote ?? seed.contact.responseNote,
+  };
+}
+
 /* ==================================================================== FAQs */
 
 export type FaqContent = {
@@ -1020,6 +1063,7 @@ const SEO_QUERIES: Record<string, string> = {
   about: aboutPageQuery,
   join: joinPageQuery,
   faqs: faqPageQuery,
+  contact: contactPageQuery,
   events: eventsPageQuery,
   knowledgeBase: knowledgeBasePageQuery,
 };

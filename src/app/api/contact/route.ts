@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "next-sanity";
 import { contactSchema } from "@/lib/validations";
+import { emailConfigured, sendEmail as deliver } from "@/lib/email";
 import { projectId, dataset, apiVersion, cmsEnabled } from "../../../../sanity/env";
 
 /**
@@ -33,7 +34,7 @@ export async function GET() {
   const hasToken = Boolean(process.env.SANITY_API_WRITE_TOKEN);
   return NextResponse.json({
     saving: hasToken && cmsEnabled,
-    emailing: Boolean(process.env.RESEND_API_KEY && resendTo()),
+    emailing: emailConfigured() && Boolean(resendTo()),
     writeToken: hasToken ? "present" : "missing",
     resendKey: process.env.RESEND_API_KEY ? "present" : "missing",
   });
@@ -44,56 +45,26 @@ function resendTo(): string | undefined {
   return process.env.CONTACT_TO_EMAIL || undefined;
 }
 
-/**
- * The From address.
- *
- * Resend will only send from a domain verified in the Resend account, so this
- * cannot be the visitor's own address; their address goes in Reply-To, which
- * makes replying from the inbox work as expected.
- */
-function resendFrom(): string {
-  return process.env.CONTACT_FROM_EMAIL || "Pinkfly <onboarding@resend.dev>";
-}
-
 type Message = { name: string; email: string; message: string };
 
 /** Hands the message to Resend. Returns the failure rather than throwing. */
 async function sendEmail(data: Message): Promise<string | null> {
-  const key = process.env.RESEND_API_KEY;
   const to = resendTo();
-  if (!key || !to) return "not configured";
+  if (!to) return "not configured";
 
-  try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${key}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: resendFrom(),
-        to: [to],
-        reply_to: data.email,
-        subject: `Pinkfly contact form — ${data.name}`,
-        text: [
-          `From: ${data.name} <${data.email}>`,
-          "",
-          data.message,
-          "",
-          "— Sent from the contact form on pinkfly.vercel.app/about",
-        ].join("\n"),
-      }),
-    });
-
-    if (!response.ok) {
-      // Resend says why in the body: an unverified domain and a bad key are
-      // the two usual answers, and they read nothing alike.
-      return `${response.status} ${await response.text()}`.slice(0, 500);
-    }
-    return null;
-  } catch (error) {
-    return error instanceof Error ? error.message : String(error);
-  }
+  return deliver({
+    to,
+    // Their address, so replying from the inbox reaches the person who wrote.
+    replyTo: data.email,
+    subject: `Pinkfly contact form — ${data.name}`,
+    text: [
+      `From: ${data.name} <${data.email}>`,
+      "",
+      data.message,
+      "",
+      "— Sent from the contact form on the Pinkfly website",
+    ].join("\n"),
+  });
 }
 
 export async function POST(request: Request) {

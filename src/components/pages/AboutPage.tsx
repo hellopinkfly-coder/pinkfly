@@ -5,7 +5,7 @@ import { FounderStory } from "@/features/about/FounderStory";
 import { CommunityGuidelines } from "@/features/about/CommunityGuidelines";
 import { Initiatives } from "@/features/about/Initiatives";
 import { ExecutiveTeam } from "@/features/about/ExecutiveTeam";
-import { ContactSection } from "@/features/about/ContactSection";
+import { ContactCta } from "@/features/about/ContactCta";
 import { FinalCTA } from "@/features/final-cta/FinalCTA";
 import { getAboutContent, getFinalCta, getSiteContent } from "@/lib/cms/content";
 import type { Region } from "@/lib/region";
@@ -13,7 +13,8 @@ import type { Region } from "@/lib/region";
 /**
  * About page, in wireframe order:
  * header → why Pinkfly exists → banner → founder story →
- * community guidelines → initiatives → executive team → contact → footer.
+ * community guidelines → initiatives → executive team →
+ * the way through to Contact → footer.
  *
  * Every headline, paragraph, image and section switch on this page is edited
  * in Sanity under Pages → About.
@@ -50,11 +51,13 @@ export async function AboutPage({ region }: { region: Region }) {
           heading={content.team.heading}
         />
       )}
+      {/* Not the form itself — that has its own page now. This is the door
+          to it, for a reader who has just finished reading about us. */}
       {content.contact.visible && (
-        <ContactSection
+        <ContactCta
           region={region}
-          content={content.contact}
-          fallbackEmail={site.contactEmail}
+          content={content.contact.cta}
+          email={region.email ?? site.contactEmail}
         />
       )}
       <FinalCTA region={region} content={finalCta} formUrl={formUrl} />

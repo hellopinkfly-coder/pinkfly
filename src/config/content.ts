@@ -350,6 +350,37 @@ export const about = {
   },
 };
 
+/* ----------------------------------------------------------- Contact page -- */
+/**
+ * The Contact page.
+ *
+ * The address, phone and inbox are not here: they belong to each region and
+ * live in `src/config/regions.ts`, so the page shows whichever region the
+ * visitor is on.
+ */
+export const contact = {
+  hero: {
+    eyebrow: "Contact us",
+    title: "Talk to the Pinkfly team.",
+    intro:
+      "Partnerships, press, speaking, sponsorship — or a question you cannot find the answer to. A person reads every message.",
+  },
+  heading: {
+    eyebrow: "Write to us",
+    headline: "Tell us what you need.",
+    intro:
+      "The more you can say about what you are after, the more useful the reply.",
+  },
+  responseNote: "We usually reply within two working days.",
+  /** The short invitation that stands in for this page on About. */
+  aboutCta: {
+    eyebrow: "Contact us",
+    headline: "Something you want to ask?",
+    body: "Partnerships, press, speaking, or a question about the community.",
+    label: "Go to Contact",
+  },
+};
+
 /* ---------------------------------------------------- Join Community page -- */
 export const join = {
   hero: {

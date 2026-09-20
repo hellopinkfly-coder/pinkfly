@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { siteConfig } from "@/config/site";
 import { SiteChrome } from "@/components/layout/SiteChrome";
+import { JsonLd } from "@/components/shared/JsonLd";
+import { organizationSchema } from "@/lib/structured-data";
 import { getSiteContent } from "@/lib/cms/content";
 import "./globals.css";
 
@@ -144,6 +146,9 @@ export default async function RootLayout({
           Skip to content
         </a>
         <SiteChrome site={site}>{children}</SiteChrome>
+        {/* Who publishes this site. One block, every page — the pages
+            themselves add what they are (an article, an event, the FAQs). */}
+        <JsonLd data={organizationSchema()} />
       </body>
     </html>
   );

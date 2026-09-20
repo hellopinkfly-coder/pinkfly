@@ -5,6 +5,8 @@ import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
 import { FaqSearch } from "@/features/faq/FaqSearch";
 import { FinalCTA } from "@/features/final-cta/FinalCTA";
+import { JsonLd } from "@/components/shared/JsonLd";
+import { breadcrumbSchema, faqSchema } from "@/lib/structured-data";
 import { getFaqContent, getFinalCta, getSiteContent } from "@/lib/cms/content";
 import { siteConfig } from "@/config/site";
 import { regionPath, type Region } from "@/lib/region";
@@ -32,6 +34,12 @@ export async function FaqPage({ region }: { region: Region }) {
 
   return (
     <>
+      {/* Every question and answer, so a search result can carry them. */}
+      <JsonLd data={faqSchema(content.groups)} />
+      <JsonLd
+        data={breadcrumbSchema(region, [{ name: "FAQs", path: "/faqs" }])}
+      />
+
       <PageHeader
         eyebrow={content.hero.eyebrow}
         title={content.hero.title}

@@ -18,6 +18,11 @@ export const pageSeo = {
     description:
       "Browse upcoming Pinkfly events by location, month and event type, and register for the ones near you.",
   },
+  contact: {
+    title: "Contact Pinkfly",
+    description:
+      "Partnerships, press, speaking or a question about the community — write to the Pinkfly team and a person will reply.",
+  },
   faqs: {
     title: "FAQs — joining, events, mentorship and your details",
     description:

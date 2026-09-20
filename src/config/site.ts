@@ -104,7 +104,7 @@ export const footerNav = {
     title: "Company",
     links: [
       { label: "About Us", href: "/about" },
-      { label: "Contact Us", href: "/about#contact" },
+      { label: "Contact Us", href: "/contact" },
       { label: "Privacy Policy", href: "/policies/privacy" },
     ],
   },

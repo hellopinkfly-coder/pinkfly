@@ -1,28 +1,38 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
-import { ContactForm } from "@/features/contact/ContactForm";
+import { ContactForm } from "./ContactForm";
 import type { Region } from "@/lib/region";
-import type { AboutContent } from "@/lib/cms/content";
+import type { ContactContent } from "@/lib/cms/content";
 
 /**
- * Contact block. Details come from the active region, so switching region
- * updates the address, phone and inbox shown here.
+ * The contact details and the form, side by side.
+ *
+ * Lives on its own page rather than at the foot of About: the two answer
+ * different questions — who Pinkfly is, and how to reach it — and a form
+ * buried under the team photographs is a form nobody finds. About now
+ * carries a short invitation that leads here.
+ *
+ * Details come from the active region, so switching region updates the
+ * address, phone and inbox shown.
  */
 export function ContactSection({
   region,
   content,
   fallbackEmail,
+  responseNote,
 }: {
   region: Region;
-  content: AboutContent["contact"];
+  content: Pick<ContactContent, "heading">;
   /** The global inbox, used when the region has none of its own. */
   fallbackEmail: string;
+  /** What to expect after writing. Empty shows nothing. */
+  responseNote?: string;
 }) {
   const email = region.email ?? fallbackEmail;
 
   return (
-    <Section id="contact" className="bg-[var(--pf-surface)]">
+    <Section id="contact">
       <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <Reveal>
           <span className="pf-eyebrow">{content.heading.eyebrow}</span>
@@ -30,6 +40,12 @@ export function ContactSection({
           <p className="mt-5 text-base leading-relaxed text-[var(--pf-text)]">
             {content.heading.intro}
           </p>
+
+          {responseNote && (
+            <p className="mt-4 inline-flex items-center rounded-full bg-[var(--pf-accent-soft)] px-4 py-2 text-sm font-bold text-[var(--pf-accent-hover)]">
+              {responseNote}
+            </p>
+          )}
 
           <ul className="mt-8 flex flex-col gap-5 text-sm">
             <Detail icon={MapPin} label={`Pinkfly ${region.shortName}`}>
