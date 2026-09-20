@@ -6,7 +6,6 @@ import { visionTool } from "@sanity/vision";
 import { apiVersion, dataset, projectId } from "./env";
 import { schemaTypes } from "./schemas";
 import { structure } from "./structure";
-import { subscribersTool } from "./tools/SubscribersTool";
 
 /**
  * The Studio configuration — schema, desk structure and Vision.
@@ -27,11 +26,4 @@ export default defineConfig({
   dataset,
   schema: { types: schemaTypes },
   plugins: [structureTool({ structure }), visionTool({ defaultApiVersion: apiVersion })],
-  /**
-   * An extra top-level tool beside Structure and Vision: the subscriber list
-   * as a table, with a CSV download. It reads through the Studio's own
-   * client, so it inherits the logged-in editor's permissions and needs no
-   * endpoint of its own.
-   */
-  tools: (prev) => [...prev, subscribersTool],
 });

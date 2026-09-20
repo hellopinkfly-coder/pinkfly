@@ -1,25 +1,22 @@
 import { NextResponse } from "next/server";
-import { createClient } from "next-sanity";
 import { newsletterSchema } from "@/lib/validations";
 import { NEWSLETTER_TABLE, supabase } from "@/lib/supabase";
 import { emailConfigured, newsletterFrom, sendEmail } from "@/lib/email";
 import { siteConfig } from "@/config/site";
-import { projectId, dataset, apiVersion, cmsEnabled } from "../../../../sanity/env";
 
 /**
  * Newsletter subscription.
  *
- * Three things happen, in this order:
+ * Two things happen, in this order:
  *
  *  1. **Supabase** stores the address. This is the list — it is what a
  *     newsletter is eventually sent to, it holds the unique constraint that
- *     stops an address appearing twice, and it must succeed.
+ *     stops an address appearing twice, and it must succeed. It is also the
+ *     only place the list lives, so it is where subscribers are read and
+ *     exported from.
  *  2. **Resend** sends one welcome email, so subscribing visibly does
  *     something. Without it a visitor typed their address, saw a tick, and
  *     heard nothing ever again.
- *  3. **Sanity** gets a copy, so the list can be read and exported by anyone
- *     with a Studio login rather than a database seat. It is a mirror, not
- *     the list: a failure here loses nothing, so it is logged and ignored.
  *
  * The welcome email is not the newsletter itself. Sending an actual issue to
  * everyone on the list is a separate job and belongs in Resend Broadcasts or
@@ -68,7 +65,6 @@ export async function GET() {
     emailing: emailConfigured(),
     resendKey: process.env.RESEND_API_KEY ? "present" : "missing",
     from: newsletterFrom(),
-    mirroringToSanity: Boolean(process.env.SANITY_API_WRITE_TOKEN && cmsEnabled),
   });
 }
 
@@ -93,42 +89,6 @@ function welcome(email: string) {
   };
 }
 
-/**
- * Copies the subscriber into Sanity, for the Studio's Subscribers table.
- *
- * Deliberately last and deliberately quiet: the address is already on the
- * list by the time this runs, so nothing here is worth failing a request
- * over. The document id is derived from the address, so a replay writes the
- * same document rather than a second row.
- */
-async function mirrorToSanity(
-  email: string,
-  source: string,
-  welcomeEmailed: boolean
-) {
-  const token = process.env.SANITY_API_WRITE_TOKEN;
-  if (!token || !cmsEnabled) return;
-
-  try {
-    const client = createClient({ projectId, dataset, apiVersion, token, useCdn: false });
-    // A document id has to be URL-safe; an address is not, so it is encoded.
-    const id = `subscriber.${Buffer.from(email).toString("base64url")}`;
-    await client.createIfNotExists({
-      _id: id,
-      _type: "newsletterSubscriber",
-      email,
-      source,
-      welcomeEmailed,
-      subscribedAt: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error(
-      "[newsletter] could not mirror subscriber to Sanity:",
-      error instanceof Error ? error.message : String(error)
-    );
-  }
-}
-
 export async function POST(request: Request) {
   let body: unknown;
   try {
@@ -146,10 +106,6 @@ export async function POST(request: Request) {
   }
 
   const email = parsed.data.email.trim().toLowerCase();
-  // Which form they used. Anything unrecognised is recorded as the page
-  // form, since that is the one that has always existed.
-  const source =
-    (body as { source?: unknown })?.source === "popup" ? "popup" : "form";
 
   const { error } = await supabase()
     .from(NEWSLETTER_TABLE)
@@ -178,7 +134,6 @@ export async function POST(request: Request) {
     if (failure && failure !== "not configured") {
       console.error("[newsletter] welcome email not sent:", failure);
     }
-    await mirrorToSanity(email, source, !failure);
   }
 
   return NextResponse.json({ ok: true }, { status: 200 });

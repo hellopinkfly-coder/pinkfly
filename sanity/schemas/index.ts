@@ -32,7 +32,6 @@ import { kbEntry } from "./documents/kbEntry";
 import { teamMember, testimonial, initiative, partner } from "./documents/people";
 import { comment } from "./documents/comment";
 import { contactMessage } from "./documents/contactMessage";
-import { newsletterSubscriber } from "./documents/newsletterSubscriber";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // Objects — the reusable blocks every page is built from.
@@ -71,7 +70,6 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   partner,
   comment,
   contactMessage,
-  newsletterSubscriber,
 
   // Global.
   siteSettings,
