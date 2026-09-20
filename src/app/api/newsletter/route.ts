@@ -35,13 +35,40 @@ import { projectId, dataset, apiVersion, cmsEnabled } from "../../../../sanity/e
  * would only produce a duplicate.
  */
 
-/** What a status check can ask about this route. */
+/**
+ * What a status check can ask about this route.
+ *
+ * It actually talks to Supabase rather than reporting what it intends to do.
+ * "storing: true" was a claim, not a fact, and when the table stopped
+ * accepting writes the form said "something went wrong" while this endpoint
+ * went on saying everything was fine. A count costs one round trip and
+ * returns no addresses, so it is safe to leave public.
+ */
 export async function GET() {
+  let storing: boolean;
+  let storeError: string | null = null;
+
+  try {
+    const { error } = await supabase()
+      .from(NEWSLETTER_TABLE)
+      .select("*", { count: "exact", head: true });
+    storing = !error;
+    // Postgres' own code is the useful part: 42P01 is a missing table, 42501
+    // a row-level-security refusal, and an invalid key fails before either.
+    if (error) storeError = `${error.code ?? "?"}: ${error.message}`;
+  } catch (error) {
+    storing = false;
+    storeError = error instanceof Error ? error.message : String(error);
+  }
+
   return NextResponse.json({
-    storing: true,
+    storing,
+    storeError,
+    table: NEWSLETTER_TABLE,
     emailing: emailConfigured(),
     resendKey: process.env.RESEND_API_KEY ? "present" : "missing",
     from: newsletterFrom(),
+    mirroringToSanity: Boolean(process.env.SANITY_API_WRITE_TOKEN && cmsEnabled),
   });
 }
 
@@ -132,9 +159,16 @@ export async function POST(request: Request) {
   const alreadySubscribed = error?.code === "23505";
 
   if (error && !alreadySubscribed) {
-    console.error("[newsletter] could not save subscriber:", error.message);
+    console.error(
+      "[newsletter] could not save subscriber:",
+      error.code ?? "?",
+      error.message
+    );
+    // The visitor gets the plain sentence; the body also carries the code so
+    // whoever is debugging can see it in the network tab without reading the
+    // server logs. It names no address and no key.
     return NextResponse.json(
-      { error: "Something went wrong. Please try again." },
+      { error: "Something went wrong. Please try again.", code: error.code ?? null },
       { status: 502 }
     );
   }

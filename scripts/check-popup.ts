@@ -18,8 +18,16 @@ if (!base) {
   process.exit(1);
 }
 
-/** A line of the dialog's own copy — nothing else on the site says this. */
-const FINGERPRINT = "Get what founders here are reading";
+/**
+ * Something structural, not a line of copy.
+ *
+ * It used to look for the headline. Then the headline moved into the Studio,
+ * the bundle stopped containing it, and this reported the dialog missing from
+ * a deployment that had it — a check that fails when the thing it checks is
+ * working is worse than no check. The heading's id is part of the component,
+ * so it survives every edit an editor can make.
+ */
+const FINGERPRINT = "welcome-dialog-title";
 /** How long it waits before opening, as the bundle spells the number. */
 const DELAYS = ["3000", "3e3", "12000", "12e3"];
 

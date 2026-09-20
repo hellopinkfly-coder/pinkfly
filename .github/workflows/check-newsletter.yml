@@ -1,0 +1,23 @@
+# Does subscribing actually work on a deployment?
+# Run by hand — it posts a test address through the real form.
+name: Check newsletter
+
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: "Deployment to check"
+        required: false
+        default: "https://pinkfly.vercel.app"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check:newsletter -- "${{ inputs.site_url || 'https://pinkfly.vercel.app' }}"
