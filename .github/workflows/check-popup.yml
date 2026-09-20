@@ -1,0 +1,23 @@
+# Is the newsletter dialog in what a deployment actually serves?
+# Run by hand — a push cannot check a build that does not exist yet.
+name: Check newsletter popup
+
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: "Deployment to check"
+        required: false
+        default: "https://pinkfly.vercel.app"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check:popup -- "${{ inputs.site_url || 'https://pinkfly.vercel.app' }}"

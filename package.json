@@ -27,7 +27,8 @@
     "check:contact": "tsx scripts/check-contact.ts",
     "build:icons": "node scripts/build-icons.mjs",
     "check:cards": "tsx scripts/check-cards.ts",
-    "check:seo": "tsx scripts/check-seo.ts"
+    "check:seo": "tsx scripts/check-seo.ts",
+    "check:popup": "tsx scripts/check-popup.ts"
   },
   "dependencies": {
     "@portabletext/react": "^8.0.1",
