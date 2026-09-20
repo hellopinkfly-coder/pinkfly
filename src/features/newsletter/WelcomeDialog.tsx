@@ -122,9 +122,7 @@ export function WelcomeDialog({
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Tagged, so the Studio's subscriber table can show which form
-        // actually brings people in.
-        body: JSON.stringify({ ...parsed.data, source: "popup" }),
+        body: JSON.stringify(parsed.data),
       });
       if (!res.ok) throw new Error();
       setStatus("success");

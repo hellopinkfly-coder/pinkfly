@@ -24,7 +24,6 @@ type Status = {
   emailing?: boolean;
   resendKey?: string;
   from?: string;
-  mirroringToSanity?: boolean;
 };
 
 async function main() {
@@ -35,13 +34,12 @@ async function main() {
   console.log(`  ${status.storing ? "✓" : "⚠"} Supabase table "${status.table}" ${status.storing ? "accepts queries" : "is NOT reachable"}`);
   if (status.storeError) console.log(`      ${status.storeError}`);
   console.log(`  ${status.emailing ? "✓" : "○"} welcome email ${status.emailing ? `sends from ${status.from}` : "not configured (RESEND_API_KEY missing)"}`);
-  console.log(`  ${status.mirroringToSanity ? "✓" : "○"} Studio mirror ${status.mirroringToSanity ? "on" : "off (no SANITY_API_WRITE_TOKEN)"}`);
 
   const email = `check-${Date.now()}@pinkfly-test.invalid`;
   const response = await fetch(`${base}/api/newsletter`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, source: "form" }),
+    body: JSON.stringify({ email }),
   });
   const body = await response.text();
   console.log(`\nPOST /api/newsletter  HTTP ${response.status}  ${body}`);

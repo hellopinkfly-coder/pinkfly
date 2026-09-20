@@ -125,17 +125,6 @@ export const structure: StructureResolver = (S) =>
                 ),
             ])
         ),
-      // The subscriber list also has its own tool (a table, with a CSV
-      // download). This is the same rows, one at a time, for adding a note.
-      S.listItem()
-        .title("Newsletter subscribers")
-        .id("newsletterSubscribers")
-        .schemaType("newsletterSubscriber")
-        .child(
-          S.documentTypeList("newsletterSubscriber")
-            .title("Newsletter subscribers")
-            .defaultOrdering([{ field: "subscribedAt", direction: "desc" }])
-        ),
       S.divider(),
       collection(S, "policyPage", "Policy pages"),
       collection(S, "region", "Regions"),
