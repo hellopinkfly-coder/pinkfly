@@ -23,3 +23,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check:seo -- "${{ inputs.site_url || 'https://pinkfly.vercel.app' }}"
+      # TEMPORARY: check-popup.yml is not on main yet, so it cannot be
+      # dispatched. Removed in the same PR once it is.
+      - run: npm run check:popup -- "${{ inputs.site_url || 'https://pinkfly.vercel.app' }}"
