@@ -14,6 +14,7 @@ export const siteSettings = defineType({
     { name: "contact", title: "Contact" },
     { name: "navigation", title: "Navigation" },
     { name: "integrations", title: "Integrations" },
+    { name: "popup", title: "Newsletter popup" },
   ],
   fields: [
     defineField({ name: "name", type: "string", group: "identity", validation: (r) => r.required() }),
@@ -164,6 +165,76 @@ export const siteSettings = defineType({
       group: "integrations",
       description:
         "The Google Form every Register CTA opens. A region may override this on its own document. Leave empty and the site says registration opens shortly rather than showing a dead button.",
+    }),
+
+    defineField({
+      name: "newsletterPopup",
+      title: "Newsletter popup",
+      type: "object",
+      group: "popup",
+      description:
+        "The invitation that appears a few seconds after someone arrives. " +
+        "It is shown on every visit, except to people who have already " +
+        "subscribed, and never on the Join page.",
+      options: { collapsible: true, collapsed: false },
+      fields: [
+        defineField({
+          name: "enabled",
+          title: "Show the popup",
+          type: "boolean",
+          initialValue: true,
+          description: "Turn this off and it never appears, on any page.",
+        }),
+        defineField({
+          name: "delaySeconds",
+          title: "Appears after (seconds)",
+          type: "number",
+          initialValue: 3,
+          description:
+            "How long after someone arrives. Below about two seconds it " +
+            "lands before the page has drawn and reads as an advert.",
+          validation: (r) => r.min(0).max(60),
+        }),
+        defineField({ name: "eyebrow", type: "string" }),
+        defineField({ name: "headline", type: "string" }),
+        defineField({
+          name: "body",
+          type: "text",
+          rows: 3,
+          description: "What they get. One or two sentences.",
+        }),
+        defineField({
+          name: "placeholder",
+          title: "Email field placeholder",
+          type: "string",
+        }),
+        defineField({ name: "cta", title: "Button label", type: "string" }),
+        defineField({
+          name: "joinPrompt",
+          title: "Join line",
+          type: "string",
+          description:
+            'The sentence offering membership, e.g. "Ready for the whole thing?"',
+        }),
+        defineField({ name: "joinLabel", title: "Join link text", type: "string" }),
+        defineField({
+          name: "joinNote",
+          title: "Join note",
+          type: "string",
+          description: 'The grey text after the link, e.g. "takes about a minute".',
+        }),
+        defineField({
+          name: "successTitle",
+          title: "After subscribing — heading",
+          type: "string",
+        }),
+        defineField({
+          name: "successBody",
+          title: "After subscribing — message",
+          type: "text",
+          rows: 2,
+        }),
+      ],
     }),
   ],
   preview: { prepare: () => ({ title: "Site settings" }) },

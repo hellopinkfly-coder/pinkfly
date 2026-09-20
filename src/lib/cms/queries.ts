@@ -100,7 +100,8 @@ export const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
   footerCompany{ title, links[]{ label, href } },
   navCta,
   policyNav[]{ label, href },
-  joinFormUrl
+  joinFormUrl,
+  newsletterPopup
 }`;
 
 export const regionsQuery = groq`*[_type == "region"]{

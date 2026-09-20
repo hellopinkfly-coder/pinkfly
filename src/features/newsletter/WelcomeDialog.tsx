@@ -8,20 +8,22 @@ import { ArrowRight, CheckCircle2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { newsletterSchema } from "@/lib/validations";
+import { RisingBalloon } from "./RisingBalloon";
 import { parsePathname, regionPath } from "@/lib/region";
-
-/** How long after arriving the dialog appears, in milliseconds. */
-const DELAY = 3_000;
+import type { SiteContent } from "@/lib/cms/content";
 
 /**
- * Remembered per browser, so it asks once and then leaves people alone.
+ * Only subscribing is remembered.
  *
- * Dismissing is remembered for a month; subscribing is remembered for a year,
- * because someone who has already given their address should not be asked for
- * it again on their next visit.
+ * Closing the dialog no longer suppresses it: it is shown on every visit, so
+ * someone who was not ready the first time is asked again the next.
+ *
+ * Subscribing still is, and for good reason — asking a person who has just
+ * given their address to give it again reads as a broken site, not a second
+ * chance. That is the one case where showing it again makes the invitation
+ * worse rather than more persistent.
  */
 const KEY = "pf-welcome-dialog";
-const MONTH = 30 * 24 * 60 * 60 * 1000;
 const YEAR = 365 * 24 * 60 * 60 * 1000;
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -46,13 +48,18 @@ function suppress(ms: number) {
 }
 
 /**
- * The newsletter invitation, shown once to a new visitor.
+ * The newsletter invitation, shown on every visit.
  *
  * It waits three seconds rather than opening on arrival: a dialog that is
  * already there as the page paints reads as an ad and gets closed before it
  * is read, and on a slow connection it can land before the page behind it
  * has drawn at all. Three seconds is long enough that the page is there to
  * come back to, and short enough to catch someone who is only passing.
+ *
+ * Once per visit, not once per page: the site's chrome stays mounted as a
+ * visitor moves between pages, so the timer runs on arrival and not again
+ * until they come back. A dialog that reappeared on every click would be
+ * unusable.
  *
  * It offers both doors — the newsletter, which costs an email address, and
  * membership, which is the real invitation — because someone not ready to
@@ -61,9 +68,15 @@ function suppress(ms: number) {
  *
  * It never appears on the Join page, where the visitor is already doing the
  * thing it would ask for, nor in the Studio, which renders without the site's
- * chrome at all.
+ * chrome at all. Someone who has already subscribed is not asked again — see
+ * the note on the storage key.
  */
-export function WelcomeDialog() {
+export function WelcomeDialog({
+  content,
+}: {
+  /** Every line of it, and its timing, edited in the Studio. */
+  content: SiteContent["newsletterPopup"];
+}) {
   const pathname = usePathname() || "/";
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -73,15 +86,17 @@ export function WelcomeDialog() {
   const previouslyFocused = useRef<Element | null>(null);
 
   const { region, rest } = parsePathname(pathname);
-  // Not on Join, where the visitor is already doing what this would ask for.
+  // Not on Join, where the visitor is already doing what this would ask for,
+  // and not at all when an editor has switched it off.
   const onQuietRoute = rest.startsWith("/join");
+  const delay = Math.max(0, content.delaySeconds) * 1000;
 
   useEffect(() => {
-    if (onQuietRoute) return;
+    if (!content.enabled || onQuietRoute) return;
     if (Date.now() < suppressedUntil()) return;
-    const timer = window.setTimeout(() => setOpen(true), DELAY);
+    const timer = window.setTimeout(() => setOpen(true), delay);
     return () => window.clearTimeout(timer);
-  }, [onQuietRoute]);
+  }, [content.enabled, onQuietRoute, delay]);
 
   // Escape closes it, focus moves into it and back out again, and the page
   // behind it does not scroll while it is open.
@@ -108,8 +123,9 @@ export function WelcomeDialog() {
   }, [open]);
 
   function close() {
+    // Closed for this visit only. Nothing is written, so the next visit
+    // asks again.
     setOpen(false);
-    suppress(MONTH);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -184,15 +200,14 @@ export function WelcomeDialog() {
                   id="welcome-dialog-title"
                   className="mt-4 text-xl leading-tight sm:text-2xl"
                 >
-                  You&apos;re on the list.
+                  {content.successTitle}
                 </h2>
                 <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[var(--pf-text)]">
-                  The next one lands soon. Membership is the bigger door —
-                  mentors, introductions and the rooms behind all this.
+                  {content.successBody}
                 </p>
                 <div className="mt-6 flex flex-col items-center gap-3">
                   <Button href={regionPath(region, "/join")} onClick={close}>
-                    Join Pinkfly
+                    {content.joinLabel}
                     <ArrowRight size={16} />
                   </Button>
                   <button
@@ -206,17 +221,23 @@ export function WelcomeDialog() {
               </div>
             ) : (
               <>
-                <span className="pf-eyebrow">Before you go</span>
+                {/* She is the balloon, not a passenger on it — the brand's
+                    own image, drifting rather than jumping. */}
+                <div className="pointer-events-none mb-1 flex justify-center">
+                  <RisingBalloon />
+                </div>
+
+                <span className="pf-eyebrow block text-center">
+                  {content.eyebrow}
+                </span>
                 <h2
                   id="welcome-dialog-title"
-                  className="mt-2 pr-8 text-xl leading-tight sm:text-2xl"
+                  className="mt-2 text-center text-xl leading-tight sm:text-2xl"
                 >
-                  Get what founders here are reading.
+                  {content.headline}
                 </h2>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--pf-text)] sm:text-base">
-                  One email: the new playbooks, the policy changes worth
-                  knowing, and the events near you. No pitch, and you can
-                  leave any time.
+                <p className="mx-auto mt-3 max-w-sm text-center text-sm leading-relaxed text-[var(--pf-text)] sm:text-base">
+                  {content.body}
                 </p>
 
                 <form
@@ -232,7 +253,7 @@ export function WelcomeDialog() {
                       id="welcome-email"
                       type="email"
                       autoComplete="email"
-                      placeholder="you@company.com"
+                      placeholder={content.placeholder}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       aria-invalid={!!error}
@@ -240,7 +261,7 @@ export function WelcomeDialog() {
                     />
                   </div>
                   <Button type="submit" disabled={status === "loading"}>
-                    {status === "loading" ? "…" : "Subscribe"}
+                    {status === "loading" ? "…" : content.cta}
                     {status !== "loading" && <ArrowRight size={16} />}
                   </Button>
                 </form>
@@ -257,17 +278,17 @@ export function WelcomeDialog() {
 
                 {/* The other door. Someone ready to join should not have to
                     subscribe first to find it. */}
-                <p className="mt-5 border-t border-[var(--pf-border)] pt-4 text-sm text-[var(--pf-text)]">
-                  Ready for the whole thing?{" "}
+                <p className="mt-5 border-t border-[var(--pf-border)] pt-4 text-center text-sm text-[var(--pf-text)]">
+                  {content.joinPrompt}{" "}
                   <Link
                     href={regionPath(region, "/join")}
                     onClick={close}
                     className="pf-link font-bold"
                   >
-                    Join the community
+                    {content.joinLabel}
                   </Link>{" "}
                   <span className="text-[var(--pf-muted)]">
-                    — takes about a minute.
+                    {content.joinNote}
                   </span>
                 </p>
               </>

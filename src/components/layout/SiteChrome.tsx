@@ -69,7 +69,7 @@ export function SiteChrome({
       <Footer region={region} site={site} />
       {/* Mounted here rather than in the layout so it inherits the Studio
           exemption above: the Studio returns before this point. */}
-      <WelcomeDialog />
+      <WelcomeDialog content={site.newsletterPopup} />
     </>
   );
 }
