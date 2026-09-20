@@ -23,4 +23,5 @@ jobs:
       - run: npm run check:popup -- "${{ inputs.site_url || 'https://pinkfly.vercel.app' }}"
       # TEMPORARY: check-newsletter.yml is not on main yet, so it cannot be
       # dispatched. Removed before this branch merges.
-      - run: npm run check:newsletter -- "${{ inputs.site_url || 'https://pinkfly.vercel.app' }}"
+      - if: always()
+        run: npm run check:newsletter -- "${{ inputs.site_url || 'https://pinkfly.vercel.app' }}"
