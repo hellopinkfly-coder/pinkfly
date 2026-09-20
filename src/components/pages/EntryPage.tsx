@@ -10,6 +10,8 @@ import { ArticleBody } from "@/features/knowledge-base/ArticleBody";
 import { ArticleCard } from "@/features/knowledge-base/ArticleCard";
 import { FinalCTA } from "@/features/final-cta/FinalCTA";
 import { Comments } from "@/features/comments/Comments";
+import { JsonLd } from "@/components/shared/JsonLd";
+import { articleSchema, breadcrumbSchema } from "@/lib/structured-data";
 import { flags } from "@/config/flags";
 import { relatedEntries, type KbEntry } from "@/data/knowledge-base";
 import { getComments, getKbEntries } from "@/lib/cms/collections";
@@ -54,6 +56,22 @@ export async function EntryPage({
 
   return (
     <>
+      {/* What this page is: an article, with an author and a date. */}
+      <JsonLd data={articleSchema(entry, region)} />
+      <JsonLd
+        data={breadcrumbSchema(region, [
+          { name: "Knowledge Base", path: "/knowledge-base" },
+          {
+            name: category?.title ?? entry.category,
+            path: `/knowledge-base/${entry.category}`,
+          },
+          {
+            name: entry.title,
+            path: `/knowledge-base/${entry.category}/${entry.slug}`,
+          },
+        ])}
+      />
+
       {/*
         Banner.
 

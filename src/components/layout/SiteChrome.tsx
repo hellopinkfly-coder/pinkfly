@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { parsePathname } from "@/lib/region";
 import { Navbar, type NavVariant } from "./Navbar";
 import { Footer } from "./Footer";
+import { WelcomeDialog } from "@/features/newsletter/WelcomeDialog";
 import type { SiteContent } from "@/lib/cms/content";
 
 /**
@@ -15,10 +16,13 @@ import type { SiteContent } from "@/lib/cms/content";
 
 /** Which header a route gets — driven by the wireframes. */
 function navVariantFor(rest: string): NavVariant {
-  // The Events listing opens straight into its hero image (no standard header).
-  if (rest === "/events") return "minimal";
   // The Knowledge Base has its own category navigation.
   if (rest.startsWith("/knowledge-base")) return "knowledge";
+  // Everything else carries the site's own navigation, the Events listing
+  // included. The wireframe gave it a stripped bar — logo, region and the
+  // button — and in practice that read as a page missing its header: on the
+  // Events page alone the links to the rest of the site were gone, and on a
+  // desktop there was no way out of it but the logo.
   return "default";
 }
 
@@ -63,6 +67,9 @@ export function SiteChrome({
       />
       <main id="main">{children}</main>
       <Footer region={region} site={site} />
+      {/* Mounted here rather than in the layout so it inherits the Studio
+          exemption above: the Studio returns before this point. */}
+      <WelcomeDialog />
     </>
   );
 }

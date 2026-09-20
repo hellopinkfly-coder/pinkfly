@@ -9,7 +9,9 @@ import { regionPath, type Region } from "@/lib/region";
 /**
  * What is coming up, on the homepage.
  *
- * Three events, the soonest first, for whichever region the visitor is on.
+ * Three events, the soonest first, for whichever region the visitor is on —
+ * or the ones an editor picked in the Studio (Homepage → Events + articles),
+ * in the order they put them in.
  * "Show all" is the way through to the Events page, where they can be
  * filtered by city, month and type — this section is a taste, not a listing,
  * so it stays short and does not repeat the filters.
@@ -20,11 +22,25 @@ import { regionPath, type Region } from "@/lib/region";
 export function HomeEvents({
   region,
   events,
+  featured = [],
 }: {
   region: Region;
   events: PinkflyEvent[];
+  /** Slugs chosen in the Studio. Empty means "the next three". */
+  featured?: string[];
 }) {
-  const list = upcomingEvents(events, region.slug, undefined, 3);
+  // What an editor picked, kept in their order — but still only events this
+  // region hosts and that have not already happened. A card for a meetup in
+  // another city last month is worse than one fewer card.
+  const upcoming = upcomingEvents(events, region.slug, undefined, 3);
+  const eligible = new Set(
+    upcomingEvents(events, region.slug).map((event) => event.slug)
+  );
+  const chosen = featured
+    .map((slug) => events.find((event) => event.slug === slug))
+    .filter((event): event is PinkflyEvent => Boolean(event) && eligible.has(event!.slug));
+
+  const list = chosen.length > 0 ? chosen : upcoming;
   if (list.length === 0) return null;
 
   return (

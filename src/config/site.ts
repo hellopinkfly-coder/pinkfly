@@ -95,7 +95,7 @@ export const footerNav = {
     title: "Community",
     links: [
       { label: "Join Pinkfly", href: "/join" },
-      { label: "FAQs", href: "/join#faqs" },
+      { label: "FAQs", href: "/faqs" },
       { label: "Knowledge Base", href: "/knowledge-base" },
       { label: "Events", href: "/events" },
     ],
@@ -104,7 +104,7 @@ export const footerNav = {
     title: "Company",
     links: [
       { label: "About Us", href: "/about" },
-      { label: "Contact Us", href: "/about#contact" },
+      { label: "Contact Us", href: "/contact" },
       { label: "Privacy Policy", href: "/policies/privacy" },
     ],
   },

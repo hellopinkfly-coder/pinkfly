@@ -11,6 +11,15 @@ type PageHeaderProps = {
   intro?: string;
   /** Optional full-bleed banner rendered beneath the copy. */
   banner?: StockImage;
+  /**
+   * Tighter vertical space.
+   *
+   * The standard band is sized for a page whose header is the whole first
+   * screen. On the Knowledge Base the header is a label above the article
+   * rails, and at full height it pushed the first rail below the fold — the
+   * page opened on a title and nothing to read.
+   */
+  compact?: boolean;
   className?: string;
   children?: React.ReactNode;
 };
@@ -21,20 +30,24 @@ export function PageHeader({
   title,
   intro,
   banner,
+  compact = false,
   className,
   children,
 }: PageHeaderProps) {
   return (
     <section
       className={cn(
-        "relative overflow-hidden pt-32 sm:pt-40",
-        banner ? "pb-0" : "pb-12 sm:pb-16",
+        "relative overflow-hidden",
+        // The top padding clears the floating header either way; the compact
+        // band just stops giving it a screenful to itself.
+        compact ? "pt-28 sm:pt-32" : "pt-32 sm:pt-40",
+        banner ? "pb-0" : compact ? "pb-8 sm:pb-10" : "pb-12 sm:pb-16",
         className
       )}
     >
       <GradientBackdrop />
       <Container>
-        <Reveal className="flex max-w-3xl flex-col gap-5">
+        <Reveal className={cn("flex max-w-3xl flex-col", compact ? "gap-3.5" : "gap-5")}>
           <span className="pf-eyebrow">{eyebrow}</span>
           <h1 className="pf-display text-[var(--pf-heading)]">{title}</h1>
           {intro && (

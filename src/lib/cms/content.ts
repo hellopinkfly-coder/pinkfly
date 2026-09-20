@@ -27,6 +27,8 @@ import {
 } from "./resolve";
 import {
   homePageQuery,
+  faqPageQuery,
+  contactPageQuery,
   aboutPageQuery,
   joinPageQuery,
   eventsPageQuery,
@@ -135,6 +137,15 @@ export type HomeContent = {
     heading: Heading;
     posts: SocialPost[];
   };
+  /**
+   * Which events and articles the homepage shows, chosen in the Studio.
+   *
+   * Slugs rather than documents: the page already loads every event and
+   * entry, so this is a running order over what it has, not a second copy of
+   * it. Empty means the section picks for itself — the soonest events, the
+   * most recently published articles.
+   */
+  featured: { events: string[]; entries: string[] };
   finalCta: FinalCtaContent;
   /** The CTA band under the hero, and the join block at the foot of the page. */
   finalCtaVisible: boolean;
@@ -214,6 +225,8 @@ type CmsHome = {
   socialHeading?: CmsHeading;
   socialPosts?: { url?: string; caption?: string; image?: CmsFigure }[];
   socialVisible?: boolean;
+  featuredEvents?: { slug?: string; hidden?: boolean }[];
+  featuredEntries?: { slug?: string; category?: string; hidden?: boolean }[];
 } | null;
 
 function missionFrom(
@@ -366,6 +379,18 @@ export async function getHomeContent(): Promise<HomeContent> {
       }).filter((post) => post.url && post.image.src),
     },
 
+    featured: {
+      // A reference to a document that has since been hidden or deleted
+      // dereferences to nothing; either way it is dropped rather than
+      // leaving a gap in the row.
+      events: (cms?.featuredEvents ?? [])
+        .filter((e) => e?.slug && e.hidden !== true)
+        .map((e) => e.slug as string),
+      entries: (cms?.featuredEntries ?? [])
+        .filter((e) => e?.slug && e.hidden !== true)
+        .map((e) => e.slug as string),
+    },
+
     finalCta: finalCtaFrom(cms?.finalCta),
     finalCtaVisible: pickBool(cms?.finalCtaVisible, fallbackFlag(true, live, cms)),
     joinCtaVisible: pickBool(cms?.joinCtaVisible, fallbackFlag(true, live, cms)),
@@ -411,7 +436,12 @@ export type AboutContent = {
   };
   initiatives: { visible: boolean; heading: Heading; items: Initiative[] };
   team: { visible: boolean; heading: Heading; members: TeamMember[] };
-  contact: { visible: boolean; heading: Heading };
+  contact: {
+    visible: boolean;
+    heading: Heading;
+    /** The short invitation shown on About, pointing at the Contact page. */
+    cta: { eyebrow: string; headline: string; body: string; label: string };
+  };
 };
 
 type CmsAbout = {
@@ -552,6 +582,7 @@ export async function getAboutContent(): Promise<AboutContent> {
         headline: seed.about.contact.headline,
         intro: seed.about.contact.intro,
       }),
+      cta: { ...seed.contact.aboutCta },
     },
   };
 }
@@ -925,6 +956,95 @@ export async function getPartners(): Promise<
   );
 }
 
+/* ================================================================= contact */
+
+export type ContactContent = {
+  hero: { eyebrow: string; title: string; intro: string };
+  heading: Heading;
+  responseNote: string;
+};
+
+type CmsContactPage = {
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  heading?: CmsHeading;
+  responseNote?: string;
+} | null;
+
+export async function getContactContent(): Promise<ContactContent> {
+  const { data: cms } = await cmsFetch<CmsContactPage>(contactPageQuery);
+
+  return {
+    hero: {
+      eyebrow: pick(cms?.eyebrow, seed.contact.hero.eyebrow),
+      title: pick(cms?.title, seed.contact.hero.title),
+      intro: pick(cms?.intro, seed.contact.hero.intro),
+    },
+    heading: heading(cms?.heading, {
+      eyebrow: seed.contact.heading.eyebrow,
+      headline: seed.contact.heading.headline,
+      intro: seed.contact.heading.intro,
+    }),
+    // Blank is a real answer: an editor who does not want to promise a reply
+    // time clears the field and nothing is shown.
+    responseNote: cms?.responseNote ?? seed.contact.responseNote,
+  };
+}
+
+/* ==================================================================== FAQs */
+
+export type FaqContent = {
+  hero: { eyebrow: string; title: string; intro: string };
+  groups: {
+    title: string;
+    intro: string;
+    items: { question: string; answer: string }[];
+  }[];
+  contactNote: string;
+};
+
+type CmsFaqPage = {
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  contactNote?: string;
+  groups?: {
+    title?: string;
+    intro?: string;
+    items?: { question?: string; answer?: string }[];
+  }[];
+} | null;
+
+export async function getFaqContent(): Promise<FaqContent> {
+  const { live, data: cms } = await cmsFetch<CmsFaqPage>(faqPageQuery);
+
+  return {
+    hero: {
+      eyebrow: pick(cms?.eyebrow, seed.faqPage.hero.eyebrow),
+      title: pick(cms?.title, seed.faqPage.hero.title),
+      intro: pick(cms?.intro, seed.faqPage.hero.intro),
+    },
+    // A section with no questions in it is a heading and a shortcut that lead
+    // to nothing, so it is dropped rather than rendered empty.
+    groups: pickList(
+      cms?.groups,
+      fallback(seed.faqPage.groups, live),
+      (group, i) => ({
+        title: pick(group.title, seed.faqPage.groups[i]?.title ?? ""),
+        intro: pick(group.intro, seed.faqPage.groups[i]?.intro ?? ""),
+        items: (group.items ?? seed.faqPage.groups[i]?.items ?? [])
+          .map((item) => ({
+            question: item.question ?? "",
+            answer: item.answer ?? "",
+          }))
+          .filter((item) => item.question && item.answer),
+      })
+    ).filter((group) => group.title && group.items.length > 0),
+    contactNote: pick(cms?.contactNote, seed.faqPage.contactNote),
+  };
+}
+
 /* =============================================================== page SEO */
 
 export type PageSeo = {
@@ -942,6 +1062,8 @@ const SEO_QUERIES: Record<string, string> = {
   home: homePageQuery,
   about: aboutPageQuery,
   join: joinPageQuery,
+  faqs: faqPageQuery,
+  contact: contactPageQuery,
   events: eventsPageQuery,
   knowledgeBase: knowledgeBasePageQuery,
 };

@@ -1,0 +1,25 @@
+# Do robots.txt and the sitemap describe the site as it actually is?
+name: Check SEO files
+
+# Run by hand. A push cannot check a deployment that has not been built
+# yet, and the default below is production, which a branch's push has not
+# reached — so an automatic run would report on the wrong site.
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: "Deployment to check"
+        required: false
+        default: "https://pinkfly.vercel.app"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check:seo -- "${{ inputs.site_url || 'https://pinkfly.vercel.app' }}"

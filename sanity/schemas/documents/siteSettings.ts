@@ -23,7 +23,7 @@ export const siteSettings = defineType({
     defineField({ name: "parentUrl", title: "Parent company URL", type: "url", group: "identity" }),
     defineField({
       name: "logo",
-      title: "Logo — for the light theme",
+      title: "Logo — for the light theme (about 1400 × 400)",
       type: "figure",
       group: "identity",
       description:
@@ -36,7 +36,7 @@ export const siteSettings = defineType({
 
     defineField({
       name: "logoDark",
-      title: "Logo — for the dark theme",
+      title: "Logo — for the dark theme (about 1400 × 400)",
       type: "figure",
       group: "identity",
       description:
@@ -60,13 +60,17 @@ export const siteSettings = defineType({
 
     defineField({
       name: "defaultOgImage",
-      title: "Default social share image",
+      title: "Default social share image (1200 × 630)",
       type: "figure",
       group: "identity",
+      description:
+        "What WhatsApp, LinkedIn and X show when a link to the site is shared, " +
+        "for any page without one of its own. Anything other than 1200 × 630 " +
+        "is cropped to it.",
     }),
     defineField({
       name: "placeholderImage",
-      title: "Placeholder image",
+      title: "Placeholder image (1600 × 1200)",
       type: "figure",
       group: "identity",
       description:

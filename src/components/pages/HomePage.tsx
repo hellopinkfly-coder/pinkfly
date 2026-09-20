@@ -57,8 +57,13 @@ export async function HomePage({ region }: { region: Region }) {
       {content.social.visible && <SocialWall content={content.social} />}
       {/* What is on, and what has been written — each a taste, with the way
           through to the full listing. */}
-      <HomeEvents region={region} events={events} />
-      <HomeKnowledge region={region} entries={entries} categories={kb.categories} />
+      <HomeEvents region={region} events={events} featured={content.featured.events} />
+      <HomeKnowledge
+        region={region}
+        entries={entries}
+        categories={kb.categories}
+        featured={content.featured.entries}
+      />
 
       {/* The closing ask, last thing before the footer. */}
       {content.joinCtaVisible && <Join region={region} content={content.joinCta} />}

@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Countdown } from "@/features/events/Countdown";
 import { EventCard } from "@/features/events/EventCard";
 import { RichText } from "@/components/shared/RichText";
+import { JsonLd } from "@/components/shared/JsonLd";
+import { breadcrumbSchema, eventSchema } from "@/lib/structured-data";
 import { upcomingEvents, type PinkflyEvent } from "@/data/events";
 import { getEvents } from "@/lib/cms/collections";
 import { teamPlaceholder } from "@/config/images";
@@ -55,6 +57,15 @@ export async function EventDetailPage({
 
   return (
     <>
+      {/* What this page is: an event, with a date and a place. */}
+      <JsonLd data={eventSchema(event, region)} />
+      <JsonLd
+        data={breadcrumbSchema(region, [
+          { name: "Events", path: "/events" },
+          { name: event.title, path: `/events/${event.slug}` },
+        ])}
+      />
+
       {/* Time left + hero image */}
       <section className="relative overflow-hidden pt-32 pb-4 sm:pt-40">
         <Container>

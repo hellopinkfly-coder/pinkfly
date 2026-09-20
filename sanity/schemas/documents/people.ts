@@ -7,7 +7,12 @@ export const teamMember = defineType({
   fields: [
     defineField({ name: "name", type: "string", validation: (r) => r.required() }),
     defineField({ name: "role", type: "string", validation: (r) => r.required() }),
-    defineField({ name: "image", title: "Portrait", type: "figure" }),
+    defineField({
+      name: "image",
+      title: "Portrait (1200 × 1500)",
+      type: "figure",
+      description: "Upright, 4:5. A wider photograph is cropped to this shape.",
+    }),
     defineField({ name: "bio", type: "text", rows: 4 }),
     defineField({ name: "linkedin", type: "url" }),
     defineField({
@@ -29,7 +34,12 @@ export const testimonial = defineType({
     defineField({ name: "name", type: "string", validation: (r) => r.required() }),
     defineField({ name: "role", type: "string" }),
     defineField({ name: "company", type: "string" }),
-    defineField({ name: "image", title: "Portrait", type: "figure" }),
+    defineField({
+      name: "image",
+      title: "Portrait (600 × 600)",
+      type: "figure",
+      description: "Square. Shown small beside the quote.",
+    }),
   ],
   preview: { select: { title: "name", subtitle: "company", media: "image.asset" } },
 });
@@ -48,7 +58,12 @@ export const initiative = defineType({
     }),
     defineField({ name: "period", type: "string", description: 'Year or range, e.g. "2024 – 2025".' }),
     defineField({ name: "summary", type: "text", rows: 3 }),
-    defineField({ name: "image", type: "figure" }),
+    defineField({
+      name: "image",
+      title: "Image (1200 × 900)",
+      type: "figure",
+      description: "Landscape, 4:3.",
+    }),
     defineField({ name: "highlights", type: "array", of: [{ type: "string" }] }),
   ],
   preview: { select: { title: "title", subtitle: "period", media: "image.asset" } },
@@ -61,7 +76,12 @@ export const partner = defineType({
   description: "Logos shown in the credibility strip.",
   fields: [
     defineField({ name: "name", type: "string", validation: (r) => r.required() }),
-    defineField({ name: "logo", type: "figure" }),
+    defineField({
+      name: "logo",
+      title: "Logo (600 × 240)",
+      type: "figure",
+      description: "Transparent PNG, the logo cropped tight to the artwork.",
+    }),
     defineField({ name: "url", type: "url" }),
     defineField({ name: "order", type: "number", initialValue: 0 }),
   ],

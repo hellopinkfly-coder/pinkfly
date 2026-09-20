@@ -75,7 +75,13 @@ export const imageCard = defineType({
   fields: [
     defineField({ name: "title", type: "string", validation: (r) => r.required() }),
     defineField({ name: "description", type: "text", rows: 2 }),
-    defineField({ name: "image", type: "figure", validation: (r) => r.required() }),
+    defineField({
+      name: "image",
+      title: "Image (1200 × 1500)",
+      type: "figure",
+      description: "Upright, 4:5. Square on a phone, so keep the subject central.",
+      validation: (r) => r.required(),
+    }),
     defineField({
       name: "shape",
       title: "Frame shape",
