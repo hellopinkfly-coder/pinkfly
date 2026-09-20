@@ -28,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/",
     "/about",
     "/join",
+    "/faqs",
     "/events",
     "/knowledge-base",
     // Each category is a page in its own right — where "Show all" leads.

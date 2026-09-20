@@ -95,7 +95,7 @@ export const footerNav = {
     title: "Community",
     links: [
       { label: "Join Pinkfly", href: "/join" },
-      { label: "FAQs", href: "/join#faqs" },
+      { label: "FAQs", href: "/faqs" },
       { label: "Knowledge Base", href: "/knowledge-base" },
       { label: "Events", href: "/events" },
     ],

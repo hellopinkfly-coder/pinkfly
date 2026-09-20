@@ -15,7 +15,7 @@ import type { SiteContent } from "@/lib/cms/content";
 import { Container } from "./Container";
 import { cn } from "@/lib/utils";
 
-export type NavVariant = "default" | "knowledge" | "minimal";
+export type NavVariant = "default" | "knowledge";
 
 type NavbarProps = {
   region: Region;
@@ -24,8 +24,6 @@ type NavbarProps = {
   /**
    * `default` — the standard site header.
    * `knowledge` — the Knowledge Base's own category navigation.
-   * `minimal` — logo, region and CTA only, laid over a full-bleed hero
-   *   (the Events page has no standard header per the wireframe).
    */
   variant?: NavVariant;
   /**
@@ -54,9 +52,7 @@ export function Navbar({
   const items =
     variant === "knowledge"
       ? site.knowledgeBaseNav.map((i) => ({ ...i, href: withRegion(i.href) }))
-      : variant === "minimal"
-        ? []
-        : site.mainNav.map((i) => ({ ...i, href: withRegion(i.href) }));
+      : site.mainNav.map((i) => ({ ...i, href: withRegion(i.href) }));
 
   function withRegion(href: string) {
     // In-page anchors on the current page stay as-is.
@@ -119,7 +115,7 @@ export function Navbar({
           />
 
           {items.length > 0 && (
-            <ul className="hidden items-center gap-7 lg:flex">
+            <ul className="hidden items-center gap-4 lg:flex xl:gap-5">
               {items.map((item) => {
                 const active =
                   pathname === item.href.split("#")[0] &&
@@ -185,11 +181,7 @@ export function Navbar({
           >
             <Container className="mt-2">
               <div className="flex max-h-[75vh] flex-col gap-1 overflow-y-auto rounded-[var(--pf-radius-xl)] border border-[var(--pf-border)] bg-[var(--pf-surface)] p-3 shadow-[var(--pf-shadow-md)] sm:p-4">
-                {/* The minimal variant still needs a way into the site. */}
-                {(items.length > 0
-                  ? items
-                  : site.mainNav.map((i) => ({ ...i, href: withRegion(i.href) }))
-                ).map(
+                {items.map(
                   (item) => (
                     <Link
                       key={item.href}

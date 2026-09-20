@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/shared/PageHeader";
 import { CategoryRail } from "@/features/knowledge-base/CategoryRail";
+import { KbSearch } from "@/features/knowledge-base/KbSearch";
 import { FinalCTA } from "@/features/final-cta/FinalCTA";
 import { entriesByCategory, type KbCategory } from "@/data/knowledge-base";
 import { getKbEntries } from "@/lib/cms/collections";
@@ -23,17 +24,31 @@ export async function KnowledgeBasePage({ region }: { region: Region }) {
     getSiteContent(),
   ]);
 
+  const visibleCategories = content.categories.filter(
+    (category) => !category.hidden
+  );
+
   return (
     <>
       <PageHeader
         eyebrow={content.hero.eyebrow}
         title={content.hero.title}
         intro={content.hero.intro}
+        compact
       />
 
-      {content.categories
-        .filter((category) => !category.hidden)
-        .map((category, i) => (
+      {/* Search and filters sit above the rails and search across all of
+          them; the rails are what they fall back to. Hidden categories are
+          filtered out once, so neither the rails nor the search offer an
+          article from a category the Studio has taken down. */}
+      <KbSearch
+        entries={entries.filter((entry) =>
+          visibleCategories.some((c) => c.id === entry.category)
+        )}
+        region={region}
+        categories={visibleCategories.map((c) => ({ id: c.id, title: c.title }))}
+      >
+        {visibleCategories.map((category, i) => (
           <CategoryRail
             key={category.id}
             id={category.anchor}
@@ -45,6 +60,7 @@ export async function KnowledgeBasePage({ region }: { region: Region }) {
             muted={i % 2 === 1}
           />
         ))}
+      </KbSearch>
 
       {/* The Knowledge Base is something to read through, so the closing
           invitation is drawn tight rather than as a second hero. */}

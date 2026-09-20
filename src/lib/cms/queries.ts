@@ -34,6 +34,8 @@ export const homePageQuery = groq`*[_type == "homePage"][0]{
   socialHeading ${HEADING},
   socialPosts[]{ url, caption, image ${FIGURE} },
   socialVisible,
+  "featuredEvents": featuredEvents[]->{ "slug": slug.current, hidden },
+  "featuredEntries": featuredEntries[]->{ "slug": slug.current, category, hidden },
   seo ${SEO}
 }`;
 
@@ -60,6 +62,12 @@ export const joinPageQuery = groq`*[_type == "joinPage"][0]{
   editorial{ eyebrow, headline, body }, editorialVisible,
   cta,
   faqs[]{ question, answer }, faqsVisible,
+  seo ${SEO}
+}`;
+
+export const faqPageQuery = groq`*[_type == "faqPage"][0]{
+  eyebrow, title, intro, contactNote,
+  groups[]{ title, intro, items[]{ question, answer } },
   seo ${SEO}
 }`;
 

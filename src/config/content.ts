@@ -263,7 +263,7 @@ export const testimonials = {
 export const finalCta = {
   eyebrow: "Your seat is waiting",
   headline: "This is where you find your people.",
-  body: "Membership is free. Fill in the form and we'll send your welcome pack, the community links, and the next events near you.",
+  body: "Founders here find the introduction, the answer or the room they needed — then do the same for someone else. Register and we will send your welcome pack, the community links and the next events near you.",
   /**
    * Two labels, because the button has two honest destinations: the Google
    * Form once its URL is configured, or the on-site Join page until then.
@@ -274,7 +274,7 @@ export const finalCta = {
     label: "Register now",
     href: "/join",
   },
-  note: "Free to join · Takes about a minute",
+  note: "Takes about a minute · Reviewed by a person",
 };
 
 /* ------------------------------------------------------------ Newsletter -- */
@@ -410,18 +410,23 @@ export const join = {
   },
   cta: {
     eyebrow: "Membership",
-    headline: "Join the community.",
-    body: "Tell us where you are and what you're building. We'll send your welcome pack, point you at the next room, and introduce you to founders a step ahead.",
+    headline: "You don't have to build it alone.",
+    /**
+     * What she gets, not what we do with her details. The old line described
+     * our process — "tell us where you are", "we'll send your welcome pack" —
+     * which is admin, not a reason to join.
+     */
+    body: "Every week, founders in this community find the introduction, the answer or the room they needed. Membership is free, and it takes about a minute.",
     /** Shown when the Google Form is live. */
-    formLabel: "Register now",
+    formLabel: "Join Pinkfly — it's free",
     /** Sets expectations before the visitor leaves the site. */
-    formNote: "Opens in a new tab · Free · Takes about a minute",
+    formNote: "Free, always · About a minute · No pitch, no spam",
     /** Shown until a form URL is configured — never a dead button. */
     pending: "Registration opens shortly. Check back soon.",
     steps: [
-      "Register in under a minute.",
-      "We'll send your welcome pack and the community links.",
-      "You'll get the next events and introductions near you.",
+      "Meet founders a stage ahead of you, in your city and online.",
+      "Get the next events, playbooks and policy changes before they are public.",
+      "Ask the room anything — pricing, hiring, funding, burnout.",
     ],
   },
   form: {
@@ -447,6 +452,156 @@ export const join = {
     {
       q: "Can I join from outside the listed regions?",
       a: "Yes. Pick 'Global' in the region selector to see everything on offer.",
+    },
+  ],
+};
+
+/* ------------------------------------------------------------------ FAQs -- */
+/**
+ * The dedicated FAQs page.
+ *
+ * Grouped by what the reader is actually worried about — whether they belong
+ * here, what it costs, what happens at an event — rather than by which part
+ * of the organisation owns the answer. The Join page keeps its own short set
+ * for the moment of deciding; this is the reference.
+ *
+ * TODO(pre-launch): confirm every answer with the team. Anything the team has
+ * not confirmed says so rather than inventing a policy.
+ */
+export const faqPage = {
+  hero: {
+    eyebrow: "FAQs",
+    title: "Questions, answered.",
+    intro:
+      "Everything people ask before they join, and most of what they ask afterwards. If yours is not here, write to us and we will answer it — and add it.",
+  },
+  contactNote:
+    "Still not sure about something? Email {email} and a person will reply.",
+  groups: [
+    {
+      title: "Joining Pinkfly",
+      intro: "Who it is for, and how to get in.",
+      items: [
+        {
+          question: "Who can join Pinkfly?",
+          answer:
+            "Any woman building, or seriously planning, a business. No revenue threshold, no stage requirement, no invitation needed. Founders at the idea stage sit in the same rooms as founders who have raised — that is the point of it.",
+        },
+        {
+          question: "Does membership cost anything?",
+          answer:
+            "Membership is free, and stays free. Some events and intensive programmes are ticketed; the price is always shown up front, before you register.",
+        },
+        {
+          question: "What happens after I submit the form?",
+          answer:
+            "The team sends a welcome pack with your community links and the next events in your region. It usually arrives within a couple of working days.",
+        },
+        {
+          question: "Can I join from outside the listed regions?",
+          answer:
+            "Yes. Choose 'Global' in the region selector to see everything on offer, including the online meets, which have no location at all.",
+        },
+        {
+          question: "I am not a founder yet. Is it too early?",
+          answer:
+            "No. A good share of the community joined with an idea and no company. Coming early is easier than arriving once you are stuck.",
+        },
+      ],
+    },
+    {
+      title: "Events and meetups",
+      intro: "What they are like, and what they cost.",
+      items: [
+        {
+          question: "What kinds of events do you run?",
+          answer:
+            "Meetups and launches in person, online meets, webinars and masterclasses, and one-to-one coffee chats. The Events page lists what is coming up and lets you filter by city, month and type.",
+        },
+        {
+          question: "Do I have to attend everything?",
+          answer:
+            "Not at all. Come to what is useful and ignore the rest. The community works at a slow pace too.",
+        },
+        {
+          question: "Are events free?",
+          answer:
+            "Most are. Ticketed events say so on their own page, with the price before you register.",
+        },
+        {
+          question: "Can I bring someone with me?",
+          answer:
+            "Yes, if they would join the community themselves. Ask them to register too, so we know who is in the room.",
+        },
+        {
+          question: "Can I speak or host a session?",
+          answer:
+            "We are always looking for members to share what they have learned. Write to us with the subject and roughly what you would cover.",
+        },
+      ],
+    },
+    {
+      title: "Mentorship and introductions",
+      intro: "How the matching actually works.",
+      items: [
+        {
+          question: "How does mentorship work?",
+          answer:
+            "You are matched to where you are, not to a curriculum: a mentor who has built something at the stage ahead of yours. Some pairings run for months, some are a single conversation that answers the question.",
+        },
+        {
+          question: "Can I be a mentor?",
+          answer:
+            "Yes, and members who have shipped something are exactly who we want. Tell us what you can help with and roughly how much time you have.",
+        },
+        {
+          question: "Will you introduce me to investors?",
+          answer:
+            "Introductions happen inside the community, and some of them have led to funding. We do not promise investor access, and anyone who does is selling you something.",
+        },
+      ],
+    },
+    {
+      title: "The Knowledge Base",
+      intro: "The writing, and who it is for.",
+      items: [
+        {
+          question: "Who writes the articles?",
+          answer:
+            "Members of the community and the Pinkfly team. Every piece carries its author and the date it was published.",
+        },
+        {
+          question: "Can I write for the Knowledge Base?",
+          answer:
+            "Yes. Pitch the idea rather than the finished piece — a paragraph on what you would cover and who it helps is enough.",
+        },
+        {
+          question: "How current are the government policy pages?",
+          answer:
+            "Each policy entry shows its effective date and the authority behind it. Treat it as a starting point and check the authority's own page before you act on it.",
+        },
+      ],
+    },
+    {
+      title: "Your details and your privacy",
+      intro: "What we hold, and what we do with it.",
+      items: [
+        {
+          question: "What do you do with my details?",
+          answer:
+            "They are used to run your membership: your welcome pack, the events near you, and the newsletter if you asked for it. The full detail is in the privacy policy.",
+        },
+        {
+          question: "Will you sell my data or pass it to sponsors?",
+          answer:
+            "No. We do not sell member data, and sponsors do not get your details.",
+        },
+        {
+          question: "How do I unsubscribe or leave?",
+          answer:
+            "Every newsletter has an unsubscribe link, and you can write to us to have your membership and your details removed entirely.",
+        },
+      ],
     },
   ],
 };

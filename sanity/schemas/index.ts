@@ -22,6 +22,7 @@ import { region } from "./documents/region";
 import { homePage } from "./documents/homePage";
 import { aboutPage } from "./documents/aboutPage";
 import { joinPage } from "./documents/joinPage";
+import { faqPage } from "./documents/faqPage";
 import { eventsPage } from "./documents/eventsPage";
 import { knowledgeBasePage } from "./documents/knowledgeBasePage";
 import { policyPage } from "./documents/policyPage";
@@ -53,6 +54,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   homePage,
   aboutPage,
   joinPage,
+  faqPage,
   eventsPage,
   knowledgeBasePage,
   policyPage,

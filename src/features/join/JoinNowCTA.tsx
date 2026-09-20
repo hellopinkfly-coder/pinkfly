@@ -33,19 +33,20 @@ export function JoinNowCTA({
     <Section id="join-now" className="relative overflow-hidden">
       <GradientBackdrop />
       <Reveal className="mx-auto max-w-3xl">
-        <div className="pf-glass rounded-[var(--pf-radius-2xl)] p-8 text-left shadow-[var(--pf-shadow-md)] sm:p-12">
+        <div className="pf-glass rounded-[var(--pf-radius-2xl)] p-6 text-left shadow-[var(--pf-shadow-md)] sm:p-9">
           <span className="pf-eyebrow">{content.eyebrow}</span>
-          <h2 className="pf-h2 mt-4">{content.headline}</h2>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-[var(--pf-text)] sm:text-lg">
+          <h2 className="pf-h2 mt-3">{content.headline}</h2>
+          <p className="mt-3 max-w-xl text-base leading-relaxed text-[var(--pf-text)]">
             {content.body}
           </p>
 
-          {/* What happens after the click, before they leave the site. */}
-          <ol className="mt-8 flex flex-col gap-3">
+          {/* Why it is worth the click — what membership gives her, not the
+              order the paperwork happens in. */}
+          <ul className="mt-6 flex flex-col gap-2.5">
             {content.steps.map((step) => (
               <li
                 key={step}
-                className="flex items-start gap-3 text-sm text-[var(--pf-text)] sm:text-base"
+                className="flex items-start gap-3 text-sm leading-relaxed text-[var(--pf-text)]"
               >
                 <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)]">
                   <Check size={13} strokeWidth={3} aria-hidden />
@@ -53,10 +54,10 @@ export function JoinNowCTA({
                 {step}
               </li>
             ))}
-          </ol>
+          </ul>
 
           {formUrl ? (
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-3">
               <Button
                 href={formUrl}
                 size="lg"
@@ -70,7 +71,7 @@ export function JoinNowCTA({
             </div>
           ) : (
             /* No URL yet. An honest "not open yet" beats a dead button. */
-            <p className="mt-8 inline-flex items-center rounded-full bg-[var(--pf-surface-muted)] px-5 py-3 text-sm text-[var(--pf-text)]">
+            <p className="mt-6 inline-flex items-center rounded-full bg-[var(--pf-surface-muted)] px-5 py-3 text-sm text-[var(--pf-text)]">
               {content.pending}
             </p>
           )}

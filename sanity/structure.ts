@@ -11,6 +11,7 @@ const SINGLETONS: [type: string, title: string][] = [
   ["homePage", "Homepage"],
   ["aboutPage", "About"],
   ["joinPage", "Join Community"],
+  ["faqPage", "FAQs"],
   ["eventsPage", "Events"],
   ["knowledgeBasePage", "Knowledge Base"],
 ];

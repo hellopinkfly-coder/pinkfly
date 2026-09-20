@@ -6,10 +6,11 @@ import type { EventsPageContent } from "@/lib/cms/content";
 /**
  * Events opening visual.
  *
- * The Events page deliberately has no standard header (see the wireframe) —
- * it opens directly on this full-bleed image, with the page title set over
- * it. The navbar switches to its `minimal` variant for this route so a
- * visitor still has the logo, region selector and CTA.
+ * The page opens directly on this full-bleed image, with the title set over
+ * it. The site's own header floats above it, transparent with light type
+ * until the visitor scrolls off the image. It used to be a stripped bar with
+ * no navigation at all, which left this page as the one place with no links
+ * to the rest of the site.
  */
 export function EventsHero({
   region,

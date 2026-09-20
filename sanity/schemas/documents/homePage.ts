@@ -18,6 +18,7 @@ export const homePage = defineType({
     { name: "mission", title: "Why Pinkfly exists" },
     { name: "join", title: "Join + newsletter" },
     { name: "social", title: "Social wall" },
+    { name: "featured", title: "Events + articles" },
     { name: "seo", title: "SEO" },
   ],
   fields: [
@@ -169,6 +170,33 @@ export const homePage = defineType({
       ...visibleField,
       name: "socialVisible",
       group: "social",
+    }),
+
+    defineField({
+      name: "featuredEvents",
+      title: "Events shown on the homepage",
+      type: "array",
+      group: "featured",
+      of: [{ type: "reference", to: [{ type: "event" }] }],
+      validation: (r) => r.max(3).unique(),
+      description:
+        "Leave this empty and the homepage shows the next three events for " +
+        "the region being viewed, soonest first. Pick events here to show " +
+        "those instead, in the order you put them in. One that has already " +
+        "happened, or that does not run in the region being viewed, is " +
+        "skipped rather than shown.",
+    }),
+    defineField({
+      name: "featuredEntries",
+      title: "Articles shown on the homepage",
+      type: "array",
+      group: "featured",
+      of: [{ type: "reference", to: [{ type: "kbEntry" }] }],
+      validation: (r) => r.max(3).unique(),
+      description:
+        "Leave this empty and the homepage shows the three most recently " +
+        "published articles, whichever categories they come from. Pick " +
+        "articles here to show those instead, in the order you put them in.",
     }),
 
     defineField({ name: "seo", type: "seo", group: "seo" }),
