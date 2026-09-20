@@ -20,7 +20,19 @@
  * deployment or a staging domain needs. A trailing slash is trimmed so
  * `${url}${path}` never produces a double slash.
  */
-export const PRODUCTION_URL = "https://pinkfly.com";
+/**
+ * The address the site actually answers on.
+ *
+ * It was `https://pinkfly.com`, which is not yet serving the site — so every
+ * canonical, every hreflang and all 130 URLs in the sitemap pointed at a
+ * domain a crawler cannot reach. A sitemap of dead links is worse than none:
+ * it is the one file that asks to be crawled.
+ *
+ * When pinkfly.com goes live, set NEXT_PUBLIC_APP_URL to it in Vercel — that
+ * takes effect on the next deploy with no code change — and this constant can
+ * follow at leisure.
+ */
+export const PRODUCTION_URL = "https://pinkfly.vercel.app";
 
 function siteUrl(): string {
   const configured = process.env.NEXT_PUBLIC_APP_URL?.trim();
