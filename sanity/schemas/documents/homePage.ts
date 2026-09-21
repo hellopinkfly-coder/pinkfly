@@ -46,7 +46,16 @@ export const homePage = defineType({
               validation: (r) => r.max(3),
             }),
             defineField({ name: "cta", type: "cta" }),
-            defineField({ name: "image", type: "figure" }),
+            defineField({
+              name: "image",
+              title: "Slide photograph (2400 × 1600)",
+              type: "figure",
+              description:
+                "Fills the whole first screen, edge to edge, and is cropped to whatever shape " +
+                "that is — on a phone a tall slice, on a desktop a wide one. Upload 2400 × 1600 " +
+                "(3:2) and keep the subject near the centre, since the edges go first. The " +
+                "headline sits over the left of it, so avoid a busy left side.",
+            }),
           ],
           preview: { select: { title: "headline", subtitle: "eyebrow", media: "image.asset" } },
         },
