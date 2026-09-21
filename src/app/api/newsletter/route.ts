@@ -41,6 +41,14 @@ import { siteConfig } from "@/config/site";
  * went on saying everything was fine. A count costs one round trip and
  * returns no addresses, so it is safe to leave public.
  */
+/**
+ * Never cached. Without this the GET is prerendered at build time and Vercel
+ * serves that frozen answer forever — it reported the table as healthy while
+ * the live POST was failing against the same project, which is the one thing
+ * a status check must not do.
+ */
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   let storing: boolean;
   let storeError: string | null = null;
