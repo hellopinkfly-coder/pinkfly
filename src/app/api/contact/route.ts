@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "next-sanity";
 import { contactSchema } from "@/lib/validations";
 import { emailConfigured, sendEmail as deliver } from "@/lib/email";
+import { CONTACT_TABLE, supabase } from "@/lib/supabase";
 import { projectId, dataset, apiVersion, cmsEnabled } from "../../../../sanity/env";
 
 /**
@@ -16,6 +17,10 @@ import { projectId, dataset, apiVersion, cmsEnabled } from "../../../../sanity/e
  *     Studio lists what still needs a reply.
  *  2. **An inbox**, through Resend, so nobody has to remember to check the
  *     Studio.
+ *  3. **Supabase**, as a row. The same messages in a shape that exports —
+ *     one spreadsheet of who wrote and what they said, rather than documents
+ *     opened one at a time. It is a mirror, not the record: a message that
+ *     reached Sanity has arrived whether or not this row was written.
  *
  * Sanity is the one that must succeed. If the email fails the message is
  * still saved and the visitor is still thanked — telling them to try again
@@ -29,12 +34,38 @@ import { projectId, dataset, apiVersion, cmsEnabled } from "../../../../sanity/e
  *   CONTACT_TO_EMAIL        where messages are sent
  */
 
-/** What the form and a status check can ask about this route. */
+/**
+ * What the form and a status check can ask about this route.
+ *
+ * Never cached: a prerendered status answers from whenever it was built and
+ * goes on claiming health long after a table stopped accepting writes.
+ */
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const hasToken = Boolean(process.env.SANITY_API_WRITE_TOKEN);
+
+  // Actually asked, rather than assumed. A count returns no messages, so it
+  // is safe to leave public.
+  let mirroring: boolean;
+  let mirrorError: string | null = null;
+  try {
+    const { error } = await supabase()
+      .from(CONTACT_TABLE)
+      .select("*", { count: "exact", head: true });
+    mirroring = !error;
+    if (error) mirrorError = `${error.code ?? "?"}: ${error.message}`;
+  } catch (error) {
+    mirroring = false;
+    mirrorError = error instanceof Error ? error.message : String(error);
+  }
+
   return NextResponse.json({
     saving: hasToken && cmsEnabled,
     emailing: emailConfigured() && Boolean(resendTo()),
+    mirroring,
+    mirrorError,
+    table: CONTACT_TABLE,
     writeToken: hasToken ? "present" : "missing",
     resendKey: process.env.RESEND_API_KEY ? "present" : "missing",
   });
@@ -67,6 +98,24 @@ async function sendEmail(data: Message): Promise<string | null> {
   });
 }
 
+/**
+ * Writes the message to Supabase. Returns the failure rather than throwing,
+ * because a failure here must not change what the visitor is told.
+ */
+async function mirror(data: Message, emailed: boolean): Promise<string | null> {
+  try {
+    const { error } = await supabase().from(CONTACT_TABLE).insert({
+      name: data.name,
+      email: data.email,
+      message: data.message,
+      emailed,
+    });
+    return error ? `${error.code ?? "?"}: ${error.message}` : null;
+  } catch (error) {
+    return error instanceof Error ? error.message : String(error);
+  }
+}
+
 export async function POST(request: Request) {
   let body: unknown;
   try {
@@ -90,6 +139,11 @@ export async function POST(request: Request) {
   // returned to the visitor on a failure here — see the note above.
   const emailError = await sendEmail(data);
   if (emailError) console.error("[contact] email not sent:", emailError);
+
+  // The exportable copy. Failing here is logged and swallowed: Sanity is the
+  // record, and a visitor cannot fix a database of ours by typing again.
+  const mirrorError = await mirror(data, !emailError);
+  if (mirrorError) console.error("[contact] not mirrored to Supabase:", mirrorError);
 
   if (!token || !cmsEnabled) {
     // No store to write to. An email that went out still counts as delivered;
