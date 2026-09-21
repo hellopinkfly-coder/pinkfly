@@ -20,6 +20,16 @@ export const SUPABASE_PUBLISHABLE_KEY =
 /** The table the subscribe form writes to. */
 export const NEWSLETTER_TABLE = "newsletter_subscribers";
 
+/**
+ * The table the contact form writes to.
+ *
+ * Sanity remains the record a person works from — the Studio lists what still
+ * needs a reply. This table is the same messages in a shape that exports: a
+ * spreadsheet of who wrote, when, and what they said, without clicking
+ * through documents one at a time.
+ */
+export const CONTACT_TABLE = "contact_messages";
+
 let client: SupabaseClient | null = null;
 
 /**
