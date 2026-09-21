@@ -296,16 +296,16 @@ export const newsletterPopup = {
   enabled: true,
   delaySeconds: 3,
   eyebrow: "Before you go",
-  headline: "Get what founders here are reading.",
-  body: "One email: the new playbooks, the policy changes worth knowing, and the events near you. No pitch, and you can leave any time.",
+  headline: "What founders here are reading.",
+  body: "One email: playbooks, policy changes, events near you. Leave any time.",
   placeholder: "you@company.com",
   cta: "Subscribe",
   joinPrompt: "Ready for the whole thing?",
   joinLabel: "Join the community",
-  joinNote: "— takes about a minute.",
+  joinNote: "— about a minute.",
   successTitle: "You're on the list.",
   successBody:
-    "The next one lands soon. Membership is the bigger door — mentors, introductions and the rooms behind all this.",
+    "Membership is the bigger door — mentors, introductions, the rooms behind all this.",
 };
 
 /* ------------------------------------------------------------ About page -- */

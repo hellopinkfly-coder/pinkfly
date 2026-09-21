@@ -155,33 +155,33 @@ export function WelcomeDialog({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-lg overflow-hidden rounded-[var(--pf-radius-2xl)] border border-[var(--pf-border)] bg-[var(--pf-bg)] p-6 shadow-[var(--pf-shadow-lg)] sm:p-8"
+            className="relative max-h-[88svh] w-full max-w-sm overflow-y-auto rounded-[var(--pf-radius-2xl)] border border-[var(--pf-border)] bg-[var(--pf-bg)] p-5 shadow-[var(--pf-shadow-lg)] sm:max-w-md sm:p-7"
           >
             <button
               ref={closeRef}
               type="button"
               onClick={close}
               aria-label="Close"
-              className="absolute right-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--pf-muted)] transition-colors hover:bg-[var(--pf-surface-muted)] hover:text-[var(--pf-heading)]"
+              className="absolute right-2 top-2 inline-flex h-11 w-11 items-center justify-center rounded-full text-[var(--pf-muted)] transition-colors hover:bg-[var(--pf-surface-muted)] hover:text-[var(--pf-heading)]"
             >
               <X size={18} />
             </button>
 
             {status === "success" ? (
-              <div className="py-2 text-center">
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)]">
-                  <CheckCircle2 size={24} />
+              <div className="text-center">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)]">
+                  <CheckCircle2 size={22} />
                 </span>
                 <h2
                   id="welcome-dialog-title"
-                  className="mt-4 text-xl leading-tight sm:text-2xl"
+                  className="mt-3 text-lg leading-tight sm:text-xl"
                 >
                   {content.successTitle}
                 </h2>
-                <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[var(--pf-text)]">
+                <p className="mx-auto mt-2 max-w-[30ch] text-sm leading-snug text-[var(--pf-text)]">
                   {content.successBody}
                 </p>
-                <div className="mt-6 flex flex-col items-center gap-3">
+                <div className="mt-5 flex flex-col items-center gap-2">
                   <Button href={regionPath(region, "/join")} onClick={close}>
                     {content.joinLabel}
                     <ArrowRight size={16} />
@@ -199,8 +199,8 @@ export function WelcomeDialog({
               <>
                 {/* She is the balloon, not a passenger on it — the brand's
                     own image, drifting rather than jumping. */}
-                <div className="pointer-events-none mb-1 flex justify-center">
-                  <RisingBalloon />
+                <div className="pointer-events-none flex justify-center">
+                  <RisingBalloon size={76} />
                 </div>
 
                 <span className="pf-eyebrow block text-center">
@@ -208,18 +208,18 @@ export function WelcomeDialog({
                 </span>
                 <h2
                   id="welcome-dialog-title"
-                  className="mt-2 text-center text-xl leading-tight sm:text-2xl"
+                  className="mt-1.5 text-center text-lg leading-tight sm:text-xl"
                 >
                   {content.headline}
                 </h2>
-                <p className="mx-auto mt-3 max-w-sm text-center text-sm leading-relaxed text-[var(--pf-text)] sm:text-base">
+                <p className="mx-auto mt-2 max-w-[34ch] text-center text-sm leading-snug text-[var(--pf-text)]">
                   {content.body}
                 </p>
 
                 <form
                   onSubmit={handleSubmit}
                   noValidate
-                  className="mt-5 flex flex-col gap-3 sm:flex-row"
+                  className="mt-4 flex flex-col gap-2 sm:flex-row"
                 >
                   <div className="flex-1">
                     <label htmlFor="welcome-email" className="sr-only">
@@ -254,7 +254,7 @@ export function WelcomeDialog({
 
                 {/* The other door. Someone ready to join should not have to
                     subscribe first to find it. */}
-                <p className="mt-5 border-t border-[var(--pf-border)] pt-4 text-center text-sm text-[var(--pf-text)]">
+                <p className="mt-4 border-t border-[var(--pf-border)] pt-3 text-center text-sm leading-snug text-[var(--pf-text)]">
                   {content.joinPrompt}{" "}
                   <Link
                     href={regionPath(region, "/join")}
