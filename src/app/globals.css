@@ -219,6 +219,17 @@
 .pf-eyebrow--pill {
   display: inline-flex;
   align-items: center;
+  /*
+   * A flex or grid parent stretches its children to the full track unless
+   * told otherwise, and `inline-flex` does not opt out of that — on the
+   * Events hero, whose column has no `items-start`, the pill ran the whole
+   * width of the page as a faint band across the photograph. Sizing it to
+   * its content and refusing the stretch makes it a pill wherever it is put,
+   * rather than only inside a parent that happens to align its children.
+   */
+  align-self: flex-start;
+  width: fit-content;
+  max-width: 100%;
   font-size: 0.68rem;
   letter-spacing: 0.2em;
   line-height: 1;
