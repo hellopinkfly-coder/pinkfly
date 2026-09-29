@@ -113,7 +113,11 @@ export function HeroCarousel({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: DURATION.slow, ease: EASE }}
+          // Linear rather than the house easing: an eased cross-fade dips in
+          // the middle, because both layers are part-transparent at once and
+          // the background shows between them. Held linear, one photograph
+          // simply becomes the other.
+          transition={{ duration: 1.1, ease: "linear" }}
           className="absolute inset-0 -z-20"
         >
           <SlideMedia slide={active} priority={index === 0} still={!!still} />
@@ -133,22 +137,47 @@ export function HeroCarousel({
       </div>
 
       {/* ---- Copy ----------------------------------------------------- */}
-      <Container className="relative w-full">
-        <AnimatePresence mode="wait" initial={false}>
+      {/* One grid cell, shared. With `mode="wait"` the outgoing slide had to
+          finish leaving before the next arrived, so for a moment the
+          container held nothing: the section dropped to its min-height and
+          sprang back. That is the jump that reads as the hero "not being
+          fixed" — worst on a phone, where the copy is tallest and each slide
+          is a different height. Stacked, the section is always as tall as
+          its tallest live slide and never moves. */}
+      <Container className="relative grid w-full grid-cols-1 grid-rows-1">
+        <AnimatePresence initial={false}>
           <motion.div
             key={index}
             initial="hidden"
             animate="visible"
             exit="exit"
             variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: STAGGER, delayChildren: 0.1 } },
-              exit: { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
+              // The whole block fades as one, under the incoming slide.
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  opacity: { duration: 0.45, ease: "linear" },
+                  staggerChildren: STAGGER,
+                  delayChildren: 0.1,
+                },
+              },
+              exit: {
+                opacity: 0,
+                transition: {
+                  opacity: { duration: 0.45, ease: "linear" },
+                  staggerChildren: 0.04,
+                  staggerDirection: -1,
+                },
+              },
             }}
-            className="flex max-w-xl flex-col items-start gap-3.5 sm:gap-5"
+            // Both slides sit in the same cell; the one on its way out must
+            // not catch a tap meant for the one arriving.
+            style={{ gridArea: "1 / 1" }}
+            className="pointer-events-auto flex max-w-xl flex-col items-start gap-3.5 self-center sm:gap-5"
           >
             <Line>
-              <span className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--pf-accent-hover)] drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
+              <span className="pf-eyebrow pf-eyebrow--on-dark drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
                 {active.eyebrow}
               </span>
             </Line>
@@ -316,8 +345,13 @@ function SlideMedia({
   return (
     <motion.div
       className="absolute inset-0"
-      animate={still ? undefined : { scale: [1.04, 1.12] }}
-      transition={{ duration: 14, ease: "easeInOut" }}
+      // Gentler than it was (1.04 → 1.12). `object-cover` already crops a
+      // 3:2 photograph hard to fill a tall, narrow phone, so the subject is
+      // enlarged before any drift is added; the old range pushed it further
+      // and the whole hero read as zoomed in. A slower, shallower move keeps
+      // the life without the magnification.
+      animate={still ? undefined : { scale: [1.0, 1.05] }}
+      transition={{ duration: 20, ease: "easeInOut" }}
     >
       <Image
         src={slide.image.src}
