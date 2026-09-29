@@ -14,6 +14,7 @@
 import type { LucideIcon } from "lucide-react";
 
 import { cmsFetch } from "./fetch";
+import type { HeadingSize } from "../heading-size";
 import { iconFor, iconKey } from "./icons";
 import {
   pick,
@@ -691,6 +692,7 @@ export async function getJoinContent(): Promise<JoinContent> {
 export type EventsPageContent = {
   eyebrow: string;
   title: string;
+  titleSize: HeadingSize;
   intro: string;
   banner: ResolvedImage;
   emptyState: string;
@@ -700,6 +702,7 @@ export async function getEventsPageContent(): Promise<EventsPageContent> {
   const { live, data: cms } = await cmsFetch<{
     eyebrow?: string;
     title?: string;
+    titleSize?: HeadingSize;
     intro?: string;
     bannerImage?: CmsFigure;
     emptyState?: string;
@@ -708,6 +711,7 @@ export async function getEventsPageContent(): Promise<EventsPageContent> {
   return {
     eyebrow: pick(cms?.eyebrow, "Events"),
     title: pick(cms?.title, "Rooms worth showing up for."),
+    titleSize: pick(cms?.titleSize, "medium" as HeadingSize),
     intro: pick(
       cms?.intro,
       "Meetups, webinars, masterclasses and coffee chats."

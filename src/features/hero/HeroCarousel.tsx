@@ -84,7 +84,7 @@ export function HeroCarousel({
 
   return (
     <section
-      className="relative isolate flex min-h-[38rem] items-center overflow-hidden bg-[var(--pf-heading)] pt-28 pb-16 sm:min-h-[42rem] sm:pt-32 lg:min-h-[44rem]"
+      className="relative isolate flex min-h-[34rem] items-center overflow-hidden bg-[var(--pf-heading)] pt-24 pb-10 sm:min-h-[42rem] sm:pt-32 sm:pb-16 lg:min-h-[44rem]"
       role="group"
       aria-roledescription="carousel"
       aria-label="Pinkfly"
@@ -145,7 +145,7 @@ export function HeroCarousel({
               visible: { transition: { staggerChildren: STAGGER, delayChildren: 0.1 } },
               exit: { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
             }}
-            className="flex max-w-xl flex-col items-start gap-5"
+            className="flex max-w-xl flex-col items-start gap-3.5 sm:gap-5"
           >
             <Line>
               <span className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--pf-accent-hover)] drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
@@ -160,13 +160,13 @@ export function HeroCarousel({
             </Line>
 
             <Line>
-              <p className="max-w-md text-lg leading-relaxed text-white/85">
+              <p className="max-w-[38ch] text-base leading-snug text-white/85 sm:max-w-md sm:text-lg sm:leading-relaxed">
                 {active.subhead}
               </p>
             </Line>
 
             <Line>
-              <ul className="flex flex-col gap-3">
+              <ul className="flex flex-col gap-2 sm:gap-3">
                 {active.points.map(({ icon, label }) => {
                   const Icon = iconFor(icon);
                   return (
@@ -174,10 +174,10 @@ export function HeroCarousel({
                       key={label}
                       className="flex items-center gap-3 text-white"
                     >
-                      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-sm">
+                      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-sm sm:h-9 sm:w-9">
                         <Icon size={17} strokeWidth={1.9} aria-hidden />
                       </span>
-                      <span className="text-sm sm:text-base">{label}</span>
+                      <span className="text-sm leading-snug sm:text-base">{label}</span>
                     </li>
                   );
                 })}
@@ -202,7 +202,7 @@ export function HeroCarousel({
 
         {/* ---- Controls: dots left, arrows right ------------------- */}
         {slides.length > 1 && (
-          <div className="mt-8 flex items-center justify-between gap-4 sm:mt-10">
+          <div className="mt-6 flex items-center justify-between gap-4 sm:mt-10">
             <div className="-ml-2 flex" role="tablist" aria-label="Slides">
               {slides.map((slide, i) => (
                 <button

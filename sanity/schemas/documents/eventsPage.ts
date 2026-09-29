@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { HEADING_SIZE_OPTIONS } from "../../../src/lib/heading-size";
 
 export const eventsPage = defineType({
   name: "eventsPage",
@@ -7,6 +8,17 @@ export const eventsPage = defineType({
   fields: [
     defineField({ name: "eyebrow", type: "string" }),
     defineField({ name: "title", title: "Page headline", type: "string", validation: (r) => r.required() }),
+    defineField({
+      name: "titleSize",
+      title: "Headline size",
+      type: "string",
+      initialValue: "large",
+      options: { list: HEADING_SIZE_OPTIONS, layout: "radio" },
+      description:
+        "How large the headline is set over the photograph. A short headline carries " +
+        "the full size; a longer sentence fills the screen at it and stops being read. " +
+        "Every size still grows and shrinks with the screen.",
+    }),
     defineField({
       name: "intro",
       type: "text",

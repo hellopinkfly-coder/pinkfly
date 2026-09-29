@@ -76,7 +76,7 @@ export const faqPageQuery = groq`*[_type == "faqPage"][0]{
 }`;
 
 export const eventsPageQuery = groq`*[_type == "eventsPage"][0]{
-  eyebrow, title, intro, bannerImage ${FIGURE}, emptyState, seo ${SEO}
+  eyebrow, title, titleSize, intro, bannerImage ${FIGURE}, emptyState, seo ${SEO}
 }`;
 
 export const knowledgeBasePageQuery = groq`*[_type == "knowledgeBasePage"][0]{

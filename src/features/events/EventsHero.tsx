@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import type { Region } from "@/lib/region";
 import type { EventsPageContent } from "@/lib/cms/content";
+import { headingSizeClass } from "@/lib/heading-size";
 
 /**
  * Events opening visual.
@@ -11,6 +12,9 @@ import type { EventsPageContent } from "@/lib/cms/content";
  * until the visitor scrolls off the image. It used to be a stripped bar with
  * no navigation at all, which left this page as the one place with no links
  * to the rest of the site.
+ *
+ * How large the title is set is chosen in the Studio, because it depends on
+ * how long the headline is and whoever writes it can see that.
  */
 export function EventsHero({
   region,
@@ -38,7 +42,7 @@ export function EventsHero({
         <span className="text-xs font-bold uppercase tracking-[0.22em] text-white/85">
           {content.eyebrow}
         </span>
-        <h1 className="pf-display mt-4 max-w-3xl text-white">
+        <h1 className={`${headingSizeClass(content.titleSize)} mt-4 max-w-3xl text-white`}>
           {content.title}
         </h1>
         <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">

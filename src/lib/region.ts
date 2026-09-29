@@ -17,10 +17,27 @@ export function getRegion(slug?: string): Region {
 }
 
 /**
+ * Is this a link that leaves the site?
+ *
+ * Anything with a scheme — `https:`, `mailto:`, `tel:` — plus protocol
+ * relative `//host`. Everything else is a path on this site.
+ */
+export function isExternalHref(href: string): boolean {
+  return /^([a-z][a-z0-9+.-]*:|\/\/)/i.test(href.trim());
+}
+
+/**
  * Build a path within a region. The global region keeps clean root URLs
  * (`/about`), regional variants are prefixed (`/india/about`).
+ *
+ * An external link is returned untouched. Editors have always been told they
+ * could put a full URL in a link field, and they could not: every caller
+ * runs the value through here first, so `https://forms.gle/x` came back as
+ * `/india/https://forms.gle/x` and 404ed. A region is a section of this
+ * site; somebody else's site is not in it.
  */
 export function regionPath(region: Region, path = "/"): string {
+  if (isExternalHref(path)) return path;
   const clean = path === "/" ? "" : path;
   if (region.slug === "global") return clean || "/";
   return `/${region.slug}${clean}`;
