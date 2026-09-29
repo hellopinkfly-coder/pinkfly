@@ -212,42 +212,39 @@
  * The pill, for a hero only.
  *
  * Over a photograph the eyebrow has nothing to sit on and reads as a stray
- * line above the headline. The CTA's shape at one pixel of border and a
- * barely-there fill makes it a label instead, without competing with the
- * button below it. `inline-flex` so the pill wraps the words, not the column.
+ * line above the headline. It takes the CTA's shape — full radius — and now
+ * the CTA's colour too: solid brand pink with white type. Outlined in pink
+ * on pink-tinted glass it was a faint ring on a dark photograph, legible
+ * only if you were looking for it. Filled, it is the same object as the
+ * button further down the hero, so the two read as one family rather than
+ * two unrelated shapes stacked on the same image.
+ *
+ * `inline-flex` so the pill wraps the words, and `fit-content` so a flex or
+ * grid parent cannot stretch it across the page.
  */
 .pf-eyebrow--pill {
   display: inline-flex;
   align-items: center;
-  /*
-   * A flex or grid parent stretches its children to the full track unless
-   * told otherwise, and `inline-flex` does not opt out of that — on the
-   * Events hero, whose column has no `items-start`, the pill ran the whole
-   * width of the page as a faint band across the photograph. Sizing it to
-   * its content and refusing the stretch makes it a pill wherever it is put,
-   * rather than only inside a parent that happens to align its children.
-   */
   align-self: flex-start;
   width: fit-content;
   max-width: 100%;
   font-size: 0.68rem;
   letter-spacing: 0.2em;
   line-height: 1;
-  padding: 0.4rem 0.75rem;
-  border: 1px solid color-mix(in srgb, var(--pf-accent) 42%, transparent);
+  padding: 0.45rem 0.85rem;
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--pf-accent) 9%, transparent);
+  color: #fff;
+  background: var(--pf-accent);
 }
 
-/* Over a dark photograph the accent needs to be the lighter of the two. */
-.pf-eyebrow--on-dark {
+/*
+ * The colour-only variant, for an eyebrow set as plain text over dark
+ * imagery. The filled pill already carries its own contrast, so it does not
+ * need this and does not change under it.
+ */
+.pf-eyebrow--on-dark:not(.pf-eyebrow--pill) {
   color: var(--pf-accent-hover);
-}
-
-.pf-eyebrow--pill.pf-eyebrow--on-dark {
-  border-color: color-mix(in srgb, var(--pf-accent-hover) 55%, transparent);
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(4px);
 }
 
 /* The lower bound of each clamp is the phone size, not a desktop size the
