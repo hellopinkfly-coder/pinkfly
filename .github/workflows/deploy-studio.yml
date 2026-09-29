@@ -4,10 +4,20 @@
 # the copy Sanity hosts is a separate upload that only changes when someone
 # runs `sanity deploy` — so it silently kept showing an older schema.
 #
+# Runs from the `sanity/` folder, which is the Studio root: `sanity.config.ts`
+# and `sanity.cli.ts` live there, not beside this repository's package.json.
+# Run from the root the CLI cannot resolve its config, and what it uploads is
+# a Studio with no schema in it. (There is no `--cwd` flag on `sanity deploy`
+# to do this from the root; the working directory is the way.) node_modules
+# is installed once at the repository root and `npx` walks up to find it, so
+# nothing needs installing twice.
+#
 # Needs a token that may deploy. It prefers a SANITY_AUTH_TOKEN secret and
-# falls back to SANITY_API_WRITE_TOKEN, which the repository already holds —
-# whether that one is allowed to deploy depends on the role it was given, and
-# the run says so either way.
+# falls back to SANITY_API_WRITE_TOKEN, which the repository already holds.
+# A write token is usually NOT enough: deploying needs the `deployStudio`
+# grant, which comes with the Deploy Studio role rather than with write
+# access. The run says which token it used, and what to do when it is
+# refused.
 name: Deploy Studio
 
 on:
@@ -31,6 +41,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Deploy
+        working-directory: sanity
         env:
           DEPLOY_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
           WRITE_TOKEN: ${{ secrets.SANITY_API_WRITE_TOKEN }}
@@ -40,8 +51,10 @@ jobs:
             export SANITY_AUTH_TOKEN="$DEPLOY_TOKEN"
           elif [ -n "$WRITE_TOKEN" ]; then
             echo "SANITY_AUTH_TOKEN is not set; trying SANITY_API_WRITE_TOKEN."
-            echo "If this fails on permissions, that token cannot deploy and a"
-            echo "token with the Deploy Studio role is needed."
+            echo "A write token usually cannot deploy. If this fails with"
+            echo "\"missing required grant sanity.project.deployStudio\", create a"
+            echo "token with the Deploy Studio role at manage.sanity.io ->"
+            echo "API -> Tokens, and add it as the SANITY_AUTH_TOKEN secret."
             export SANITY_AUTH_TOKEN="$WRITE_TOKEN"
           else
             echo "No token available — add SANITY_AUTH_TOKEN as a repository secret."

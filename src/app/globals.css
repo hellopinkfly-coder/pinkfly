@@ -79,6 +79,34 @@
 }
 
 @theme inline {
+  /*
+   * The type scale, one notch down from Tailwind's default.
+   *
+   * Space Mono runs large for its point size — a monospace face carries more
+   * width and a taller x-height per em than the proportional faces the
+   * default scale was drawn for — so every size read a step bigger than
+   * intended. These are set here rather than by changing the root font size,
+   * because that would drag all the rem spacing down with it and the spacing
+   * is already where it should be.
+   *
+   * Roughly 94%: 16 → 15, 18 → 17, 20 → 19. Enough to feel calmer, not so
+   * much that anything becomes hard to read; nothing lands below 12px.
+   */
+  --text-xs: 0.7rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.8125rem;
+  --text-sm--line-height: 1.55;
+  --text-base: 0.9375rem;
+  --text-base--line-height: 1.6;
+  --text-lg: 1.0625rem;
+  --text-lg--line-height: 1.6;
+  --text-xl: 1.1875rem;
+  --text-xl--line-height: 1.5;
+  --text-2xl: 1.4rem;
+  --text-2xl--line-height: 1.35;
+  --text-3xl: 1.75rem;
+  --text-3xl--line-height: 1.25;
+
   --color-accent: var(--pf-accent);
   --color-accent-hover: var(--pf-accent-hover);
   --color-accent-soft: var(--pf-accent-soft);
@@ -162,21 +190,56 @@
    Utilities
    ========================================================================== */
 
+/*
+ * The eyebrow, as a hairline pill.
+ *
+ * It used to be bare text, which over a photograph had nothing to sit on and
+ * read as a stray line above the headline. Giving it the CTA's shape — the
+ * same full radius — at one pixel of border and a barely-there fill makes it
+ * a label rather than a fragment, without competing with the button it sits
+ * above. `inline-flex` so the pill wraps the words and not the column.
+ */
 .pf-eyebrow {
+  display: inline-flex;
+  align-items: center;
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
+  line-height: 1;
   text-transform: uppercase;
   color: var(--pf-accent);
+  padding: 0.4rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--pf-accent) 42%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pf-accent) 9%, transparent);
+}
+
+/* Over a dark photograph the accent needs to be the lighter of the two. */
+.pf-eyebrow--on-dark {
+  color: var(--pf-accent-hover);
+  border-color: color-mix(in srgb, var(--pf-accent-hover) 55%, transparent);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(4px);
 }
 
 /* The lower bound of each clamp is the phone size, not a desktop size the
    viewport is too narrow to honour: at 320px a 40px headline wrapped after
    two words. The upper bound and the desktop rendering are unchanged. */
 .pf-display {
-  font-size: clamp(2.1rem, 7.5vw, 4.5rem);
-  line-height: 1.08;
+  /*
+   * The floor was 2.1rem, which on a 390px phone is where the clamp lands —
+   * 7.5vw is only 29px there, so the minimum always won and the headline was
+   * effectively a fixed 33.6px however small the screen got. That is large
+   * for a display face set over a photograph with a subhead under it, and it
+   * is what made the hero read as enlarged. The floor drops so the headline
+   * actually scales on a phone, and the ceiling comes down from 4.5rem to
+   * 3.9rem: at 72px a four-word headline filled the fold on a laptop and the
+   * subhead under it had nowhere to go. Space Mono is wide for its point
+   * size, so it carries a smaller number than a proportional face would.
+   */
+  font-size: clamp(1.7rem, 7vw, 3.9rem);
+  line-height: 1.1;
 }
 
 @media (min-width: 640px) {
