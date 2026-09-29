@@ -185,6 +185,20 @@
   }
 }
 
+/*
+ * Two smaller steps on the display scale, chosen in the Studio per page.
+ * A long headline set over a photograph at the full size fills the screen
+ * and stops being read; these keep the same fluid growth on a narrower
+ * ceiling rather than switching to a fixed size.
+ */
+.pf-display--md {
+  font-size: clamp(1.9rem, 6vw, 3.4rem);
+}
+
+.pf-display--sm {
+  font-size: clamp(1.7rem, 5vw, 2.6rem);
+}
+
 .pf-h2 {
   font-size: clamp(1.6rem, 5vw, 2.9rem);
 }

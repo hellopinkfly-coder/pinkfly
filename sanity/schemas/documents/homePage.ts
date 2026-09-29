@@ -141,7 +141,15 @@ export const homePage = defineType({
           title: "Button text (no form yet)",
           type: "string",
         }),
-        defineField({ name: "href", title: "Fallback link", type: "string" }),
+        defineField({
+          name: "href",
+          title: "Fallback link",
+          type: "string",
+          description:
+            'Where the button goes. A path on this site such as "/join" — the ' +
+            "region prefix is added for you — or a full external address such as " +
+            '"https://forms.gle/…", which opens in a new tab.',
+        }),
         defineField({ name: "note", title: "Supporting text", type: "string" }),
       ],
     }),

@@ -10,7 +10,16 @@ type SectionHeadingProps = {
   className?: string;
 };
 
-/** Consistent eyebrow → headline → intro pattern used across every section. */
+/**
+ * Consistent eyebrow → headline → intro pattern used across every section.
+ *
+ * Centred text is where line breaking shows. Left to itself the browser
+ * fills each line to the measure and drops whatever is left onto the last
+ * one, which reads as a staircase when every line is centred on a different
+ * width. `text-balance` asks the browser to even the lines of the headline
+ * instead, and `text-pretty` keeps the paragraph from ending on a single
+ * stranded word. Neither changes a word of the copy.
+ */
 export function SectionHeading({
   eyebrow,
   title,
@@ -27,11 +36,11 @@ export function SectionHeading({
       )}
     >
       {eyebrow && <span className="pf-eyebrow">{eyebrow}</span>}
-      <h2 className="pf-h2 max-w-3xl">{title}</h2>
+      <h2 className="pf-h2 max-w-3xl text-balance">{title}</h2>
       {intro && (
         <p
           className={cn(
-            "max-w-2xl text-base leading-relaxed text-[var(--pf-text)] sm:text-lg",
+            "max-w-[58ch] text-pretty text-base leading-relaxed text-[var(--pf-text)] sm:text-lg",
             align === "center" && "mx-auto"
           )}
         >

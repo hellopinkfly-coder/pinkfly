@@ -36,7 +36,7 @@ export function Mission({
         {rest.map((paragraph) => (
           <p
             key={paragraph.slice(0, 32)}
-            className="text-base leading-relaxed text-[var(--pf-text)] sm:text-lg"
+            className="max-w-[58ch] text-pretty text-base leading-relaxed text-[var(--pf-text)] sm:text-lg"
           >
             {paragraph}
           </p>

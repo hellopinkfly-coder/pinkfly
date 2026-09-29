@@ -92,17 +92,14 @@ export function Navbar({
               : "border border-transparent"
           )}
         >
-          {/* The full lockup needs width the phone bar does not have, so the
-              tagline is dropped below `sm` rather than shrunk to nothing. */}
-          <Logo
-            href={regionPath(region, "/")}
-            onDark={onDark}
-            size="sm"
-            logo={site.logo}
-            logoDark={site.logoDark}
-            logoHeight={site.logoHeight}
-            className="sm:hidden"
-          />
+          {/* One lockup at every width, tagline included.
+              The phone used to get a cut with no tagline, on the assumption
+              that the full one needed width a phone bar does not have. It
+              does not: "Building Dreams" tucks under the wordmark beside the
+              balloon rather than extending past it, so both cuts are within
+              a hair of the same proportions (3.81 against 3.85) and the full
+              lockup costs the bar about two pixels. Dropping it only meant
+              the brand line was missing on the devices most people use. */}
           <Logo
             href={regionPath(region, "/")}
             onDark={onDark}
@@ -111,7 +108,6 @@ export function Navbar({
             logo={site.logo}
             logoDark={site.logoDark}
             logoHeight={site.logoHeight}
-            className="hidden sm:inline-flex"
           />
 
           {items.length > 0 && (

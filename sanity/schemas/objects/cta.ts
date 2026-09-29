@@ -17,7 +17,9 @@ export const cta = defineType({
       title: "Link",
       type: "string",
       description:
-        'Site path such as "/join" (region prefixes are added automatically) or a full external URL.',
+        'A path on this site such as "/join" — the region prefix is added for ' +
+        'you — or a full external address such as "https://forms.gle/…", which ' +
+        "opens in a new tab.",
       validation: (r) => r.required(),
     }),
   ],
