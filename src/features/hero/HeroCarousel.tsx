@@ -229,50 +229,69 @@ export function HeroCarousel({
           </motion.div>
         </AnimatePresence>
 
-        {/* ---- Controls: dots left, arrows right ------------------- */}
-        {slides.length > 1 && (
-          <div className="mt-6 flex items-center justify-between gap-4 sm:mt-10">
-            <div className="-ml-2 flex" role="tablist" aria-label="Slides">
-              {slides.map((slide, i) => (
-                <button
-                  key={slide.headline}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === index}
-                  aria-label={slide.headline}
-                  onClick={() => goTo(i)}
-                  // The dot is the mark; the button around it is the target,
-                  // sized for a thumb rather than for the mark's height.
-                  className="group/dot inline-flex h-11 items-center justify-center px-2"
-                >
-                  <span
-                    className={cn(
-                      "block h-1.5 rounded-full transition-all duration-300 ease-[var(--pf-ease)]",
-                      i === index
-                        ? "w-9 bg-white"
-                        : "w-2 bg-white/40 group-hover/dot:bg-white/70"
-                    )}
-                  />
-                </button>
-              ))}
-            </div>
+        {/* ---- Controls -------------------------------------------------
+            One bar, not five floating parts.
 
-            <div className="flex gap-2">
-              {/* Explicit pause, so autoplay is stoppable without hovering. */}
-              {!still && (
-                <RoundButton
-                  label={userPaused ? "Play slideshow" : "Pause slideshow"}
-                  onClick={() => setUserPaused((v) => !v)}
-                >
-                  {userPaused ? <Play size={17} /> : <Pause size={17} />}
+            The dots sat against the far left of the container and the three
+            buttons against the far right, a page apart, each button its own
+            translucent circle at 10% white. Over the pale lower half of a
+            photograph — which is also where the section's bottom fade lifts
+            everything towards the page colour — they had almost no edge left
+            and read as smudges rather than controls.
+
+            They are one cluster now: dots, a hairline divider, then the
+            buttons, inside a single dark glass pill sitting under the copy it
+            belongs to. The pill is its own contrast, so it holds up over a
+            light photograph or a dark one, and the group reads as a control
+            rather than as marks left on the image.
+            --------------------------------------------------------------- */}
+        {slides.length > 1 && (
+          <div className="mt-6 flex sm:mt-9">
+            <div className="inline-flex items-center rounded-full border border-white/15 bg-black/40 p-1 shadow-[0_8px_24px_rgba(0,0,0,0.28)] backdrop-blur-md">
+              <div className="flex px-1" role="tablist" aria-label="Slides">
+                {slides.map((slide, i) => (
+                  <button
+                    key={slide.headline}
+                    type="button"
+                    role="tab"
+                    aria-selected={i === index}
+                    aria-label={slide.headline}
+                    onClick={() => goTo(i)}
+                    // The dot is the mark; the button around it is the target,
+                    // sized for a thumb rather than for the mark's height.
+                    className="group/dot inline-flex h-11 items-center justify-center px-1.5"
+                  >
+                    <span
+                      className={cn(
+                        "block h-1.5 rounded-full transition-all duration-300 ease-[var(--pf-ease)]",
+                        i === index
+                          ? "w-6 bg-white"
+                          : "w-2 bg-white/40 group-hover/dot:bg-white/70"
+                      )}
+                    />
+                  </button>
+                ))}
+              </div>
+
+              <span aria-hidden className="mx-1 h-5 w-px shrink-0 bg-white/15" />
+
+              <div className="flex gap-0.5">
+                {/* Explicit pause, so autoplay is stoppable without hovering. */}
+                {!still && (
+                  <RoundButton
+                    label={userPaused ? "Play slideshow" : "Pause slideshow"}
+                    onClick={() => setUserPaused((v) => !v)}
+                  >
+                    {userPaused ? <Play size={17} /> : <Pause size={17} />}
+                  </RoundButton>
+                )}
+                <RoundButton label="Previous slide" onClick={() => goTo(index - 1)}>
+                  <ChevronLeft size={20} />
                 </RoundButton>
-              )}
-              <RoundButton label="Previous slide" onClick={() => goTo(index - 1)}>
-                <ChevronLeft size={20} />
-              </RoundButton>
-              <RoundButton label="Next slide" onClick={() => goTo(index + 1)}>
-                <ChevronRight size={20} />
-              </RoundButton>
+                <RoundButton label="Next slide" onClick={() => goTo(index + 1)}>
+                  <ChevronRight size={20} />
+                </RoundButton>
+              </div>
             </div>
           </div>
         )}
@@ -312,7 +331,9 @@ function RoundButton({
       onClick={onClick}
       aria-label={label}
       title={label}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-md transition-colors duration-300 ease-[var(--pf-ease)] hover:border-transparent hover:bg-[var(--pf-accent)]"
+      // No surface of its own: the bar around it already provides one, and
+      // a circle inside a pill inside a photograph is two borders too many.
+      className="inline-flex h-11 w-11 items-center justify-center rounded-full text-white/85 transition-colors duration-200 ease-[var(--pf-ease)] hover:bg-white/12 hover:text-white"
     >
       {children}
     </button>
