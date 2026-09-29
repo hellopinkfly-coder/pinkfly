@@ -191,24 +191,37 @@
    ========================================================================== */
 
 /*
- * The eyebrow, as a hairline pill.
+ * The eyebrow: plain text by default.
  *
- * It used to be bare text, which over a photograph had nothing to sit on and
- * read as a stray line above the headline. Giving it the CTA's shape — the
- * same full radius — at one pixel of border and a barely-there fill makes it
- * a label rather than a fragment, without competing with the button it sits
- * above. `inline-flex` so the pill wraps the words and not the column.
+ * It is used in nineteen places — every section heading, the 404, the
+ * newsletter dialog — and in almost all of them it sits on a plain surface
+ * above a heading, where a bordered pill would be nineteen small boxes
+ * competing with the headings they introduce. So the pill is a modifier,
+ * not the default.
  */
 .pf-eyebrow {
-  display: inline-flex;
-  align-items: center;
   font-family: var(--font-display);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.2em;
-  line-height: 1;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--pf-accent);
+}
+
+/*
+ * The pill, for a hero only.
+ *
+ * Over a photograph the eyebrow has nothing to sit on and reads as a stray
+ * line above the headline. The CTA's shape at one pixel of border and a
+ * barely-there fill makes it a label instead, without competing with the
+ * button below it. `inline-flex` so the pill wraps the words, not the column.
+ */
+.pf-eyebrow--pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  line-height: 1;
   padding: 0.4rem 0.75rem;
   border: 1px solid color-mix(in srgb, var(--pf-accent) 42%, transparent);
   border-radius: 999px;
@@ -218,6 +231,9 @@
 /* Over a dark photograph the accent needs to be the lighter of the two. */
 .pf-eyebrow--on-dark {
   color: var(--pf-accent-hover);
+}
+
+.pf-eyebrow--pill.pf-eyebrow--on-dark {
   border-color: color-mix(in srgb, var(--pf-accent-hover) 55%, transparent);
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(4px);
