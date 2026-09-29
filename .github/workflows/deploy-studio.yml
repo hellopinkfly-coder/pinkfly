@@ -60,4 +60,10 @@ jobs:
             echo "No token available — add SANITY_AUTH_TOKEN as a repository secret."
             exit 1
           fi
-          npx sanity deploy
+          # A deploy that answers a prompt with nothing still exits 0, so
+          # the run is only trusted if the CLI actually says it deployed.
+          npx sanity deploy 2>&1 | tee deploy.log
+          if ! grep -q "Success! Studio deployed" deploy.log; then
+            echo "::error::The CLI did not report a successful deploy. Output above."
+            exit 1
+          fi
