@@ -177,7 +177,7 @@ export function HeroCarousel({
             className="pointer-events-auto flex max-w-xl flex-col items-start gap-3.5 self-center sm:gap-5"
           >
             <Line>
-              <span className="pf-eyebrow pf-eyebrow--on-dark drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
+              <span className="pf-eyebrow pf-eyebrow--pill pf-eyebrow--on-dark drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
                 {active.eyebrow}
               </span>
             </Line>

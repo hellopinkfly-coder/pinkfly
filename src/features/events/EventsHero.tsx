@@ -39,7 +39,7 @@ export function EventsHero({
       />
 
       <Container className="relative flex min-h-[62vh] flex-col justify-end pb-14 pt-36 sm:min-h-[70vh] sm:pb-20">
-        <span className="pf-eyebrow pf-eyebrow--on-dark">
+        <span className="pf-eyebrow pf-eyebrow--pill pf-eyebrow--on-dark">
           {content.eyebrow}
         </span>
         <h1 className={`${headingSizeClass(content.titleSize)} mt-4 max-w-3xl text-white`}>
