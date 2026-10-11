@@ -24,7 +24,7 @@ export function Impact({ content }: { content: HomeContent["impact"] }) {
       <Reveal
         as="ul"
         variants={stagger}
-        className="mt-12 grid gap-px overflow-hidden rounded-[var(--pf-radius-2xl)] border border-[var(--pf-border)] bg-[var(--pf-border)] sm:grid-cols-2 lg:grid-cols-4"
+        className="pf-section-body grid gap-px overflow-hidden rounded-[var(--pf-radius-2xl)] border border-[var(--pf-border)] bg-[var(--pf-border)] sm:grid-cols-2 lg:grid-cols-4"
       >
         {content.stats.map(({ icon: Icon, value, suffix, label }) => (
           <Reveal

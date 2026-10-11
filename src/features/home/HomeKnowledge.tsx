@@ -82,7 +82,7 @@ export function HomeKnowledge({
         </Link>
       </Reveal>
 
-      <div className="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="pf-section-body grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {latest.map(({ category, entry }) => (
           <div key={`${entry.category}/${entry.slug}`} className="flex flex-col gap-3">
             <Link
