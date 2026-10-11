@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowLeft, Clock, ExternalLink, MessageCircle } from "lucide-react";
+import { Clock, ExternalLink, MessageCircle } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { BackLink } from "@/components/shared/BackLink";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/shared/Reveal";
 import { ImageFrame } from "@/components/shared/ImageFrame";
@@ -126,16 +127,14 @@ export async function EntryPage({
       <Section className="pt-10 sm:pt-14">
         <div className="mx-auto max-w-4xl">
           <Reveal>
-            <Link
+            <BackLink
               href={
                 regionPath(region, "/knowledge-base") +
                 `#${category?.anchor ?? ""}`
               }
-              className="inline-flex items-center gap-2 text-sm text-[var(--pf-muted)] transition-colors hover:text-[var(--pf-accent)]"
             >
-              <ArrowLeft size={15} aria-hidden />
               {category?.title ?? "Knowledge Base"}
-            </Link>
+            </BackLink>
 
             <h1 className="pf-h2 mt-5">{entry.title}</h1>
 

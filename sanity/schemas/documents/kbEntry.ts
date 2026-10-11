@@ -55,12 +55,12 @@ export const kbEntry = defineType({
      */
     defineField({
       name: "image",
-      title: "Card image — Knowledge Base grid (1200 × 900)",
+      title: "Card image — Knowledge Base grid (1600 × 1000)",
       type: "figure",
       group: "main",
       description:
         "Shown on the article's card in the Knowledge Base grid, and on the homepage. " +
-        "Upload 1200 × 900 (4:3) — that fills the tile edge to edge. Any other shape is " +
+        "Upload 1600 × 1000 (16:10) — that fills the tile edge to edge. Any other shape is " +
         "shown whole and centred, with blurred bands filling the rest of the tile, so a wide " +
         "banner here becomes a thin strip. Use the header image field below for banners.",
     }),
