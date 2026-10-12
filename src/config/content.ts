@@ -13,7 +13,6 @@ import {
   type StockImage,
 } from "@/config/images";
 import { siteConfig } from "@/config/site";
-import type { FrameShape } from "@/components/shared/ImageFrame";
 import {
   Users,
   HeartHandshake,
@@ -188,8 +187,6 @@ export type CommunityCard = {
   title: string;
   description: string;
   image: StockImage;
-  /** Frame treatment — drives the organic image shapes. */
-  shape: FrameShape;
 };
 
 export const community = {
@@ -202,28 +199,24 @@ export const community = {
       description:
         "Real rooms, real conversations.",
       image: communityImages.meetups,
-      shape: "arch",
     },
     {
       title: "Online meets",
       description:
         "Small circles that keep you moving.",
       image: communityImages.onlineMeets,
-      shape: "blob",
     },
     {
       title: "Webinars",
       description:
         "The exact skill you need next.",
       image: communityImages.webinars,
-      shape: "leaf",
     },
     {
       title: "Coffee chats",
       description:
         "One-to-one with mentors who get it.",
       image: communityImages.coffeeChats,
-      shape: "rect",
     },
   ] satisfies CommunityCard[],
 };

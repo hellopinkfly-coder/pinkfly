@@ -82,23 +82,6 @@ export const imageCard = defineType({
       description: "Upright, 4:5. Square on a phone, so keep the subject central.",
       validation: (r) => r.required(),
     }),
-    defineField({
-      name: "shape",
-      title: "Frame shape",
-      type: "string",
-      description: "The organic frame this card's photograph sits in.",
-      options: {
-        list: [
-          { title: "Arch", value: "arch" },
-          { title: "Blob", value: "blob" },
-          { title: "Leaf", value: "leaf" },
-          { title: "Rectangle", value: "rect" },
-        ],
-        layout: "radio",
-        direction: "horizontal",
-      },
-      initialValue: "rect",
-    }),
     defineField({ name: "cta", type: "cta", title: "Call to action (optional)" }),
   ],
   preview: { select: { title: "title", subtitle: "description", media: "image.asset" } },

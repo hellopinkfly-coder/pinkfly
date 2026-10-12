@@ -46,7 +46,6 @@ import { siteConfig, integrations, mainNav, knowledgeBaseNav, footerNav, policyN
 import { aboutImages, joinImages, eventImages, teamPlaceholder } from "@/config/images";
 import { executiveTeam, initiatives as seedInitiatives, type Initiative, type TeamMember } from "@/data/team";
 import { kbCategories } from "@/data/knowledge-base";
-import type { FrameShape } from "@/components/shared/ImageFrame";
 import type { CommunityCard } from "@/config/content";
 import { platformFromUrl, thumbnailFromUrl, type SocialPlatform } from "@/lib/social";
 
@@ -124,7 +123,6 @@ export type HomeContent = {
       title: string;
       description: string;
       image: ResolvedImage;
-      shape: FrameShape;
     }[];
   };
   testimonials: {
@@ -193,7 +191,6 @@ type CmsHome = {
   communityCards?: {
     title?: string;
     description?: string;
-    shape?: FrameShape;
     image?: CmsFigure;
   }[];
   communityVisible?: boolean;
@@ -328,7 +325,6 @@ export async function getHomeContent(): Promise<HomeContent> {
           title: pick(card.title, fallback?.title ?? ""),
           description: pick(card.description, fallback?.description ?? ""),
           image: resolveImage(card.image, fallback?.image ?? { src: "", alt: "" }),
-          shape: pick(card.shape, fallback?.shape ?? "rect"),
         };
       }),
     },
