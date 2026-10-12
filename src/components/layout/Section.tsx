@@ -11,17 +11,6 @@ type SectionProps = React.HTMLAttributes<HTMLElement> & {
 };
 
 /** Standard section. One vertical rhythm for the whole site. */
-/*
- * Section rhythm.
- *
- * 36px of air above and below a section (56px on a laptop) is what made the
- * page feel like a list of blocks rather than a composition: with that
- * little space, the gap between two sections read as smaller than the gaps
- * inside one, so nothing announced where a section ended. The white space
- * between sections now clearly exceeds the space inside them, which is the
- * whole trick — it is what lets each block be read as one thing before the
- * next begins.
- */
 export function Section({
   id,
   bleed = false,
@@ -33,7 +22,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={cn("scroll-mt-20 py-16 sm:scroll-mt-24 sm:py-20 lg:py-28", className)}
+      className={cn("scroll-mt-20 py-9 sm:scroll-mt-24 sm:py-14", className)}
       {...props}
     >
       {bleed ? children : <Container className={containerClassName}>{children}</Container>}

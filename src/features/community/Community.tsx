@@ -69,7 +69,12 @@ export function Community({
                 sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 23vw"
                 className="shadow-[var(--pf-shadow-md)] transition-shadow duration-500 group-hover:shadow-[var(--pf-shadow-lg)]"
               />
-              <h3 className="mt-4 text-lg sm:mt-6 transition-colors duration-300 group-hover:text-[var(--pf-accent)]">
+              {/* Pink as the resting colour, not just on hover. Before, one card
+                  went pink under the cursor and the other three sat in the
+                  heading colour, so the row looked like one card was selected
+                  rather than four of a kind. Hover now lifts to the brighter
+                  pink, which keeps the feedback without the odd-one-out. */}
+              <h3 className="mt-4 text-lg text-[var(--pf-accent)] transition-colors duration-300 group-hover:text-[var(--pf-accent-hover)] sm:mt-6">
                 {card.title}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-[var(--pf-text)]">

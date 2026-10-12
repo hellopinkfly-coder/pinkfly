@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { BackLink } from "@/components/shared/BackLink";
 import { Section } from "@/components/layout/Section";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { Reveal } from "@/components/shared/Reveal";
 import { ArticleCard } from "@/features/knowledge-base/ArticleCard";
 import { FinalCTA } from "@/features/final-cta/FinalCTA";
 import { entriesByCategory, type KbCategory } from "@/data/knowledge-base";
@@ -45,15 +43,13 @@ export async function CategoryPage({
         eyebrow="Knowledge Base"
         title={meta?.title ?? "Knowledge Base"}
         intro={meta?.intro ?? ""}
+        back={{
+          href: regionPath(region, "/knowledge-base"),
+          label: "All of the Knowledge Base",
+        }}
       />
 
       <Section>
-        <Reveal>
-          <BackLink href={regionPath(region, "/knowledge-base")}>
-            All of the Knowledge Base
-          </BackLink>
-        </Reveal>
-
         {list.length === 0 ? (
           <p className="mt-8 text-base text-[var(--pf-text)]">
             Nothing here yet. New pieces are added as they are written.

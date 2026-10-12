@@ -1,5 +1,3 @@
-import { BackLink } from "@/components/shared/BackLink";
-import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { CategoryRail } from "@/features/knowledge-base/CategoryRail";
 import { KbSearch } from "@/features/knowledge-base/KbSearch";
@@ -36,14 +34,9 @@ export async function KnowledgeBasePage({ region }: { region: Region }) {
         eyebrow={content.hero.eyebrow}
         title={content.hero.title}
         intro={content.hero.intro}
+        back={{ href: regionPath(region, "/"), label: "Home" }}
         compact
       />
-
-      {/* The index had no way back at all: the pages below it could climb to
-          here, and here was a dead end. */}
-      <Container className="pb-2">
-        <BackLink href={regionPath(region, "/")}>Home</BackLink>
-      </Container>
 
       {/* Search and filters sit above the rails and search across all of
           them; the rails are what they fall back to. Hidden categories are

@@ -1,3 +1,4 @@
+import { BackLink } from "@/components/shared/BackLink";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/shared/Reveal";
 import { GradientBackdrop } from "@/components/shared/GradientBackdrop";
@@ -20,6 +21,16 @@ type PageHeaderProps = {
    * page opened on a title and nothing to read.
    */
   compact?: boolean;
+  /**
+   * A way back out, rendered directly under the floating navbar.
+   *
+   * It belongs above the title, not below it: put after the heading and the
+   * intro it sat alone in the band with a screenful of empty space around
+   * it, and "back" is the first thing you look for on arriving, not the last.
+   * Above the eyebrow it is also where every other site puts it, which is
+   * the point of a convention.
+   */
+  back?: { href: string; label: string };
   className?: string;
   children?: React.ReactNode;
 };
@@ -31,6 +42,7 @@ export function PageHeader({
   intro,
   banner,
   compact = false,
+  back,
   className,
   children,
 }: PageHeaderProps) {
@@ -47,6 +59,11 @@ export function PageHeader({
     >
       <GradientBackdrop />
       <Container>
+        {back && (
+          <Reveal className="mb-7 block sm:mb-8">
+            <BackLink href={back.href}>{back.label}</BackLink>
+          </Reveal>
+        )}
         <Reveal className={cn("flex max-w-3xl flex-col", compact ? "gap-3.5" : "gap-5")}>
           <span className="pf-eyebrow">{eyebrow}</span>
           <h1 className="pf-display text-[var(--pf-heading)]">{title}</h1>
