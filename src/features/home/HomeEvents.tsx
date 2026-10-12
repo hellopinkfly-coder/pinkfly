@@ -64,7 +64,7 @@ export function HomeEvents({
         </Link>
       </Reveal>
 
-      <div className="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="pf-section-body grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((event) => (
           <EventCard key={event.slug} event={event} region={region} compact />
         ))}

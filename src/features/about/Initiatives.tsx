@@ -2,7 +2,7 @@ import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { Rail } from "@/components/shared/Rail";
-import { ImageFrame } from "@/components/shared/ImageFrame";
+import { ImageFrame, CARD_ASPECT } from "@/components/shared/ImageFrame";
 import { Badge } from "@/components/ui/badge";
 import type { AboutContent } from "@/lib/cms/content";
 
@@ -43,7 +43,7 @@ export function Initiatives({
                   alt={initiative.image.alt}
                   label={initiative.period}
                   shape="rect"
-                  aspect="aspect-[4/3]"
+                  aspect={CARD_ASPECT}
                   sizes="340px"
                   className="shadow-[var(--pf-shadow-sm)] transition-shadow duration-500 group-hover:shadow-[var(--pf-shadow-md)]"
                 />

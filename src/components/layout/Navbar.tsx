@@ -61,7 +61,17 @@ export function Navbar({
     return regionPath(region, path) + (hash ? `#${hash}` : "");
   }
 
-  const joinHref = regionPath(region, site.navCta.href);
+  // The bar's one button goes straight to the form.
+  //
+  // It used to point at `/join`, a page whose own job is to explain the
+  // community and then offer the same form. Someone who has already decided
+  // — which is who presses a button labelled "Join Pinkfly" — was made to
+  // read a pitch first and find the form at the bottom of it. The region's
+  // own form wins where one is set, exactly as every other join button on
+  // the site resolves it; the /join page is still there for anyone who wants
+  // the argument before the form.
+  const joinHref =
+    region.form.googleFormUrl || site.joinFormUrl || regionPath(region, site.navCta.href);
   const ctaLabel =
     variant === "knowledge" ? site.navCta.knowledgeLabel : site.navCta.label;
   // Light type only while the bar is still floating clear of the page, over
@@ -81,7 +91,7 @@ export function Navbar({
         <nav
           aria-label="Primary"
           className={cn(
-            "flex items-center justify-between gap-2 rounded-full px-3 py-2 transition-all duration-300 ease-[var(--pf-ease)] sm:gap-4 sm:px-6 sm:py-2.5",
+            "flex items-center justify-between gap-2 rounded-full px-4 py-2.5 transition-all duration-300 ease-[var(--pf-ease)] sm:gap-5 sm:px-7 sm:py-3.5",
             // Solid, never frosted: an opaque surface with a hairline
             // border. A translucent bar over long-form text is hard to read
             // on a phone, where the bar covers a bigger share of the screen.
@@ -111,7 +121,7 @@ export function Navbar({
           />
 
           {items.length > 0 && (
-            <ul className="hidden items-center gap-4 lg:flex xl:gap-5">
+            <ul className="hidden items-center gap-6 lg:flex xl:gap-8">
               {items.map((item) => {
                 const active =
                   pathname === item.href.split("#")[0] &&

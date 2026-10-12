@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { BackLink } from "@/components/shared/BackLink";
 import { Section } from "@/components/layout/Section";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Reveal } from "@/components/shared/Reveal";
@@ -49,13 +49,9 @@ export async function CategoryPage({
 
       <Section>
         <Reveal>
-          <Link
-            href={regionPath(region, "/knowledge-base")}
-            className="pf-link inline-flex min-h-11 items-center gap-2 text-sm font-bold"
-          >
-            <ArrowLeft size={15} aria-hidden />
+          <BackLink href={regionPath(region, "/knowledge-base")}>
             All of the Knowledge Base
-          </Link>
+          </BackLink>
         </Reveal>
 
         {list.length === 0 ? (

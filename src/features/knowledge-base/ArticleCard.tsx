@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Clock } from "lucide-react";
-import { ImageFrame } from "@/components/shared/ImageFrame";
+import { ImageFrame, CARD_ASPECT } from "@/components/shared/ImageFrame";
 import type { KbEntry } from "@/data/knowledge-base";
 import { regionPath, type Region } from "@/lib/region";
 import { cn } from "@/lib/utils";
@@ -47,7 +47,7 @@ export function ArticleCard({
           alt={entry.image.alt}
           label={entry.tag}
           shape="rect"
-          aspect="aspect-[4/3]"
+          aspect={CARD_ASPECT}
           // Every card is the same 4:3 so the rows line up — but the picture
           // inside it is shown whole rather than trimmed to that shape, and
           // the space beside it is filled by a blurred copy of the picture.

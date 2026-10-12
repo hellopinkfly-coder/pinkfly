@@ -33,7 +33,7 @@ export function ExecutiveTeam({
       <Reveal
         as="ul"
         variants={staggerContainer}
-        className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3"
+        className="pf-section-body grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3"
       >
         {members.map((member, i) => (
           <Reveal as="li" key={`${member.role}-${i}`} variants={fadeUp} className="group">

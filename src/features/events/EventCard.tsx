@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CalendarDays, MapPin } from "lucide-react";
-import { ImageFrame } from "@/components/shared/ImageFrame";
+import { ImageFrame, CARD_ASPECT } from "@/components/shared/ImageFrame";
 import { Badge } from "@/components/ui/badge";
 import type { PinkflyEvent } from "@/data/events";
 import { formatEventDate } from "@/lib/date";
@@ -55,7 +55,7 @@ export function EventCard({
         alt={event.image.alt}
         label={event.type}
         shape="rect"
-        aspect={compact ? "aspect-[16/9]" : "aspect-[16/10]"}
+        aspect={CARD_ASPECT}
         sizes="(max-width: 640px) 88vw, 340px"
         className="rounded-none"
       />

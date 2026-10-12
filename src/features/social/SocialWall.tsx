@@ -40,7 +40,7 @@ export function SocialWall({ content }: { content: HomeContent["social"] }) {
         intro={content.heading.intro}
       />
 
-      <div className="mt-12 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+      <div className="pf-section-body grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
         {content.posts.map((post, i) => {
           const badge = badges[post.platform];
 

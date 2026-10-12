@@ -3,6 +3,18 @@ import { cn } from "@/lib/utils";
 
 export type FrameShape = "rect" | "arch" | "blob" | "leaf" | "pill";
 
+/**
+ * The ratio every content card shares.
+ *
+ * Article cards were 4:3, event cards 16:10 or 16:9 depending on a `compact`
+ * flag, initiative cards 4:3 again — four shapes for one idea, so a grid that
+ * mixed them never lined up. They are all 16:10 now. Portraits (team,
+ * speakers, testimonials) keep their own ratio on purpose: a person is not a
+ * landscape, and that difference is meaningful rather than accidental.
+ */
+export const CARD_ASPECT = "aspect-[16/10]";
+
+
 type ImageFrameProps = {
   src: string;
   alt: string;

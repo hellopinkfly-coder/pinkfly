@@ -60,7 +60,7 @@ export const initiative = defineType({
     defineField({ name: "summary", type: "text", rows: 3 }),
     defineField({
       name: "image",
-      title: "Image (1200 × 900)",
+      title: "Image (1600 × 1000)",
       type: "figure",
       description: "Landscape, 4:3.",
     }),
