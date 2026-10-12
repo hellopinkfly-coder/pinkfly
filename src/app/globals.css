@@ -296,12 +296,12 @@
  * rather than designed. One value, one place to change it.
  */
 .pf-section-body {
-  margin-top: 3rem;
+  margin-top: 2.5rem;
 }
 
 @media (min-width: 640px) {
   .pf-section-body {
-    margin-top: 3.5rem;
+    margin-top: 3rem;
   }
 }
 
