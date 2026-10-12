@@ -270,7 +270,6 @@ async function seed() {
         _type: "imageCard",
         title: card.title,
         description: card.description,
-        shape: card.shape,
         image: figure(card.image),
       })),
       "card"

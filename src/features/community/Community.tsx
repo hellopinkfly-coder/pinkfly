@@ -59,12 +59,15 @@ export function Community({
                 src={card.image.src}
                 alt={card.image.alt}
                 label={card.image.label ?? card.title}
-                shape={card.shape}
+                // One silhouette for all four. Each card used to carry its
+                // own frame shape — arch, blob, leaf, rectangle — so a row
+                // meant to read as four of a kind read as four unrelated
+                // things. The rectangle is what every other card on the site
+                // uses, so the row now sits in the same family as the rest.
+                //
                 // Four portraits stacked on a phone made the section roughly
-                // three screens long. A square is a third shorter and still
-                // suits the arch and leaf silhouettes, which a wide crop turns
-                // into a squat dome. The portrait returns as soon as the cards
-                // sit side by side.
+                // three screens long. A square is a third shorter; the
+                // portrait returns as soon as the cards sit side by side.
                 aspect="aspect-square sm:aspect-[4/5]"
                 sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 23vw"
                 className="shadow-[var(--pf-shadow-md)] transition-shadow duration-500 group-hover:shadow-[var(--pf-shadow-lg)]"
