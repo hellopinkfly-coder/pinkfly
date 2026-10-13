@@ -181,13 +181,13 @@ export function HeroCarousel({
             </Line>
 
             <Line>
-              <h1 className="pf-display text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]">
+              <h1 className="pf-display pf-display--hero text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]">
                 {active.headline}
               </h1>
             </Line>
 
             <Line>
-              <p className="max-w-[38ch] text-base leading-snug text-white/85 sm:max-w-md sm:text-lg sm:leading-relaxed">
+              <p className="max-w-[32ch] text-base leading-snug text-white/85 sm:max-w-md sm:text-lg sm:leading-relaxed">
                 {active.subhead}
               </p>
             </Line>
