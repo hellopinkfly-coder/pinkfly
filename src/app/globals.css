@@ -425,6 +425,67 @@
 }
 
 /* --------------------------------------------------------------------------
+   Hero scrim
+   -------------------------------------------------------------------------- */
+
+/*
+ * The wash that keeps white type legible over the hero photograph.
+ *
+ * Its weight is written once, here, because it is not the same in both
+ * themes. On a dark page the heavy version is invisible as a treatment: the
+ * hero's near-black and the page's near-black are the same family, so the
+ * photograph can sit well behind the type. On a light page that same wash
+ * reads as a black slab dropped onto a cream page — the photograph all but
+ * disappears and the hero stops looking like part of the site. The light
+ * theme therefore lifts every stop, far enough for the picture to come
+ * through and no further: the headline keeps its own drop shadow, and the
+ * darkest stop still sits under the copy.
+ */
+.pf-hero-scrim {
+  background: linear-gradient(
+    to top,
+    rgba(16, 10, 14, 0.93) 0%,
+    rgba(16, 10, 14, 0.86) 42%,
+    rgba(16, 10, 14, 0.7) 72%,
+    rgba(16, 10, 14, 0.55) 100%
+  );
+}
+
+:root[data-theme="light"] .pf-hero-scrim {
+  background: linear-gradient(
+    to top,
+    rgba(26, 16, 22, 0.78) 0%,
+    rgba(26, 16, 22, 0.66) 42%,
+    rgba(26, 16, 22, 0.46) 72%,
+    rgba(26, 16, 22, 0.3) 100%
+  );
+}
+
+@media (min-width: 640px) {
+  .pf-hero-scrim {
+    background: linear-gradient(
+      100deg,
+      rgba(16, 10, 14, 0.92) 0%,
+      rgba(16, 10, 14, 0.78) 32%,
+      rgba(16, 10, 14, 0.42) 55%,
+      rgba(16, 10, 14, 0.12) 78%,
+      transparent 100%
+    );
+  }
+
+  :root[data-theme="light"] .pf-hero-scrim {
+    background: linear-gradient(
+      100deg,
+      rgba(26, 16, 22, 0.8) 0%,
+      rgba(26, 16, 22, 0.6) 32%,
+      rgba(26, 16, 22, 0.28) 55%,
+      rgba(26, 16, 22, 0.08) 78%,
+      transparent 100%
+    );
+  }
+}
+
+/* --------------------------------------------------------------------------
    Horizontal rails
    -------------------------------------------------------------------------- */
 

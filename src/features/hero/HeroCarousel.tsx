@@ -127,7 +127,7 @@ export function HeroCarousel({
       {/* ---- Blend + legibility -------------------------------------- */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         {/* Left-weighted wash: dense under the copy, clear over the subject */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(16,10,14,0.93)_0%,rgba(16,10,14,0.86)_42%,rgba(16,10,14,0.7)_72%,rgba(16,10,14,0.55)_100%)] sm:bg-[linear-gradient(100deg,rgba(16,10,14,0.92)_0%,rgba(16,10,14,0.78)_32%,rgba(16,10,14,0.42)_55%,rgba(16,10,14,0.12)_78%,transparent_100%)]" />
+        <div className="pf-hero-scrim absolute inset-0" />
         {/* A little brand warmth, so the photograph sits inside the palette */}
         <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_8%_50%,rgba(216,3,125,0.30)_0%,transparent_62%)] mix-blend-soft-light" />
         {/* Top wash, keeping the floating navbar readable */}
