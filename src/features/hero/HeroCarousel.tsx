@@ -132,8 +132,6 @@ export function HeroCarousel({
         <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_8%_50%,rgba(216,3,125,0.30)_0%,transparent_62%)] mix-blend-soft-light" />
         {/* Top wash, keeping the floating navbar readable */}
         <div className="absolute inset-x-0 top-0 h-40 bg-[linear-gradient(to_bottom,rgba(16,10,14,0.72),transparent)]" />
-        {/* Bottom fade into the page — this is what removes the seam */}
-        <div className="absolute inset-x-0 bottom-0 h-36 bg-[linear-gradient(to_top,var(--pf-bg),transparent)] sm:h-48" />
       </div>
 
       {/* ---- Copy ----------------------------------------------------- */}

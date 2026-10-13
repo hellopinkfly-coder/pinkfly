@@ -24,7 +24,6 @@ export function CommunityGuidelines({
             src={guidelines.image.src}
             alt={guidelines.image.alt}
             label={guidelines.image.label}
-            shape="leaf"
             aspect="aspect-[5/4]"
             sizes="(max-width: 1024px) 90vw, 38vw"
             className="mt-8 shadow-[var(--pf-shadow-md)]"

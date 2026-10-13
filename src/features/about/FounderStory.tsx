@@ -40,7 +40,6 @@ export function FounderStory({
             src={founder.image.src}
             alt={founder.image.alt}
             label={founder.name}
-            shape="arch"
             aspect="aspect-[4/5]"
             sizes="(max-width: 1024px) 90vw, 34vw"
             className="shadow-[var(--pf-shadow-lg)]"

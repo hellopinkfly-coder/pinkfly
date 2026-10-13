@@ -83,23 +83,30 @@ export function Navbar({
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-[var(--pf-ease)]",
-        scrolled ? "py-2" : "py-2.5 sm:py-4"
+        "fixed inset-x-0 top-0 z-50 transition-colors duration-300 ease-[var(--pf-ease)]",
+        // Edge to edge and flush with the top of the page. The bar used to
+        // float as a rounded capsule with air all around it, which read as a
+        // widget laid over the site rather than the site's own header. It is
+        // now part of the page: full width, square, a hairline along the
+        // bottom instead of a ring all the way round.
+        solid
+          ? "border-b border-[var(--pf-border)] bg-[var(--pf-surface)]"
+          : "border-b border-transparent"
       )}
     >
       <Container>
         <nav
           aria-label="Primary"
           className={cn(
-            "flex items-center justify-between gap-2 rounded-full px-4 py-2.5 transition-all duration-300 ease-[var(--pf-ease)] sm:gap-5 sm:px-7 sm:py-3.5",
-            // Solid, never frosted: an opaque surface with a hairline
-            // border. A translucent bar over long-form text is hard to read
-            // on a phone, where the bar covers a bigger share of the screen.
-            // The one place it stays clear is a page that opens on a
-            // full-bleed hero, and only until the visitor scrolls off it.
-            solid
-              ? "border border-[var(--pf-border)] bg-[var(--pf-surface)] shadow-[var(--pf-shadow-sm)]"
-              : "border border-transparent"
+            "flex items-center justify-between gap-3 transition-[padding] duration-300 ease-[var(--pf-ease)] sm:gap-5",
+            // The breathing room lives here, inside the bar, and only here —
+            // the sections below keep their own rhythm. It eases in a little
+            // on a phone and opens up through tablet to desktop, then tightens
+            // once the page is scrolled so the bar takes less of a small
+            // screen when it matters most.
+            scrolled
+              ? "py-3 sm:py-3.5 lg:py-4"
+              : "py-4 sm:py-5 lg:py-6"
           )}
         >
           {/* One lockup at every width, tagline included.
@@ -185,8 +192,11 @@ export function Navbar({
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="lg:hidden"
           >
-            <Container className="mt-2">
-              <div className="flex max-h-[75vh] flex-col gap-1 overflow-y-auto rounded-[var(--pf-radius-xl)] border border-[var(--pf-border)] bg-[var(--pf-surface)] p-3 shadow-[var(--pf-shadow-md)] sm:p-4">
+            {/* Flush with the bar above it, same width as the page, so the
+                open menu reads as the header growing rather than a card
+                dropped on top of it. */}
+            <div className="border-b border-[var(--pf-border)] bg-[var(--pf-surface)] shadow-[var(--pf-shadow-md)]">
+              <Container className="flex max-h-[75vh] flex-col gap-1 overflow-y-auto py-3 sm:py-4">
                 {items.map(
                   (item) => (
                     <Link
@@ -208,8 +218,8 @@ export function Navbar({
                     {ctaLabel}
                   </Button>
                 </div>
-              </div>
-            </Container>
+              </Container>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
