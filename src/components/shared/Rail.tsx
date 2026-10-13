@@ -62,7 +62,9 @@ export function Rail({ children, label, className }: RailProps) {
         // The gutter is declared once, so the padding and the snap line
         // cannot drift apart.
         style={{ ["--pf-rail-gutter" as string]: "var(--pf-rail-pad)" }}
-        className="pf-rail -mx-5 px-5 [--pf-rail-pad:20px] sm:-mx-8 sm:px-8 sm:[--pf-rail-pad:32px] lg:mx-0 lg:px-0 lg:[--pf-rail-pad:0px]"
+        // Mirrors Container's gutters exactly, so a rail bleeds to the screen
+        // edge while its first card still starts on the page margin.
+        className="pf-rail -mx-6 px-6 [--pf-rail-pad:24px] sm:-mx-8 sm:px-8 sm:[--pf-rail-pad:32px] lg:mx-0 lg:px-0 lg:[--pf-rail-pad:0px]"
       >
         {children}
         {/* Trailing spacer so the last card clears the gutter on mobile. */}

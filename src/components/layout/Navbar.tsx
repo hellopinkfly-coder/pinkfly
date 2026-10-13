@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/Logo";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { RegionSelector } from "@/components/region/RegionSelector";
+import { MobileBackRow } from "./MobileBackRow";
 import { regionPath, type Region } from "@/lib/region";
 import type { SiteContent } from "@/lib/cms/content";
 import { Container } from "./Container";
@@ -33,6 +34,8 @@ type NavbarProps = {
   overHero?: boolean;
   /** Navigation, header button and brand name — all edited in Sanity. */
   site: SiteContent;
+  /** Draw the phone-and-tablet back row under the bar. Off on the homepage. */
+  showBack?: boolean;
 };
 
 export function Navbar({
@@ -41,6 +44,7 @@ export function Navbar({
   variant = "default",
   overHero = false,
   site,
+  showBack = false,
 }: NavbarProps) {
   const [open, setOpen] = useState(false);
   const scrolled = useScrolled();
@@ -163,10 +167,13 @@ export function Navbar({
             </Button>
           </div>
 
-          {/* Mobile controls. The region selector is not repeated here — it
-              is in the menu panel, and at 320px the three together overflowed
-              the bar. */}
-          <div className="flex items-center lg:hidden">
+          {/* Mobile controls. Light and dark is a setting people change on
+              the device they read on, so it stays on the bar rather than
+              behind the hamburger. The region selector does not: it is the
+              wider control of the two and at 320px all three together
+              overflowed the bar, so it lives in the menu panel. */}
+          <div className="flex items-center gap-1 lg:hidden">
+            <ThemeToggle onDark={onDark} />
             <button
               type="button"
               className={cn(
@@ -182,6 +189,10 @@ export function Navbar({
           </div>
         </nav>
       </Container>
+
+      {showBack && !open && (
+        <MobileBackRow home={regionPath(region, "/")} onDark={onDark} />
+      )}
 
       <AnimatePresence>
         {open && (
@@ -212,12 +223,9 @@ export function Navbar({
                 <div className="my-2 h-px bg-[var(--pf-border)]" />
                 <RegionSelector current={region} rest={rest} variant="inline" />
 
-                <div className="mt-3 flex items-center gap-3">
-                  <ThemeToggle />
-                  <Button href={joinHref} className="flex-1">
-                    {ctaLabel}
-                  </Button>
-                </div>
+                <Button href={joinHref} className="mt-3 w-full">
+                  {ctaLabel}
+                </Button>
               </Container>
             </div>
           </motion.div>

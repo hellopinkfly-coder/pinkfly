@@ -56,6 +56,9 @@ export function SiteChrome({
 
   const { region, rest } = parsePathname(pathname);
 
+  // Every page but the homepage, which is where back would lead anyway.
+  const showBack = rest !== "/" && rest !== "";
+
   return (
     <>
       <Navbar
@@ -64,8 +67,15 @@ export function SiteChrome({
         variant={navVariantFor(rest)}
         overHero={opensOnDarkHero(rest)}
         site={site}
+        showBack={showBack}
       />
-      <main id="main">{children}</main>
+      {/* The back row adds a line to the fixed header on a phone and tablet,
+          so the page below it starts that much lower. Held here rather than
+          in each page's own top padding, which is how the pages drifted
+          apart in the first place. */}
+      <main id="main" className={showBack ? "pt-14 lg:pt-0" : undefined}>
+        {children}
+      </main>
       <Footer region={region} site={site} />
       {/* Mounted here rather than in the layout so it inherits the Studio
           exemption above: the Studio returns before this point. */}

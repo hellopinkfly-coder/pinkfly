@@ -127,7 +127,10 @@ export async function EntryPage({
       <Section className="pt-10 sm:pt-14">
         <div className="mx-auto max-w-4xl">
           <Reveal>
+            {/* As in PageHeader: on a phone the header carries the back
+                control, so this one shows from a desktop only. */}
             <BackLink
+              className="hidden lg:inline-flex"
               href={
                 regionPath(region, "/knowledge-base") +
                 `#${category?.anchor ?? ""}`

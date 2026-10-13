@@ -59,8 +59,10 @@ export function PageHeader({
     >
       <GradientBackdrop />
       <Container>
+        {/* Hidden where the header's own back row already stands, so a phone
+            is not offered the same step twice. */}
         {back && (
-          <Reveal className="mb-7 block sm:mb-8">
+          <Reveal className="mb-7 hidden sm:mb-8 lg:block">
             <BackLink href={back.href}>{back.label}</BackLink>
           </Reveal>
         )}
