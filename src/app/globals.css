@@ -273,6 +273,19 @@
 }
 
 /*
+ * The homepage hero's own step, a notch under the shared display size.
+ *
+ * The hero headline is the one piece of type set over a photograph with a
+ * subhead, a list and a button beneath it, all competing for the same fold.
+ * It carries a smaller ceiling than a page heading with white space around
+ * it, and it is a modifier rather than a change to `.pf-display` so the
+ * inner pages keep the size they were given.
+ */
+.pf-display--hero {
+  font-size: clamp(1.4rem, 5.6vw, 3rem);
+}
+
+/*
  * Two smaller steps on the display scale, chosen in the Studio per page.
  * A long headline set over a photograph at the full size fills the screen
  * and stops being read; these keep the same fluid growth on a narrower
