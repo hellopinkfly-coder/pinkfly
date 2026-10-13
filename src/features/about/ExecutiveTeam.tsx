@@ -41,7 +41,6 @@ export function ExecutiveTeam({
               src={member.image ?? ""}
               alt={`${member.name}, ${member.role}`}
               label={member.role}
-              shape={i % 2 === 0 ? "arch" : "leaf"}
               aspect="aspect-[4/5]"
               sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
               className="shadow-[var(--pf-shadow-md)]"

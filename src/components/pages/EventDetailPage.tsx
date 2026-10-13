@@ -88,7 +88,6 @@ export async function EventDetailPage({
                 src={banner.src}
                 alt={banner.alt}
                 label={event.city}
-                shape="arch"
                 aspect="aspect-[4/5] lg:aspect-[5/6]"
                 ratio={banner.ratio}
                 sizes="(max-width: 1024px) 92vw, 46vw"
@@ -199,7 +198,6 @@ export async function EventDetailPage({
                   src={speaker.image ?? teamPlaceholder}
                   alt={`${speaker.name}, ${speaker.designation}`}
                   label="Speaker"
-                  shape={i % 2 === 0 ? "leaf" : "arch"}
                   aspect="aspect-[4/5]"
                   sizes="(max-width: 640px) 88vw, 30vw"
                   className="shadow-[var(--pf-shadow-md)]"
