@@ -448,6 +448,9 @@ async function seed() {
       })),
       "cat"
     ),
+    searchVisible: true,
+    railsVisible: true,
+    finalCtaVisible: true,
     commentsClosedMessage:
       "Discussion opens once the comment backend is connected. Until then, bring your thoughts to the community — that is where the good arguments happen anyway.",
   });

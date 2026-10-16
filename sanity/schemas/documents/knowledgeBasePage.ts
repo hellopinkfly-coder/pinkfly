@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { visibleField } from "../objects/blocks";
 
 export const knowledgeBasePage = defineType({
   name: "knowledgeBasePage",
@@ -52,6 +53,28 @@ export const knowledgeBasePage = defineType({
           },
         },
       ],
+    }),
+    defineField({
+      ...visibleField,
+      name: "searchVisible",
+      title: "Show the search and filters",
+      description:
+        "The search box and the category and sort controls above the rails. "
+        + "Off, the page is the rails alone.",
+    }),
+    defineField({
+      ...visibleField,
+      name: "railsVisible",
+      title: "Show the category rails",
+      description:
+        "Every rail at once. To take a single one down, use its own "
+        + "\u201cHide this rail\u201d switch above.",
+    }),
+    defineField({
+      ...visibleField,
+      name: "finalCtaVisible",
+      title: "Show the closing invitation",
+      description: "The join band at the foot of the page.",
     }),
     defineField({
       name: "commentsClosedMessage",
