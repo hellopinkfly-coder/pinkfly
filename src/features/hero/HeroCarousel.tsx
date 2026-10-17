@@ -118,7 +118,13 @@ export function HeroCarousel({
           // the background shows between them. Held linear, one photograph
           // simply becomes the other.
           transition={{ duration: 1.1, ease: "linear" }}
-          className="absolute inset-0 -z-20"
+          // On a phone the photograph is behind the whole of the copy rather
+          // than beside it — every line, the list and the button sit on top of
+          // it, where a desktop puts them to one side of the subject. Held at
+          // full strength it competes with all of them at once. It is dimmed
+          // here, not scrimmed harder, so the picture keeps its colour instead
+          // of going grey under more black.
+          className="absolute inset-0 -z-20 opacity-60 sm:opacity-100"
         >
           <SlideMedia slide={active} priority={index === 0} still={!!still} />
         </motion.div>
@@ -172,7 +178,7 @@ export function HeroCarousel({
             // Both slides sit in the same cell; the one on its way out must
             // not catch a tap meant for the one arriving.
             style={{ gridArea: "1 / 1" }}
-            className="pointer-events-auto flex max-w-xl flex-col items-start gap-3.5 self-center sm:gap-5"
+            className="pointer-events-auto flex max-w-xl flex-col items-start gap-4 self-center sm:gap-5"
           >
             <Line>
               <span className="pf-eyebrow pf-eyebrow--pill pf-eyebrow--on-dark drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
@@ -181,13 +187,13 @@ export function HeroCarousel({
             </Line>
 
             <Line>
-              <h1 className="pf-display pf-display--hero text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]">
+              <h1 className="pf-display pf-display--hero text-balance text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]">
                 {active.headline}
               </h1>
             </Line>
 
             <Line>
-              <p className="max-w-[32ch] text-base leading-snug text-white/85 sm:max-w-md sm:text-lg sm:leading-relaxed">
+              <p className="max-w-[32ch] text-pretty text-base leading-relaxed text-white/80 sm:max-w-md sm:text-lg">
                 {active.subhead}
               </p>
             </Line>
@@ -204,7 +210,7 @@ export function HeroCarousel({
                       <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-sm sm:h-9 sm:w-9">
                         <Icon size={17} strokeWidth={1.9} aria-hidden />
                       </span>
-                      <span className="text-sm leading-snug sm:text-base">{label}</span>
+                      <span className="text-sm leading-snug text-white/90 sm:text-base">{label}</span>
                     </li>
                   );
                 })}
