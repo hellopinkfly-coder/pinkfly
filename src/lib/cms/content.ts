@@ -868,6 +868,15 @@ export type SiteContent = {
   navCta: { label: string; knowledgeLabel: string; href: string };
   policyNav: { label: string; href: string }[];
   joinFormUrl: string;
+  /**
+   * WhatsApp community invite, when one is set in the Studio.
+   *
+   * Where it is set the header's Join button opens the community rather than
+   * the registration form — joining the room and filling in a form are
+   * different invitations, and which one a visitor should get is an editor's
+   * call, not the code's. Empty is the normal case and changes nothing.
+   */
+  whatsappCommunityUrl: string;
   /** Every line of the newsletter popup, and whether it runs at all. */
   newsletterPopup: {
     enabled: boolean;
@@ -915,6 +924,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     navCta?: { label?: string; knowledgeLabel?: string; href?: string };
     policyNav?: CmsLinks;
     joinFormUrl?: string;
+    whatsappCommunityUrl?: string;
     newsletterPopup?: Partial<{
       enabled: boolean;
       delaySeconds: number;
@@ -973,6 +983,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     },
     policyNav: links(cms?.policyNav, policyNav),
     joinFormUrl: pick(cms?.joinFormUrl, integrations.joinFormUrl),
+    whatsappCommunityUrl: pick(cms?.whatsappCommunityUrl, ""),
 
     newsletterPopup: {
       // Off is a real answer, so only an explicit false turns it off.
