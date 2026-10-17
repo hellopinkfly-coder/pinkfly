@@ -101,7 +101,7 @@ export const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
   footerCompany{ title, links[]{ label, href } },
   navCta,
   policyNav[]{ label, href },
-  joinFormUrl,
+  joinFormUrl, whatsappCommunityUrl,
   newsletterPopup
 }`;
 

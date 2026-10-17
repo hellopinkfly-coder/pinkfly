@@ -74,8 +74,15 @@ export function Navbar({
   // own form wins where one is set, exactly as every other join button on
   // the site resolves it; the /join page is still there for anyone who wants
   // the argument before the form.
+  // The WhatsApp community wins where one is set in the Studio: an editor who
+  // pastes that link has decided the button should put people in the room
+  // rather than in front of a form. Without it nothing changes — the region's
+  // own form, then the site-wide one, then the /join page as the last resort.
   const joinHref =
-    region.form.googleFormUrl || site.joinFormUrl || regionPath(region, site.navCta.href);
+    site.whatsappCommunityUrl ||
+    region.form.googleFormUrl ||
+    site.joinFormUrl ||
+    regionPath(region, site.navCta.href);
   const ctaLabel =
     variant === "knowledge" ? site.navCta.knowledgeLabel : site.navCta.label;
   // Light type only while the bar is still floating clear of the page, over

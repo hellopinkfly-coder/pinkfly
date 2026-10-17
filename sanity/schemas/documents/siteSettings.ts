@@ -159,6 +159,23 @@ export const siteSettings = defineType({
     }),
 
     defineField({
+      name: "whatsappCommunityUrl",
+      title: "WhatsApp community link",
+      type: "url",
+      group: "integrations",
+      description:
+        "Paste a WhatsApp community or group invite (https://chat.whatsapp.com/\u2026) "
+        + "and the header\u2019s Join button opens it instead of the registration form. "
+        + "Leave empty and the button goes to the form exactly as it does now.",
+      validation: (r) =>
+        r.uri({ scheme: ["https"] }).custom((value) =>
+          !value || /^https:\/\/(chat\.whatsapp\.com|wa\.me|api\.whatsapp\.com)\//.test(value)
+            ? true
+            : "This does not look like a WhatsApp invite link \u2014 expected chat.whatsapp.com, wa.me or api.whatsapp.com."
+        ),
+    }),
+
+    defineField({
       name: "joinFormUrl",
       title: "Registration form URL",
       type: "url",
