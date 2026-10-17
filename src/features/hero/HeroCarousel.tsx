@@ -123,8 +123,11 @@ export function HeroCarousel({
           // it, where a desktop puts them to one side of the subject. Held at
           // full strength it competes with all of them at once. It is dimmed
           // here, not scrimmed harder, so the picture keeps its colour instead
-          // of going grey under more black.
-          className="absolute inset-0 -z-20 opacity-60 sm:opacity-100"
+          // of going grey under more black. At 60% that went too far the other
+          // way — a dimmed photograph under a dark wash is not a quiet
+          // photograph, it is an overcast one — so it keeps most of its light
+          // and the wash below does the work of legibility.
+          className="absolute inset-0 -z-20 opacity-[0.88] sm:opacity-100"
         >
           <SlideMedia slide={active} priority={index === 0} still={!!still} />
         </motion.div>
@@ -135,9 +138,13 @@ export function HeroCarousel({
         {/* Left-weighted wash: dense under the copy, clear over the subject */}
         <div className="pf-hero-scrim absolute inset-0" />
         {/* A little brand warmth, so the photograph sits inside the palette */}
-        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_8%_50%,rgba(216,3,125,0.30)_0%,transparent_62%)] mix-blend-soft-light" />
+        {/* A little brand warmth, so the photograph sits inside the palette.
+            Desktop only: soft-light over a phone's already-dimmed picture
+            flattens it towards grey, which is most of what made the section
+            read as overcast. */}
+        <div className="absolute inset-0 hidden bg-[radial-gradient(120%_90%_at_8%_50%,rgba(216,3,125,0.30)_0%,transparent_62%)] mix-blend-soft-light sm:block" />
         {/* Top wash, keeping the floating navbar readable */}
-        <div className="absolute inset-x-0 top-0 h-40 bg-[linear-gradient(to_bottom,rgba(16,10,14,0.72),transparent)]" />
+        <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(to_bottom,rgba(16,10,14,0.6),transparent)] sm:h-40 sm:bg-[linear-gradient(to_bottom,rgba(16,10,14,0.72),transparent)]" />
       </div>
 
       {/* ---- Copy ----------------------------------------------------- */}
@@ -224,7 +231,7 @@ export function HeroCarousel({
               <Button
                 href={regionPath(region, active.cta.href)}
                 size="lg"
-                className="h-auto min-h-13 whitespace-normal px-5 py-3 text-left text-sm leading-snug sm:whitespace-nowrap sm:px-8 sm:py-3.5 sm:text-base"
+                className="h-auto min-h-11 whitespace-normal px-5 py-2.5 text-left text-sm leading-snug sm:min-h-13 sm:whitespace-nowrap sm:px-8 sm:py-3.5 sm:text-base"
               >
                 {active.cta.label}
                 <ArrowRight size={18} className="shrink-0" />
@@ -250,7 +257,7 @@ export function HeroCarousel({
             rather than as marks left on the image.
             --------------------------------------------------------------- */}
         {slides.length > 1 && (
-          <div className="mt-6 flex sm:mt-9">
+          <div className="mt-5 flex sm:mt-9">
             <div className="inline-flex items-center rounded-full border border-white/15 bg-black/40 p-1 shadow-[0_8px_24px_rgba(0,0,0,0.28)] backdrop-blur-md">
               <div className="flex px-1" role="tablist" aria-label="Slides">
                 {slides.map((slide, i) => (
@@ -263,7 +270,7 @@ export function HeroCarousel({
                     onClick={() => goTo(i)}
                     // The dot is the mark; the button around it is the target,
                     // sized for a thumb rather than for the mark's height.
-                    className="group/dot inline-flex h-11 items-center justify-center px-1.5"
+                    className="group/dot inline-flex h-9 items-center justify-center px-1 sm:h-11 sm:px-1.5"
                   >
                     <span
                       className={cn(
@@ -277,7 +284,7 @@ export function HeroCarousel({
                 ))}
               </div>
 
-              <span aria-hidden className="mx-1 h-5 w-px shrink-0 bg-white/15" />
+              <span aria-hidden className="mx-0.5 h-4 w-px shrink-0 bg-white/15 sm:mx-1 sm:h-5" />
 
               <div className="flex gap-0.5">
                 {/* Explicit pause, so autoplay is stoppable without hovering. */}
@@ -286,14 +293,14 @@ export function HeroCarousel({
                     label={userPaused ? "Play slideshow" : "Pause slideshow"}
                     onClick={() => setUserPaused((v) => !v)}
                   >
-                    {userPaused ? <Play size={17} /> : <Pause size={17} />}
+                    {userPaused ? <Play size={15} /> : <Pause size={15} />}
                   </RoundButton>
                 )}
                 <RoundButton label="Previous slide" onClick={() => goTo(index - 1)}>
-                  <ChevronLeft size={20} />
+                  <ChevronLeft size={17} />
                 </RoundButton>
                 <RoundButton label="Next slide" onClick={() => goTo(index + 1)}>
-                  <ChevronRight size={20} />
+                  <ChevronRight size={17} />
                 </RoundButton>
               </div>
             </div>
@@ -337,7 +344,7 @@ function RoundButton({
       title={label}
       // No surface of its own: the bar around it already provides one, and
       // a circle inside a pill inside a photograph is two borders too many.
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full text-white/85 transition-colors duration-200 ease-[var(--pf-ease)] hover:bg-white/12 hover:text-white"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-white/85 transition-colors duration-200 ease-[var(--pf-ease)] hover:bg-white/12 hover:text-white sm:h-11 sm:w-11"
     >
       {children}
     </button>
