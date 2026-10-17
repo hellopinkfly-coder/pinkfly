@@ -82,6 +82,7 @@ export const eventsPageQuery = groq`*[_type == "eventsPage"][0]{
 export const knowledgeBasePageQuery = groq`*[_type == "knowledgeBasePage"][0]{
   eyebrow, title, intro,
   categories[]{ id, title, description, hidden },
+  searchVisible, railsVisible, finalCtaVisible,
   commentsClosedMessage,
   seo ${SEO}
 }`;

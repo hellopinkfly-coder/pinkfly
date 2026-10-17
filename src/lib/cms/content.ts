@@ -733,6 +733,10 @@ export type KnowledgeBaseContent = {
     /** Set in Sanity to take the rail off the page without deleting it. */
     hidden: boolean;
   }[];
+  /** Section switches, as on the homepage: off hides, it does not delete. */
+  searchVisible: boolean;
+  railsVisible: boolean;
+  finalCtaVisible: boolean;
   commentsClosedMessage: string;
 };
 
@@ -747,6 +751,9 @@ export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
       description?: string;
       hidden?: boolean;
     }[];
+    searchVisible?: boolean;
+    railsVisible?: boolean;
+    finalCtaVisible?: boolean;
     commentsClosedMessage?: string;
   } | null>(knowledgeBasePageQuery);
 
@@ -775,6 +782,9 @@ export async function getKnowledgeBaseContent(): Promise<KnowledgeBaseContent> {
         hidden: category.hidden === true,
       };
     }),
+    searchVisible: pickBool(cms?.searchVisible, true),
+    railsVisible: pickBool(cms?.railsVisible, true),
+    finalCtaVisible: pickBool(cms?.finalCtaVisible, true),
     commentsClosedMessage: pick(
       cms?.commentsClosedMessage,
       "Discussion opens once the comment backend is connected. Until then, bring your thoughts to the community — that is where the good arguments happen anyway."
