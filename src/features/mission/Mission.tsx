@@ -30,13 +30,20 @@ export function Mission({
 
   return (
     <Section id="why-pink-fly-exists" className="bg-[var(--pf-surface)]">
+      {/* The one section that keeps the centred setting it was designed
+          with. Everything else on the site starts on the page margin; this
+          block is a statement rather than a heading over content, and it was
+          asked for back the way it was. Centred here means centred all the
+          way down — heading, paragraphs and button — so it reads as one
+          deliberate column rather than a centred title over left-set text. */}
       <SectionHeading
         eyebrow={content.eyebrow}
         title={content.headline}
         intro={lead}
+        align="center"
       />
 
-      <Reveal className="mt-6 flex max-w-2xl flex-col items-start gap-4 text-left">
+      <Reveal className="mx-auto mt-6 flex max-w-2xl flex-col items-center gap-4 text-center">
         {rest.map((paragraph) => (
           <p
             key={paragraph.slice(0, 32)}
