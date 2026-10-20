@@ -30,7 +30,7 @@ export function EditorialBlock({
       className="bg-[var(--pf-surface)]"
       data-cms-block={BLOCK_ID}
     >
-      <Reveal className="mx-auto max-w-3xl text-left">
+      <Reveal className="max-w-3xl text-left">
         <span className="pf-eyebrow">{content.eyebrow}</span>
         <h2 className="pf-h2 mt-4">{content.headline}</h2>
         <div className="pf-prose mt-7 text-[var(--pf-text)]">

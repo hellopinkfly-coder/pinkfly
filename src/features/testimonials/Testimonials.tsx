@@ -39,7 +39,7 @@ export function Testimonials({
         title={content.heading.headline}
       />
 
-      <Reveal className="mx-auto mt-14 max-w-3xl">
+      <Reveal className="mt-14 max-w-3xl">
         <div className="relative overflow-hidden rounded-[var(--pf-radius-2xl)] border border-[var(--pf-border)] bg-[var(--pf-surface)] p-8 shadow-[var(--pf-shadow-md)] sm:p-12">
           <Quote size={44} className="mb-6 text-[var(--pf-accent-soft)]" aria-hidden />
 
@@ -111,7 +111,7 @@ export function Testimonials({
       </Reveal>
 
       {content.heading.intro && (
-        <p className="mt-6 text-center text-xs text-[var(--pf-muted)]">
+        <p className="mt-6 text-xs text-[var(--pf-muted)]">
           {content.heading.intro}
         </p>
       )}
