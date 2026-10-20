@@ -39,6 +39,11 @@ export function Footer({
   const columns = [site.footerNav.community, site.footerNav.company];
   const socialLinks = socialLinksFor(site.socials);
   const email = region.email ?? site.contactEmail;
+  // As with the inbox: a region may carry its own number, and the site-wide
+  // one in Site settings → Contact stands behind it. Before this the footer
+  // read only the region's, so the number set for the whole site showed as
+  // "Phone coming soon" on every page.
+  const phone = region.phone ?? site.phone;
 
   return (
     // No top margin: every page ends on a section that already carries its
@@ -85,12 +90,12 @@ export function Footer({
                   Address coming soon
                 </span>
               )}
-              {region.phone ? (
+              {phone ? (
                 <a
-                  href={`tel:${region.phone.replace(/[^\d+]/g, "")}`}
+                  href={`tel:${phone.replace(/[^\d+]/g, "")}`}
                   className="mt-2 inline-flex min-h-11 items-center transition-colors hover:text-[var(--pf-accent)] sm:min-h-0"
                 >
-                  {region.phone}
+                  {phone}
                 </a>
               ) : (
                 <span className="mt-2 block text-[var(--pf-muted)]">

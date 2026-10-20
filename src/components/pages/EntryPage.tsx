@@ -22,6 +22,7 @@ import {
   getSiteContent,
 } from "@/lib/cms/content";
 import { regionPath, type Region } from "@/lib/region";
+import { joinUrl } from "@/lib/join-url";
 
 /**
  * A single Knowledge Base entry.
@@ -232,7 +233,7 @@ export async function EntryPage({
       <FinalCTA
         region={region}
         content={finalCta}
-        formUrl={region.form.googleFormUrl || site.joinFormUrl}
+        formUrl={joinUrl(site, region)}
       />
     </>
   );

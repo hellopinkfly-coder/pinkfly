@@ -15,6 +15,7 @@ import {
   getSiteContent,
 } from "@/lib/cms/content";
 import type { Region } from "@/lib/region";
+import { joinUrl } from "@/lib/join-url";
 
 /**
  * The homepage, in the order the wireframe sets out:
@@ -34,7 +35,7 @@ export async function HomePage({ region }: { region: Region }) {
     getKbEntries(),
     getKnowledgeBaseContent(),
   ]);
-  const formUrl = region.form.googleFormUrl || site.joinFormUrl;
+  const formUrl = joinUrl(site, region);
 
   return (
     <>
@@ -62,6 +63,7 @@ export async function HomePage({ region }: { region: Region }) {
         region={region}
         entries={entries}
         categories={kb.categories}
+        heading={kb.hero}
         featured={content.featured.entries}
       />
 

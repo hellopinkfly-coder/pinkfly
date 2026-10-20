@@ -692,6 +692,7 @@ export type EventsPageContent = {
   intro: string;
   banner: ResolvedImage;
   emptyState: string;
+  emptyStateBody: string;
 };
 
 export async function getEventsPageContent(): Promise<EventsPageContent> {
@@ -702,6 +703,7 @@ export async function getEventsPageContent(): Promise<EventsPageContent> {
     intro?: string;
     bannerImage?: CmsFigure;
     emptyState?: string;
+    emptyStateBody?: string;
   } | null>(eventsPageQuery);
 
   return {
@@ -716,6 +718,10 @@ export async function getEventsPageContent(): Promise<EventsPageContent> {
     emptyState: pick(
       cms?.emptyState,
       "No events match those filters yet. Try another month or location."
+    ),
+    emptyStateBody: pick(
+      cms?.emptyStateBody,
+      "We’re creating experiences that bring women founders closer — through fresh ideas, meaningful connections and conversations that move businesses forward. Our events are coming soon. Stay connected with Pinkfly to be the first to know when we launch, and meanwhile join our WhatsApp group to know more."
     ),
   };
 }

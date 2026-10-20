@@ -14,6 +14,7 @@ import {
   getSiteContent,
 } from "@/lib/cms/content";
 import type { Region } from "@/lib/region";
+import { joinUrl } from "@/lib/join-url";
 
 /**
  * Events listing: opening visual → filters → results → footer.
@@ -41,13 +42,15 @@ export async function EventsPage({ region }: { region: Region }) {
         months={eventMonths(all, region.slug)}
         types={eventTypesForRegion(all, region.slug)}
         emptyState={content.emptyState}
+        emptyStateBody={content.emptyStateBody}
+        whatsappUrl={site.whatsappCommunityUrl}
       />
       {/* Every card above already offers a registration, so the closing
           invitation is a reminder here rather than the pitch. */}
       <FinalCTA
         region={region}
         content={finalCta}
-        formUrl={region.form.googleFormUrl || site.joinFormUrl}
+        formUrl={joinUrl(site, region)}
         compact
       />
     </>

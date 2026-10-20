@@ -9,6 +9,7 @@ import { ContactCta } from "@/features/about/ContactCta";
 import { FinalCTA } from "@/features/final-cta/FinalCTA";
 import { getAboutContent, getFinalCta, getSiteContent } from "@/lib/cms/content";
 import type { Region } from "@/lib/region";
+import { joinUrl } from "@/lib/join-url";
 
 /**
  * About page, in wireframe order:
@@ -25,7 +26,7 @@ export async function AboutPage({ region }: { region: Region }) {
     getFinalCta(),
     getSiteContent(),
   ]);
-  const formUrl = region.form.googleFormUrl || site.joinFormUrl;
+  const formUrl = joinUrl(site, region);
 
   return (
     <>

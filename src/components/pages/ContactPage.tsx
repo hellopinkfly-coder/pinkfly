@@ -7,6 +7,7 @@ import {
   getSiteContent,
 } from "@/lib/cms/content";
 import type { Region } from "@/lib/region";
+import { joinUrl } from "@/lib/join-url";
 
 /**
  * The Contact page.
@@ -38,13 +39,14 @@ export async function ContactPage({ region }: { region: Region }) {
         region={region}
         content={{ heading: content.heading }}
         fallbackEmail={site.contactEmail}
+        fallbackPhone={site.phone}
         responseNote={content.responseNote}
       />
 
       <FinalCTA
         region={region}
         content={finalCta}
-        formUrl={region.form.googleFormUrl || site.joinFormUrl}
+        formUrl={joinUrl(site, region)}
         compact
       />
     </>
