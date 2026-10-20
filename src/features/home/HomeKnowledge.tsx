@@ -22,10 +22,19 @@ export function HomeKnowledge({
   region,
   entries,
   categories,
+  heading,
   featured = [],
 }: {
   region: Region;
   entries: KbEntry[];
+  /**
+   * The Knowledge Base page's own heading, so the two say the same thing.
+   *
+   * This block used to carry its own hard-coded eyebrow, headline and
+   * paragraph. Rewriting the page's heading in the Studio changed the page
+   * and left the homepage quoting the old words — one section, two sources.
+   */
+  heading: { eyebrow: string; title: string; intro: string };
   /** The categories as the Studio has them: title, and whether it is hidden. */
   categories: { id: string; title: string; hidden: boolean }[];
   /** Slugs chosen in the Studio. Empty means "the most recent three". */
@@ -65,12 +74,13 @@ export function HomeKnowledge({
     >
       <Reveal className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-col gap-2">
-          <span className="pf-eyebrow">Knowledge Base</span>
-          <h2 className="pf-h2">Written for founders in a hurry.</h2>
-          <p className="max-w-2xl text-base text-[var(--pf-text)]">
-            Playbooks, the business news that moves your market, and the policy
-            changes that affect how you build.
-          </p>
+          <span className="pf-eyebrow">{heading.eyebrow}</span>
+          <h2 className="pf-h2">{heading.title}</h2>
+          {heading.intro && (
+            <p className="max-w-2xl text-base text-[var(--pf-text)]">
+              {heading.intro}
+            </p>
+          )}
         </div>
 
         <Link

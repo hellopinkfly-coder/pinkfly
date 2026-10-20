@@ -56,7 +56,7 @@ export const siteConfig = {
     "Hinjawadi Phase II, Rajiv Gandhi Infotech Park",
     "Hinjawadi, Pune, Maharashtra 411057",
   ],
-  phone: "+91 00000 00000",
+  phone: "+91 99995 08524",
   socials: {
     instagram: "https://www.instagram.com/pinkfly_official/",
     youtube: "https://www.youtube.com/@Pinkfly-official",

@@ -10,6 +10,7 @@ import { breadcrumbSchema, faqSchema } from "@/lib/structured-data";
 import { getFaqContent, getFinalCta, getSiteContent } from "@/lib/cms/content";
 import { siteConfig } from "@/config/site";
 import { regionPath, type Region } from "@/lib/region";
+import { joinUrl } from "@/lib/join-url";
 
 /**
  * The FAQs page.
@@ -71,7 +72,7 @@ export async function FaqPage({ region }: { region: Region }) {
       <FinalCTA
         region={region}
         content={finalCta}
-        formUrl={region.form.googleFormUrl || site.joinFormUrl}
+        formUrl={joinUrl(site, region)}
         compact
       />
     </>

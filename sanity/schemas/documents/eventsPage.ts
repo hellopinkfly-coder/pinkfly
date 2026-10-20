@@ -39,6 +39,18 @@ export const eventsPage = defineType({
       name: "emptyState",
       title: "Message when no events match",
       type: "string",
+      description:
+        "The heading of the panel shown in place of the event cards \u2014 both while "
+        + "nothing is published yet and when a visitor\u2019s filters match nothing.",
+    }),
+    defineField({
+      name: "emptyStateBody",
+      title: "Paragraph under that message",
+      type: "text",
+      rows: 4,
+      description:
+        "The paragraph under the heading above. Where a WhatsApp community link is set "
+        + "in Site settings, a button to it appears beneath this text.",
     }),
     defineField({ name: "seo", type: "seo" }),
   ],

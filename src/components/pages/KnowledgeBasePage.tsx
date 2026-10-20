@@ -10,6 +10,7 @@ import {
   getSiteContent,
 } from "@/lib/cms/content";
 import { regionPath, type Region } from "@/lib/region";
+import { joinUrl } from "@/lib/join-url";
 
 /**
  * Knowledge Base index — one horizontally scrolling rail per category,
@@ -79,7 +80,7 @@ export async function KnowledgeBasePage({ region }: { region: Region }) {
         <FinalCTA
           region={region}
           content={finalCta}
-          formUrl={region.form.googleFormUrl || site.joinFormUrl}
+          formUrl={joinUrl(site, region)}
           compact
         />
       )}

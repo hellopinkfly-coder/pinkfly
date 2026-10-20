@@ -30,6 +30,8 @@ export function EventFilters({
   months,
   types,
   emptyState,
+  emptyStateBody,
+  whatsappUrl,
   perPage = 6,
 }: {
   events: PinkflyEvent[];
@@ -39,6 +41,10 @@ export function EventFilters({
   types: string[];
   /** Shown when no event matches the filters. Edited in Sanity. */
   emptyState: string;
+  /** The paragraph under it, also edited in Sanity. */
+  emptyStateBody: string;
+  /** Set in Sanity: the community to send people to while there is nothing on. */
+  whatsappUrl?: string;
   perPage?: number;
 }) {
   const [draft, setDraft] = useState<Filters>(EMPTY);
@@ -178,14 +184,24 @@ export function EventFilters({
               <CalendarX2 size={24} />
             </span>
             <h3 className="text-lg">{emptyState}</h3>
-            <p className="max-w-md text-sm leading-relaxed text-[var(--pf-text)]">
-              Try a wider month range or a different location — or join the
-              community and we&apos;ll tell you the moment something is announced
-              near you.
+            <p className="max-w-xl text-pretty text-sm leading-relaxed text-[var(--pf-text)]">
+              {emptyStateBody}
             </p>
-            <Button type="button" variant="secondary" onClick={reset}>
-              Clear filters
-            </Button>
+            {/* Clearing filters is only an answer when filters are what is
+                hiding the events. With nothing published yet the same button
+                did nothing twice over, so the community takes its place. */}
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {isFiltered && (
+                <Button type="button" variant="secondary" onClick={reset}>
+                  Clear filters
+                </Button>
+              )}
+              {whatsappUrl && (
+                <Button href={whatsappUrl} variant={isFiltered ? "secondary" : "primary"}>
+                  Join the WhatsApp group
+                </Button>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

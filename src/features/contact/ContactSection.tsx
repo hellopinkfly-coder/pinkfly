@@ -20,16 +20,20 @@ export function ContactSection({
   region,
   content,
   fallbackEmail,
+  fallbackPhone,
   responseNote,
 }: {
   region: Region;
   content: Pick<ContactContent, "heading">;
   /** The global inbox, used when the region has none of its own. */
   fallbackEmail: string;
+  /** The global number, used when the region has none of its own. */
+  fallbackPhone?: string | null;
   /** What to expect after writing. Empty shows nothing. */
   responseNote?: string;
 }) {
   const email = region.email ?? fallbackEmail;
+  const phone = region.phone ?? fallbackPhone;
 
   return (
     <Section id="contact">
@@ -57,12 +61,12 @@ export function ContactSection({
             </Detail>
 
             <Detail icon={Phone} label="Phone">
-              {region.phone ? (
+              {phone ? (
                 <a
-                  href={`tel:${region.phone.replace(/[^\d+]/g, "")}`}
+                  href={`tel:${phone.replace(/[^\d+]/g, "")}`}
                   className="pf-link"
                 >
-                  {region.phone}
+                  {phone}
                 </a>
               ) : (
                 <span className="text-[var(--pf-muted)]">Phone coming soon</span>

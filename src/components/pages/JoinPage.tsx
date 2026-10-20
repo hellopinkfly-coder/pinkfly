@@ -5,6 +5,7 @@ import { JoinNowCTA } from "@/features/join/JoinNowCTA";
 import { Faqs } from "@/features/join/Faqs";
 import { getJoinContent, getSiteContent } from "@/lib/cms/content";
 import type { Region } from "@/lib/region";
+import { joinUrl } from "@/lib/join-url";
 
 /**
  * Join Community page, in wireframe order:
@@ -15,7 +16,7 @@ import type { Region } from "@/lib/region";
  */
 export async function JoinPage({ region }: { region: Region }) {
   const [content, site] = await Promise.all([getJoinContent(), getSiteContent()]);
-  const formUrl = region.form.googleFormUrl || site.joinFormUrl;
+  const formUrl = joinUrl(site, region);
 
   return (
     <>
