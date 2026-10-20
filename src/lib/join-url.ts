@@ -1,5 +1,5 @@
 import type { SiteContent } from "@/lib/cms/content";
-import type { Region } from "@/lib/region";
+import { regionPath, type Region } from "@/lib/region";
 
 /**
  * Where "join" leads, for every button on the site that says so.
@@ -21,4 +21,20 @@ import type { Region } from "@/lib/region";
  */
 export function joinUrl(site: SiteContent, region: Region): string {
   return site.whatsappCommunityUrl || region.form.googleFormUrl || site.joinFormUrl || "";
+}
+
+/**
+ * A call to action's destination, with "join" resolved.
+ *
+ * Buttons that say join carry `/join` in the Studio — the page that explains
+ * the community and then offers the way in. Once there is a community room
+ * to send people to, that page is a stop on the way rather than the
+ * destination, so a CTA pointing at it resolves to `joinUrl` instead. Any
+ * other href is a link the editor meant literally and is left alone.
+ */
+export function ctaHref(href: string, join: string, region: Region): string {
+  const path = href.trim().replace(/\/+$/, "");
+  const isJoin = path === "/join" || path === "#join" || path.endsWith("/join");
+  if (isJoin && join) return join;
+  return regionPath(region, href);
 }

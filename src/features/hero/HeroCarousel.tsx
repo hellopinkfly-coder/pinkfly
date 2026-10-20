@@ -8,6 +8,7 @@ import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
 import { DURATION, EASE, STAGGER } from "@/components/motion/variants";
 import { regionPath, type Region } from "@/lib/region";
+import { ctaHref } from "@/lib/join-url";
 import { cn } from "@/lib/utils";
 import type { HeroSlideContent } from "@/lib/cms/content";
 import { iconFor } from "@/lib/cms/icons";
@@ -45,9 +46,12 @@ const AUTOPLAY_MS = 6000;
 export function HeroCarousel({
   region,
   slides,
+  joinHref,
 }: {
   region: Region;
   slides: HeroSlideContent[];
+  /** Where a slide's join button leads — the community, where one is set. */
+  joinHref: string;
 }) {
   const still = useReducedMotion();
   const [index, setIndex] = useState(0);
@@ -229,7 +233,7 @@ export function HeroCarousel({
                   button is nowrap by default. Below `sm` it steps down a size
                   and is allowed to wrap rather than being clipped. */}
               <Button
-                href={regionPath(region, active.cta.href)}
+                href={ctaHref(active.cta.href, joinHref, region)}
                 size="lg"
                 className="h-auto min-h-11 whitespace-normal px-5 py-2.5 text-left text-sm leading-snug sm:min-h-13 sm:whitespace-nowrap sm:px-8 sm:py-3.5 sm:text-base"
               >

@@ -39,7 +39,7 @@ export async function HomePage({ region }: { region: Region }) {
 
   return (
     <>
-      <Hero region={region} slides={content.hero.slides} />
+      <Hero region={region} slides={content.hero.slides} joinHref={formUrl} />
       {content.finalCtaVisible && (
         <FinalCTA region={region} content={content.finalCta} formUrl={formUrl} />
       )}
@@ -53,7 +53,7 @@ export async function HomePage({ region }: { region: Region }) {
         <Testimonials content={content.testimonials} />
       )}
       {content.mission.visible && (
-        <Mission region={region} content={content.mission} />
+        <Mission region={region} content={content.mission} joinHref={formUrl} />
       )}
       {content.social.visible && <SocialWall content={content.social} />}
       {/* What is on, and what has been written — each a taste, with the way

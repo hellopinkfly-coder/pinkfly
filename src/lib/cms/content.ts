@@ -989,7 +989,10 @@ export async function getSiteContent(): Promise<SiteContent> {
     },
     policyNav: links(cms?.policyNav, policyNav),
     joinFormUrl: pick(cms?.joinFormUrl, integrations.joinFormUrl),
-    whatsappCommunityUrl: pick(cms?.whatsappCommunityUrl, ""),
+    whatsappCommunityUrl: pick(
+      cms?.whatsappCommunityUrl,
+      integrations.whatsappCommunityUrl
+    ),
 
     newsletterPopup: {
       // Off is a real answer, so only an explicit false turns it off.
