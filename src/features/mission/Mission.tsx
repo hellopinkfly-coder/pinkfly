@@ -32,7 +32,7 @@ export function Mission({
         intro={lead}
       />
 
-      <Reveal className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
+      <Reveal className="mt-6 flex max-w-2xl flex-col items-start gap-4 text-left">
         {rest.map((paragraph) => (
           <p
             key={paragraph.slice(0, 32)}

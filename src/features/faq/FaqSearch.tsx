@@ -64,7 +64,7 @@ export function FaqSearch({ groups }: { groups: FaqGroup[] }) {
   return (
     <>
       <Section id="faq-search" className="pb-0 sm:pb-0">
-        <div className="mx-auto max-w-3xl">
+        <div className="max-w-3xl">
           <form onSubmit={(e) => e.preventDefault()} role="search">
             <label htmlFor="faq-search-input" className="sr-only">
               Search the FAQs
@@ -116,7 +116,7 @@ export function FaqSearch({ groups }: { groups: FaqGroup[] }) {
 
       {filtered.length === 0 ? (
         <Section>
-          <p className="mx-auto max-w-3xl rounded-[var(--pf-radius-xl)] border border-dashed border-[var(--pf-border-strong)] p-8 text-center text-[var(--pf-text)]">
+          <p className="max-w-3xl rounded-[var(--pf-radius-xl)] border border-dashed border-[var(--pf-border-strong)] p-8 text-center text-[var(--pf-text)]">
             Nothing matches that. Try a single word — “price”, “mentor”,
             “online” — or clear the search to read everything.
           </p>
@@ -131,7 +131,7 @@ export function FaqSearch({ groups }: { groups: FaqGroup[] }) {
               i % 2 === 1 && "bg-[var(--pf-surface)]"
             )}
           >
-            <div className="mx-auto max-w-3xl">
+            <div className="max-w-3xl">
               <h2 className="pf-h2">{group.title}</h2>
               {group.intro && (
                 <p className="mt-2 text-base text-[var(--pf-text)]">
