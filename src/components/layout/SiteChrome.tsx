@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { parsePathname } from "@/lib/region";
+import { joinUrl } from "@/lib/join-url";
 import { Navbar, type NavVariant } from "./Navbar";
 import { Footer } from "./Footer";
 import { WelcomeDialog } from "@/features/newsletter/WelcomeDialog";
@@ -79,7 +80,7 @@ export function SiteChrome({
       <Footer region={region} site={site} />
       {/* Mounted here rather than in the layout so it inherits the Studio
           exemption above: the Studio returns before this point. */}
-      <WelcomeDialog content={site.newsletterPopup} />
+      <WelcomeDialog content={site.newsletterPopup} joinHref={joinUrl(site, region)} />
     </>
   );
 }

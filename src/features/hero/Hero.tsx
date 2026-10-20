@@ -13,9 +13,12 @@ import type { HeroSlideContent } from "@/lib/cms/content";
 export function Hero({
   region,
   slides,
+  joinHref,
 }: {
   region: Region;
   slides: HeroSlideContent[];
+  /** Where a slide's join button leads — the community, where one is set. */
+  joinHref: string;
 }) {
-  return <HeroCarousel region={region} slides={slides} />;
+  return <HeroCarousel region={region} slides={slides} joinHref={joinHref} />;
 }

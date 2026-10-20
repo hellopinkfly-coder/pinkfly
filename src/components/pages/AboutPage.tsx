@@ -36,7 +36,7 @@ export async function AboutPage({ region }: { region: Region }) {
         intro={content.hero.intro}
       />
       {content.mission.visible && (
-        <Mission region={region} content={content.mission} />
+        <Mission region={region} content={content.mission} joinHref={formUrl} />
       )}
       {content.banner.visible && <AboutBanner image={content.banner.image} />}
       {content.founder.visible && <FounderStory founder={content.founder} />}

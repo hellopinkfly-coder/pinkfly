@@ -156,6 +156,9 @@ async function seed() {
     },
     policyNav: keyed(policyNav.map(link), "pol"),
     ...(integrations.joinFormUrl ? { joinFormUrl: integrations.joinFormUrl } : {}),
+    ...(integrations.whatsappCommunityUrl
+      ? { whatsappCommunityUrl: integrations.whatsappCommunityUrl }
+      : {}),
   });
 
   /* -------------------------------------------------------------- regions */

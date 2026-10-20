@@ -53,9 +53,12 @@ type Status = "idle" | "loading" | "success" | "error";
  */
 export function WelcomeDialog({
   content,
+  joinHref,
 }: {
   /** Every line of it, and its timing, edited in the Studio. */
   content: SiteContent["newsletterPopup"];
+  /** Where its join button leads — the community, where one is set. */
+  joinHref: string;
 }) {
   const pathname = usePathname() || "/";
   const [open, setOpen] = useState(false);
@@ -182,7 +185,7 @@ export function WelcomeDialog({
                   {content.successBody}
                 </p>
                 <div className="mt-5 flex flex-col items-center gap-2">
-                  <Button href={regionPath(region, "/join")} onClick={close}>
+                  <Button href={joinHref || regionPath(region, "/join")} onClick={close}>
                     {content.joinLabel}
                     <ArrowRight size={16} />
                   </Button>
@@ -257,7 +260,7 @@ export function WelcomeDialog({
                 <p className="mt-4 border-t border-[var(--pf-border)] pt-3 text-center text-sm leading-snug text-[var(--pf-text)]">
                   {content.joinPrompt}{" "}
                   <Link
-                    href={regionPath(region, "/join")}
+                    href={joinHref || regionPath(region, "/join")}
                     onClick={close}
                     className="pf-link font-bold"
                   >

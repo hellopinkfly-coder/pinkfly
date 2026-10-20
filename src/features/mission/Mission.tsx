@@ -4,6 +4,7 @@ import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { regionPath, type Region } from "@/lib/region";
+import { ctaHref } from "@/lib/join-url";
 import type { MissionContent } from "@/lib/cms/content";
 
 /**
@@ -17,9 +18,12 @@ import type { MissionContent } from "@/lib/cms/content";
 export function Mission({
   region,
   content,
+  joinHref,
 }: {
   region: Region;
   content: MissionContent;
+  /** Where its button leads — the community, where one is set. */
+  joinHref: string;
 }) {
   // The first paragraph is the section's lead, so it is typeset as one.
   const [lead, ...rest] = content.body;
@@ -43,7 +47,7 @@ export function Mission({
         ))}
 
         <div className="mt-7">
-          <Button href={regionPath(region, content.cta.href)} size="lg">
+          <Button href={ctaHref(content.cta.href, joinHref, region)} size="lg">
             {content.cta.label}
             <ArrowRight size={18} />
           </Button>

@@ -82,9 +82,23 @@ export const siteConfig = {
 export const JOIN_FORM_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSdSkVItIeWSkszUEJ3vLeag-lF5eWnZftGhS2EX25WERlphBg/viewform";
 
+/**
+ * The WhatsApp community every join CTA opens.
+ *
+ * Public in the same way the form is — an invite link is what visitors are
+ * handed — so it lives here, and a fresh checkout behaves like production.
+ * Site settings → Integrations overrides it, and clearing that field in the
+ * Studio does not fall through to this: an editor who empties it means the
+ * form, not the community.
+ */
+export const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/FQh4axQhbVO4Rt3IG3L5G7";
+
 export const integrations = {
-  /** Google Form that backs every join CTA. */
+  /** Google Form that backs every join CTA where no community is set. */
   joinFormUrl: process.env.NEXT_PUBLIC_JOIN_FORM_URL ?? JOIN_FORM_URL,
+  /** The community room, which every join CTA prefers. */
+  whatsappCommunityUrl:
+    process.env.NEXT_PUBLIC_WHATSAPP_COMMUNITY_URL ?? WHATSAPP_COMMUNITY_URL,
 } as const;
 
 /** Primary navigation, per the homepage wireframe. */
