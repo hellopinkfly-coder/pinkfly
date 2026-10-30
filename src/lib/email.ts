@@ -20,7 +20,10 @@
 export type EmailMessage = {
   to: string;
   subject: string;
+  /** Always sent: what a text client, a filter and a reader in text mode get. */
   text: string;
+  /** The designed version, where the client will render it. */
+  html?: string;
   /** The address a reply should go to, when it is not the From address. */
   replyTo?: string;
   /** Overrides the default From — used by the newsletter. */
@@ -67,6 +70,7 @@ export async function sendEmail(message: EmailMessage): Promise<string | null> {
         ...(message.replyTo ? { reply_to: message.replyTo } : null),
         subject: message.subject,
         text: message.text,
+        ...(message.html ? { html: message.html } : null),
       }),
     });
 

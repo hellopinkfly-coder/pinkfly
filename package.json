@@ -29,7 +29,8 @@
     "check:cards": "tsx scripts/check-cards.ts",
     "check:seo": "tsx scripts/check-seo.ts",
     "check:popup": "tsx scripts/check-popup.ts",
-    "check:newsletter": "tsx scripts/check-newsletter.ts"
+    "check:newsletter": "tsx scripts/check-newsletter.ts",
+    "preview:emails": "tsx scripts/preview-emails.ts"
   },
   "dependencies": {
     "@portabletext/react": "^8.0.1",

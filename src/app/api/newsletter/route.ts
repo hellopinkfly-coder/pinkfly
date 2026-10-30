@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { newsletterSchema } from "@/lib/validations";
 import { NEWSLETTER_TABLE, supabase } from "@/lib/supabase";
 import { emailConfigured, newsletterFrom, sendEmail } from "@/lib/email";
-import { siteConfig } from "@/config/site";
+import { renderEmail, renderText } from "@/lib/email-template";
+import { siteConfig, integrations } from "@/config/site";
 
 /**
  * Newsletter subscription.
@@ -76,24 +77,37 @@ export async function GET() {
   });
 }
 
-/** The welcome email. Plain text: it is three lines and two links. */
+/**
+ * The welcome email.
+ *
+ * It is the first thing a subscriber sees after the site, so it arrives in
+ * the site's own clothes — and it carries the community link, because the
+ * list is the smaller of the two doors and somebody who has just opened one
+ * should be shown the other.
+ */
 function welcome(email: string) {
+  const content = {
+    eyebrow: "You're on the list",
+    headline: "Welcome to Pinkfly.",
+    paragraphs: [
+      "Every issue carries the new playbooks, the policy changes worth knowing, and the events near you. Nothing else.",
+      "The newsletter is the smaller door. The community itself is where the introductions happen \u2014 it is free, and you can be in it in a minute.",
+    ],
+    button: {
+      label: "Join the community",
+      href: integrations.whatsappCommunityUrl || `${siteConfig.url}/join`,
+    },
+    footnote:
+      `You received this because you subscribed at ${siteConfig.url}. `
+      + "To stop receiving it, reply to this email and we will take you off the list.",
+  };
+
   return {
     to: email,
     from: newsletterFrom(),
     subject: `Welcome to the ${siteConfig.name} newsletter`,
-    text: [
-      "You're on the list.",
-      "",
-      "Every issue carries the new playbooks, the policy changes worth knowing, and the events near you. Nothing else.",
-      "",
-      `If you have not joined the community itself yet, that is the bigger door: ${siteConfig.url}/join`,
-      "",
-      `— The ${siteConfig.name} team`,
-      "",
-      "You received this because you subscribed at " + siteConfig.url + ".",
-      `To stop receiving it, reply to this email and we will take you off the list.`,
-    ].join("\n"),
+    text: renderText(content),
+    html: renderEmail(content),
   };
 }
 
