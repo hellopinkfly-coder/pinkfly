@@ -22,7 +22,7 @@ type Status = {
   storeError?: string | null;
   table?: string;
   emailing?: boolean;
-  resendKey?: string;
+  transport?: string;
   from?: string;
 };
 
@@ -33,7 +33,7 @@ async function main() {
   console.log("Wiring");
   console.log(`  ${status.storing ? "✓" : "⚠"} Supabase table "${status.table}" ${status.storing ? "accepts queries" : "is NOT reachable"}`);
   if (status.storeError) console.log(`      ${status.storeError}`);
-  console.log(`  ${status.emailing ? "✓" : "○"} welcome email ${status.emailing ? `sends from ${status.from}` : "not configured (RESEND_API_KEY missing)"}`);
+  console.log(`  ${status.emailing ? "✓" : "○"} welcome email ${status.emailing ? `sends from ${status.from} over ${status.transport}` : "not configured (set SMTP_USER + SMTP_PASSWORD, or RESEND_API_KEY)"}`);
 
   const email = `check-${Date.now()}@pinkfly-test.invalid`;
   const response = await fetch(`${base}/api/newsletter`, {
