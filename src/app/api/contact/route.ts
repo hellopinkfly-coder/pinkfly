@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "next-sanity";
 import { contactSchema } from "@/lib/validations";
 import { emailConfigured, sendEmail as deliver } from "@/lib/email";
+import { renderEmail, renderText } from "@/lib/email-template";
+import { siteConfig, integrations } from "@/config/site";
 import { CONTACT_TABLE, supabase } from "@/lib/supabase";
 import { projectId, dataset, apiVersion, cmsEnabled } from "../../../../sanity/env";
 
@@ -83,18 +85,66 @@ async function sendEmail(data: Message): Promise<string | null> {
   const to = resendTo();
   if (!to) return "not configured";
 
+  const content = {
+    eyebrow: "Contact form",
+    headline: `${data.name} wrote in.`,
+    paragraphs: [],
+    details: [
+      { label: "From", value: `${data.name} <${data.email}>` },
+      { label: "Message", value: data.message },
+    ],
+    footnote: "Reply to this email and your answer goes straight to them.",
+  };
+
   return deliver({
     to,
     // Their address, so replying from the inbox reaches the person who wrote.
     replyTo: data.email,
     subject: `Pinkfly contact form — ${data.name}`,
-    text: [
-      `From: ${data.name} <${data.email}>`,
-      "",
-      data.message,
-      "",
-      "— Sent from the contact form on the Pinkfly website",
-    ].join("\n"),
+    text: renderText(content),
+    html: renderEmail(content),
+  });
+}
+
+/**
+ * The answer that goes back to whoever wrote.
+ *
+ * Until now they got nothing: the form said thank you on screen and the
+ * message went to an inbox they cannot see. A written message with no
+ * acknowledgement reads as one that fell down a hole, and the person is left
+ * wondering whether to send it again. This says it arrived, repeats what
+ * they wrote so they have their own copy, and points at the community, which
+ * is often a faster answer than waiting for a reply.
+ *
+ * It is the third delivery and the least important one: a failure here is
+ * logged and goes no further, exactly as with the other two.
+ */
+async function sendReceipt(data: Message): Promise<string | null> {
+  const content = {
+    eyebrow: "Message received",
+    headline: `Thanks, ${data.name.split(" ")[0] || data.name}.`,
+    paragraphs: [
+      "Your message is with us and a person will read it \u2014 usually within two working days.",
+      "In the meantime, the community is where most questions get answered fastest.",
+    ],
+    details: [{ label: "What you sent", value: data.message }],
+    button: {
+      label: "Join the community",
+      href: integrations.whatsappCommunityUrl || `${siteConfig.url}/join`,
+    },
+    footnote:
+      "You received this because you used the contact form at "
+      + `${siteConfig.url}. Replying to it reaches us.`,
+  };
+
+  return deliver({
+    to: data.email,
+    // A reply to our acknowledgement should land in the same inbox the
+    // message did, not in the void behind a no-reply address.
+    replyTo: resendTo(),
+    subject: `We have your message, ${data.name.split(" ")[0] || data.name}`,
+    text: renderText(content),
+    html: renderEmail(content),
   });
 }
 
@@ -139,6 +189,13 @@ export async function POST(request: Request) {
   // returned to the visitor on a failure here — see the note above.
   const emailError = await sendEmail(data);
   if (emailError) console.error("[contact] email not sent:", emailError);
+
+  // The acknowledgement to the sender. Last, and never allowed to change
+  // what happens to the message itself.
+  const receiptError = await sendReceipt(data);
+  if (receiptError && receiptError !== "not configured") {
+    console.error("[contact] receipt not sent:", receiptError);
+  }
 
   // The exportable copy. Failing here is logged and swallowed: Sanity is the
   // record, and a visitor cannot fix a database of ours by typing again.

@@ -38,3 +38,6 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# Rendered email previews (npm run preview:emails)
+.emails/
