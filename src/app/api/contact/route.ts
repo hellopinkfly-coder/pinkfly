@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "next-sanity";
 import { contactSchema } from "@/lib/validations";
-import { emailConfigured, sendEmail as deliver } from "@/lib/email";
+import { defaultFrom, emailConfigured, sendEmail as deliver, transport } from "@/lib/email";
 import { renderEmail, renderText } from "@/lib/email-template";
 import { siteConfig, integrations } from "@/config/site";
 import { CONTACT_TABLE, supabase } from "@/lib/supabase";
@@ -31,7 +31,9 @@ import { projectId, dataset, apiVersion, cmsEnabled } from "../../../../sanity/e
  *
  * Environment:
  *   SANITY_API_WRITE_TOKEN  required, the same token the comments use
- *   RESEND_API_KEY          optional; without it nothing is emailed
+ *   SMTP_USER, SMTP_PASSWORD  a Gmail address and an app password, or
+ *                             RESEND_API_KEY instead; without either nothing
+ *                             is emailed
  *   CONTACT_FROM_EMAIL      the From address, on a domain verified in Resend
  *   CONTACT_TO_EMAIL        where messages are sent
  */
@@ -69,7 +71,11 @@ export async function GET() {
     mirrorError,
     table: CONTACT_TABLE,
     writeToken: hasToken ? "present" : "missing",
-    resendKey: process.env.RESEND_API_KEY ? "present" : "missing",
+    // Which way out is configured, so a silent inbox can be told apart from
+    // a missing key: "smtp" is the Gmail account, "resend" the API key,
+    // "none" means nothing is sent at all.
+    transport: transport(),
+    from: defaultFrom(),
   });
 }
 

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { newsletterSchema } from "@/lib/validations";
 import { NEWSLETTER_TABLE, supabase } from "@/lib/supabase";
-import { emailConfigured, newsletterFrom, sendEmail } from "@/lib/email";
+import { emailConfigured, newsletterFrom, sendEmail, transport } from "@/lib/email";
 import { renderEmail, renderText } from "@/lib/email-template";
 import { siteConfig, integrations } from "@/config/site";
 
@@ -72,7 +72,7 @@ export async function GET() {
     storeError,
     table: NEWSLETTER_TABLE,
     emailing: emailConfigured(),
-    resendKey: process.env.RESEND_API_KEY ? "present" : "missing",
+    transport: transport(),
     from: newsletterFrom(),
   });
 }
