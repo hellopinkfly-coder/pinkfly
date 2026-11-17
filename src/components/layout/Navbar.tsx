@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { useScrolled } from "@/hooks/useScrollDirection";
+import { useHideOnScrollDown, useScrolled } from "@/hooks/useScrollDirection";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/Logo";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
@@ -49,6 +49,11 @@ export function Navbar({
 }: NavbarProps) {
   const [open, setOpen] = useState(false);
   const scrolled = useScrolled();
+  // The bar steps aside while the reader goes down the page and comes back
+  // the moment they come up — except while the menu it opens is on screen,
+  // which would otherwise slide away under the finger that opened it.
+  const hiddenByScroll = useHideOnScrollDown();
+  const away = hiddenByScroll && !open;
   const pathname = usePathname();
 
   // Close the mobile menu whenever the route changes.
@@ -98,7 +103,8 @@ export function Navbar({
         // to float over the banner, which is what put a wordmark across a
         // photograph and cut it in half on the Events page. It still follows
         // the page down.
-        "sticky inset-x-0 top-0 z-50 border-b border-[var(--pf-border)] bg-[var(--pf-surface)] transition-colors duration-300 ease-[var(--pf-ease)]"
+        "sticky inset-x-0 top-0 z-50 border-b border-[var(--pf-border)] bg-[var(--pf-surface)] transition-[background-color,border-color,translate] duration-300 ease-[var(--pf-ease)] motion-reduce:transition-none",
+        away && "-translate-y-full"
       )}
     >
       <Container>
