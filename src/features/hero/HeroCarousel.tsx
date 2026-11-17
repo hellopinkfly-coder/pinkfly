@@ -126,21 +126,37 @@ export function HeroCarousel({
           photograph is shown whole, undimmed, at its own proportions. */}
       <Container
         className={cn(
-          "mb-7",
-          // A banner carries its own words, so it has no copy to sit beside:
-          // it takes the whole width and the slide is the picture.
-          !bannerSlide &&
-            "lg:absolute lg:inset-y-0 lg:right-0 lg:mb-0 lg:w-1/2 lg:max-w-none lg:px-0"
+          // One row with two cells that share it, rather than one column
+          // pinned over the other. `lg:absolute … lg:w-1/2` for the picture
+          // and a second centred Container for the words could not agree
+          // where the middle of the page was — a Container centres itself —
+          // so on a desktop window the copy sat mid-screen and ran
+          // underneath the photograph. Shared cells cannot overlap.
+          !bannerSlide && "lg:grid lg:grid-cols-2 lg:items-stretch lg:gap-12"
         )}
       >
         <div
           className={cn(
-            "relative overflow-hidden rounded-[var(--pf-radius-2xl)] bg-[var(--pf-surface-muted)]",
-            bannerSlide
-              ? "aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]"
-              : "aspect-[4/3] sm:aspect-[16/10] lg:h-full lg:rounded-none lg:rounded-l-[var(--pf-radius-2xl)]"
+            "mb-7",
+            // The words belong in the page's 72rem column; the picture does
+            // not. Boxed in the same column it reads as a thumbnail with a
+            // corridor of page colour beside it, so from `lg` up it leaves
+            // the container and runs to the edge of the window.
+            bannerSlide ? "pf-bleed-x" : "pf-bleed-r lg:order-2 lg:mb-0"
           )}
         >
+          <div
+            className={cn(
+              "relative overflow-hidden rounded-[var(--pf-radius-2xl)] bg-[var(--pf-surface-muted)]",
+              bannerSlide
+                ? "aspect-[5/4] sm:aspect-[16/9] lg:aspect-[21/9] lg:rounded-none"
+                : // `h-full` and an aspect ratio cannot both decide the box:
+                  // the ratio wins and sets the width from the stretched
+                  // height, which pushed the picture past the window edge.
+                  // In the two-column layout the cell's shape is the shape.
+                  "aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto lg:h-full lg:rounded-none lg:rounded-l-[var(--pf-radius-2xl)]"
+            )}
+          >
           <AnimatePresence initial={false}>
             <motion.div
               key={index}
@@ -157,8 +173,8 @@ export function HeroCarousel({
               <SlideMedia slide={active} priority={index === 0} still={!!still} />
             </motion.div>
           </AnimatePresence>
+          </div>
         </div>
-      </Container>
 
       {/* ---- Copy ----------------------------------------------------- */}
       {/* One grid cell, shared. With `mode="wait"` the outgoing slide had to
@@ -168,10 +184,10 @@ export function HeroCarousel({
           fixed" — worst on a phone, where the copy is tallest and each slide
           is a different height. Stacked, the section is always as tall as
           its tallest live slide and never moves. */}
-      <Container
+      <div
         className={cn(
           "relative grid w-full grid-cols-1 grid-rows-1",
-          !bannerSlide && "lg:min-h-[32rem] lg:w-1/2 lg:items-center lg:pr-12"
+          !bannerSlide && "lg:order-1 lg:min-h-[28rem] lg:content-center"
         )}
       >
         <AnimatePresence initial={false}>
@@ -337,6 +353,7 @@ export function HeroCarousel({
             </div>
           </div>
         )}
+      </div>
       </Container>
 
     </section>
@@ -413,7 +430,10 @@ function SlideMedia({
       // enlarged before any drift is added; the old range pushed it further
       // and the whole hero read as zoomed in. A slower, shallower move keeps
       // the life without the magnification.
-      animate={still ? undefined : { scale: [1.0, 1.05] }}
+      // A banner is a designed thing: its words are part of the artwork, so
+      // drifting it also drifts them out of the frame. Only photographs get
+      // the slow push.
+      animate={still || slide.imageHasText ? undefined : { scale: [1.0, 1.05] }}
       transition={{ duration: 20, ease: "easeInOut" }}
     >
       <Image
@@ -422,8 +442,15 @@ function SlideMedia({
         fill
         priority={priority}
         sizes="100vw"
-        className="object-cover"
-        style={{ objectPosition: slide.image.focal ?? "50% 40%" }}
+        // `cover` crops to fill, which is right for a photograph and wrong
+        // for a banner: on a phone a wide banner lost its own words off both
+        // sides. A banner is shown whole against the box's own colour.
+        className={slide.imageHasText ? "object-contain" : "object-cover"}
+        style={
+          slide.imageHasText
+            ? undefined
+            : { objectPosition: slide.image.focal ?? "50% 40%" }
+        }
         draggable={false}
       />
     </motion.div>
