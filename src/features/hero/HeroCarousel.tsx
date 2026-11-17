@@ -132,7 +132,13 @@ export function HeroCarousel({
           // where the middle of the page was — a Container centres itself —
           // so on a desktop window the copy sat mid-screen and ran
           // underneath the photograph. Shared cells cannot overlap.
-          !bannerSlide && "lg:grid lg:grid-cols-2 lg:items-stretch lg:gap-12"
+          // No gap between the cells, because the gap is what stopped the
+          // split falling on the middle of the screen: two equal columns
+          // with a gap between them put the picture's edge half a gap to
+          // the right of centre. Without it each cell is exactly half, the
+          // picture starts on the centre line, and the breathing room
+          // between words and photograph is the copy's own right padding.
+          !bannerSlide && "lg:grid lg:grid-cols-2 lg:items-stretch lg:gap-0"
         )}
       >
         <div
@@ -187,7 +193,7 @@ export function HeroCarousel({
       <div
         className={cn(
           "relative grid w-full grid-cols-1 grid-rows-1",
-          !bannerSlide && "lg:order-1 lg:min-h-[28rem] lg:content-center"
+          !bannerSlide && "lg:order-1 lg:min-h-[28rem] lg:content-center lg:pr-14"
         )}
       >
         <AnimatePresence initial={false}>
@@ -441,7 +447,9 @@ function SlideMedia({
         alt={slide.image.alt}
         fill
         priority={priority}
-        sizes="100vw"
+        // Half the window from `lg` up, which is the width actually
+        // needed there; asking for a full-width file wasted most of it.
+        sizes="(min-width: 1024px) 50vw, 100vw"
         // `cover` crops to fill, which is right for a photograph and wrong
         // for a banner: on a phone a wide banner lost its own words off both
         // sides. A banner is shown whole against the box's own colour.
