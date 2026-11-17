@@ -81,24 +81,24 @@ export function Navbar({
   const joinHref = joinUrl(site, region) || regionPath(region, site.navCta.href);
   const ctaLabel =
     variant === "knowledge" ? site.navCta.knowledgeLabel : site.navCta.label;
-  // Light type only while the bar is still floating clear of the page, over
-  // the hero image. Once it lands it is a solid surface and takes the page's
-  // own type colours.
-  const onDark = overHero && !scrolled && !open;
-  const solid = !onDark;
+  // The bar is its own surface now, on every page and from the first pixel:
+  // nothing is ever set in light type over a photograph, because nothing
+  // overlaps a photograph any more. `overHero` is kept on the props so the
+  // Studio and the routes that pass it need no change, and so a page can say
+  // it opens on a hero without that meaning the header moves onto it.
+  const onDark = false;
+  const solid = true;
+  void overHero;
 
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-colors duration-300 ease-[var(--pf-ease)]",
-        // Edge to edge and flush with the top of the page. The bar used to
-        // float as a rounded capsule with air all around it, which read as a
-        // widget laid over the site rather than the site's own header. It is
-        // now part of the page: full width, square, a hairline along the
-        // bottom instead of a ring all the way round.
-        solid
-          ? "border-b border-[var(--pf-border)] bg-[var(--pf-surface)]"
-          : "border-b border-transparent"
+        // Sticky, not fixed: the header takes its own room in the layout, so
+        // the page below starts underneath it rather than beneath it. It used
+        // to float over the banner, which is what put a wordmark across a
+        // photograph and cut it in half on the Events page. It still follows
+        // the page down.
+        "sticky inset-x-0 top-0 z-50 border-b border-[var(--pf-border)] bg-[var(--pf-surface)] transition-colors duration-300 ease-[var(--pf-ease)]"
       )}
     >
       <Container>
@@ -204,7 +204,9 @@ export function Navbar({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:hidden"
+            // Over the page, not above it: inside a sticky header an
+            // in-flow panel would shove every section down as it opens.
+            className="absolute inset-x-0 top-full lg:hidden"
           >
             {/* Flush with the bar above it, same width as the page, so the
                 open menu reads as the header growing rather than a card

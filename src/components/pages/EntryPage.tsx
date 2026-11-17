@@ -104,7 +104,7 @@ export async function EntryPage({
         step wider, which, once the frame shrank, read as a banner narrower
         than the bar rather than the same width.
       */}
-      <section className="pt-28 sm:pt-32">
+      <section className="pt-10 sm:pt-14">
         <Container>
           <Reveal className="group">
             <ImageFrame

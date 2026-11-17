@@ -24,7 +24,7 @@ export function EventsHero({
   content: EventsPageContent;
 }) {
   return (
-    <section className="relative isolate min-h-[62vh] w-full overflow-hidden sm:min-h-[70vh]">
+    <section className="relative isolate min-h-[52vh] w-full overflow-hidden sm:min-h-[62vh]">
       <Image
         src={content.banner.src}
         alt={content.banner.alt}
@@ -38,7 +38,7 @@ export function EventsHero({
         className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/35"
       />
 
-      <Container className="relative flex min-h-[62vh] flex-col justify-end pb-14 pt-36 sm:min-h-[70vh] sm:pb-20">
+      <Container className="relative flex min-h-[52vh] flex-col justify-end pb-14 pt-16 sm:min-h-[62vh] sm:pb-20">
         <span className="pf-eyebrow pf-eyebrow--pill pf-eyebrow--on-dark">
           {content.eyebrow}
         </span>

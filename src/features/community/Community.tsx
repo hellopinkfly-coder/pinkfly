@@ -38,7 +38,7 @@ export function Community({
       <Reveal
         as="ul"
         variants={staggerContainer}
-        className="pf-section-body grid gap-x-8 gap-y-9 sm:gap-y-12 sm:grid-cols-2 lg:grid-cols-4"
+        className="pf-section-body pf-row [--pf-row-cols:4]"
       >
         {content.cards.map((card, i) => (
           <Reveal

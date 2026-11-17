@@ -539,23 +539,39 @@ button:active,
  * through and no further: the headline keeps its own drop shadow, and the
  * darkest stop still sits under the copy.
  */
+/*
+ * Shaped around the copy, not spread over the picture.
+ *
+ * Lightening this evenly to lift the gloom took the wash out from under the
+ * words as well, and white type on a bright photograph — a white shirt, a
+ * window, a pale wall — then has nothing to sit on. Even weight is the wrong
+ * tool: dark enough for the text makes the whole image grey, and bright
+ * enough for the image leaves the text unreadable.
+ *
+ * So the weight goes where the words are. On a phone the copy sits in the
+ * lower two thirds, which is where this is densest; the top third, where the
+ * subject's face usually is, stays nearly clear. The picture keeps its light
+ * where you look at it and the text keeps its contrast where you read it.
+ */
 .pf-hero-scrim {
   background: linear-gradient(
     to top,
-    rgba(14, 8, 12, 0.82) 0%,
-    rgba(14, 8, 12, 0.64) 45%,
-    rgba(14, 8, 12, 0.4) 75%,
-    rgba(14, 8, 12, 0.24) 100%
+    rgba(12, 7, 10, 0.92) 0%,
+    rgba(12, 7, 10, 0.86) 40%,
+    rgba(12, 7, 10, 0.72) 62%,
+    rgba(12, 7, 10, 0.4) 82%,
+    rgba(12, 7, 10, 0.14) 100%
   );
 }
 
 :root[data-theme="light"] .pf-hero-scrim {
   background: linear-gradient(
     to top,
-    rgba(26, 16, 22, 0.78) 0%,
-    rgba(26, 16, 22, 0.66) 42%,
-    rgba(26, 16, 22, 0.46) 72%,
-    rgba(26, 16, 22, 0.3) 100%
+    rgba(26, 16, 22, 0.9) 0%,
+    rgba(26, 16, 22, 0.82) 40%,
+    rgba(26, 16, 22, 0.66) 62%,
+    rgba(26, 16, 22, 0.36) 82%,
+    rgba(26, 16, 22, 0.12) 100%
   );
 }
 
@@ -580,6 +596,79 @@ button:active,
       rgba(26, 16, 22, 0.08) 78%,
       transparent 100%
     );
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Section rows
+   -------------------------------------------------------------------------- */
+
+/*
+ * A section's items: a row you swipe on a phone, a grid on a larger screen.
+ *
+ * Everything stacked. The homepage ran to twelve phone screens, and three
+ * sections took half of that between them — how we gather 2.3, what's on 2.2,
+ * the Knowledge Base 1.9 — because four or six cards sat one above another at
+ * full width. Nobody scrolls past the third. Side by side, a section is about
+ * one screen and its shape is legible at a glance: you can see there are four
+ * of something and that there is more to the right.
+ *
+ * One element does both. No second copy of the markup for small screens,
+ * which would mean every card's link twice in the document.
+ *
+ * The negative margin mirrors Container's gutter exactly, so the row bleeds
+ * to the screen edge while its first card still starts on the page margin,
+ * and the card peeking at the right edge says there is more without needing
+ * an arrow to say it.
+ */
+.pf-row {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 1.5rem;
+  margin-inline: -1.5rem;
+  padding-inline: 1.5rem;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.pf-row::-webkit-scrollbar {
+  display: none;
+}
+
+.pf-row > * {
+  flex: 0 0 76%;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 360px) {
+  .pf-row {
+    scroll-padding-left: 2rem;
+    margin-inline: -2rem;
+    padding-inline: 2rem;
+  }
+}
+
+/* From here the row is the grid it always was. */
+@media (min-width: 640px) {
+  .pf-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem 2rem;
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+    padding-bottom: 0;
+  }
+  .pf-row > * {
+    flex: initial;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pf-row {
+    grid-template-columns: repeat(var(--pf-row-cols, 3), minmax(0, 1fr));
   }
 }
 

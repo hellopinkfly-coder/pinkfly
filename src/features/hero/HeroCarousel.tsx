@@ -88,7 +88,7 @@ export function HeroCarousel({
 
   return (
     <section
-      className="relative isolate flex min-h-[34rem] items-center overflow-hidden bg-[var(--pf-heading)] pt-24 pb-10 sm:min-h-[42rem] sm:pt-32 sm:pb-16 lg:min-h-[44rem]"
+      className="relative isolate flex min-h-[30rem] items-center overflow-hidden bg-[var(--pf-heading)] pt-10 pb-10 sm:min-h-[38rem] sm:pt-14 sm:pb-16 lg:min-h-[42rem]"
       role="group"
       aria-roledescription="carousel"
       aria-label="Pinkfly"
@@ -131,7 +131,7 @@ export function HeroCarousel({
           // way — a dimmed photograph under a dark wash is not a quiet
           // photograph, it is an overcast one — so it keeps most of its light
           // and the wash below does the work of legibility.
-          className="absolute inset-0 -z-20 opacity-[0.88] sm:opacity-100"
+          className="absolute inset-0 -z-20"
         >
           <SlideMedia slide={active} priority={index === 0} still={!!still} />
         </motion.div>
@@ -204,7 +204,7 @@ export function HeroCarousel({
             </Line>
 
             <Line>
-              <p className="max-w-[32ch] text-pretty text-base leading-relaxed text-white/80 sm:max-w-md sm:text-lg">
+              <p className="max-w-[32ch] text-pretty text-base leading-relaxed text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] sm:max-w-md sm:text-lg">
                 {active.subhead}
               </p>
             </Line>
@@ -221,7 +221,7 @@ export function HeroCarousel({
                       <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-sm sm:h-9 sm:w-9">
                         <Icon size={17} strokeWidth={1.9} aria-hidden />
                       </span>
-                      <span className="text-sm leading-snug text-white/90 sm:text-base">{label}</span>
+                      <span className="text-sm leading-snug text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)] sm:text-base">{label}</span>
                     </li>
                   );
                 })}
