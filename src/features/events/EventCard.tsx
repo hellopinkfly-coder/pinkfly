@@ -45,7 +45,7 @@ export function EventCard({
   return (
     <article
       className={cn(
-        "group relative flex h-full flex-col overflow-hidden rounded-[var(--pf-radius-xl)] border border-[var(--pf-border)] bg-[var(--pf-surface)] shadow-[var(--pf-shadow-sm)] transition-all duration-300 ease-[var(--pf-ease)] hover:-translate-y-1 hover:border-[var(--pf-accent)]/30 hover:shadow-[var(--pf-shadow-md)]",
+        "group relative flex h-full flex-col overflow-hidden rounded-[var(--pf-radius-xl)] border border-[var(--pf-border)] bg-[var(--pf-surface)] shadow-[var(--pf-shadow-sm)] transition-all duration-300 ease-[var(--pf-ease)] hover:-translate-y-1 hover:border-[var(--pf-accent)]/30 hover:shadow-[var(--pf-shadow-md)] has-[a:active]:scale-[0.985] has-[a:active]:duration-75",
         layout === "rail" && "w-[280px] shrink-0 sm:w-[320px]",
         className
       )}

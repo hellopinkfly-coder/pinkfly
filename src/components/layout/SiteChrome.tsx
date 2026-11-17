@@ -60,21 +60,30 @@ export function SiteChrome({
   // Every page but the homepage, which is where back would lead anyway.
   const showBack = rest !== "/" && rest !== "";
 
+  // A page that opens on a full-bleed photograph runs it under the header on
+  // purpose: the bar floats over the image with light type, and so does the
+  // back row. Pushing such a page down by the height of that row left the
+  // header's own lower half — the wordmark's descender and the tagline —
+  // sitting on the photograph with a band of page colour above it, which is
+  // what the Events page was showing: a logo cut in half by its own hero.
+  const overHero = opensOnDarkHero(rest);
+
   return (
     <>
       <Navbar
         region={region}
         rest={rest}
         variant={navVariantFor(rest)}
-        overHero={opensOnDarkHero(rest)}
+        overHero={overHero}
         site={site}
         showBack={showBack}
       />
       {/* The back row adds a line to the fixed header on a phone and tablet,
-          so the page below it starts that much lower. Held here rather than
-          in each page's own top padding, which is how the pages drifted
-          apart in the first place. */}
-      <main id="main" className={showBack ? "pt-14 lg:pt-0" : undefined}>
+          so a page of ordinary sections starts that much lower. Held here
+          rather than in each page's own top padding, which is how the pages
+          drifted apart in the first place. A hero page is the exception
+          above: it reserves its own room and the row floats over it. */}
+      <main id="main" className={showBack && !overHero ? "pt-14 lg:pt-0" : undefined}>
         {children}
       </main>
       <Footer region={region} site={site} />

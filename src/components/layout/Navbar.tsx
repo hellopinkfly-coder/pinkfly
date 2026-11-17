@@ -216,7 +216,7 @@ export function Navbar({
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="flex min-h-12 items-center rounded-xl px-4 py-3 text-[var(--pf-heading)] transition-colors hover:bg-[var(--pf-surface-muted)]"
+                      className="pf-pressable-row flex min-h-12 items-center rounded-xl px-4 py-3 text-[var(--pf-heading)] hover:bg-[var(--pf-surface-muted)]"
                     >
                       {item.label}
                     </Link>
