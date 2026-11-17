@@ -51,10 +51,24 @@ export const homePage = defineType({
               title: "Slide photograph (2400 × 1600)",
               type: "figure",
               description:
-                "Fills the whole first screen, edge to edge, and is cropped to whatever shape " +
-                "that is — on a phone a tall slice, on a desktop a wide one. Upload 2400 × 1600 " +
-                "(3:2) and keep the subject near the centre, since the edges go first. The " +
-                "headline sits over the left of it, so avoid a busy left side.",
+                "Sits beside the copy on a desktop and above it on a phone, in a frame of its " +
+                "own — it is no longer behind the words, so nothing is written over it and no " +
+                "part of it is darkened. Upload 2400 × 1600 (3:2); it is shown at 16:10 on a " +
+                "phone and fills its half of the screen on a desktop, so keep the subject " +
+                "near the centre.",
+            }),
+            defineField({
+              name: "imageHasText",
+              title: "This image already has its own text",
+              type: "boolean",
+              initialValue: false,
+              description:
+                "For a banner designed elsewhere — in Canva, say — with the words already in " +
+                "the picture. The slide then shows the banner across the full width and draws " +
+                "none of the copy below over it; only the button follows. Write the banner's " +
+                "words into the image's Alt text so that a screen reader, and Google, still " +
+                "read them. The headline above is still required and is used as the page's " +
+                "heading, which a search engine reads and a sighted visitor does not see.",
             }),
           ],
           preview: { select: { title: "headline", subtitle: "eyebrow", media: "image.asset" } },

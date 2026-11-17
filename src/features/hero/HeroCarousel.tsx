@@ -82,13 +82,17 @@ export function HeroCarousel({
 
   const active = slides[index];
 
-  // Touch swipe. The photograph is a background layer, so the gesture is
-  // tracked on the section rather than by dragging an element.
+  // Touch swipe. The gesture is tracked on the section rather than by
+  // dragging an element, so it works over the picture and the copy alike.
   const [swipeStart, setSwipeStart] = useState<number | null>(null);
+
+  // A slide whose picture carries its own words: nothing is written beside
+  // it, and the banner takes the full width.
+  const bannerSlide = active.imageHasText;
 
   return (
     <section
-      className="relative isolate flex min-h-[30rem] items-center overflow-hidden bg-[var(--pf-heading)] pt-10 pb-10 sm:min-h-[38rem] sm:pt-14 sm:pb-16 lg:min-h-[42rem]"
+      className="relative isolate overflow-hidden bg-[var(--pf-bg)] pb-10 pt-6 sm:pb-16 sm:pt-10"
       role="group"
       aria-roledescription="carousel"
       aria-label="Pinkfly"
@@ -110,46 +114,51 @@ export function HeroCarousel({
         setSwipeStart(null);
       }}
     >
-      {/* ---- The photograph, edge to edge ---------------------------- */}
-      <AnimatePresence initial={false}>
-        <motion.div
-          key={index}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          // Linear rather than the house easing: an eased cross-fade dips in
-          // the middle, because both layers are part-transparent at once and
-          // the background shows between them. Held linear, one photograph
-          // simply becomes the other.
-          transition={{ duration: 1.1, ease: "linear" }}
-          // On a phone the photograph is behind the whole of the copy rather
-          // than beside it — every line, the list and the button sit on top of
-          // it, where a desktop puts them to one side of the subject. Held at
-          // full strength it competes with all of them at once. It is dimmed
-          // here, not scrimmed harder, so the picture keeps its colour instead
-          // of going grey under more black. At 60% that went too far the other
-          // way — a dimmed photograph under a dark wash is not a quiet
-          // photograph, it is an overcast one — so it keeps most of its light
-          // and the wash below does the work of legibility.
-          className="absolute inset-0 -z-20"
-        >
-          <SlideMedia slide={active} priority={index === 0} still={!!still} />
-        </motion.div>
-      </AnimatePresence>
+      {/* ---- The photograph, in a frame of its own --------------------
+          It used to lie behind the words, which is why this section has been
+          argued about for weeks: text on a photograph always needs a wash,
+          and a wash is a dark slab across the top of a page that is
+          otherwise light. Lighten it and the words lose their footing;
+          darken it and the picture is grey and the slab is worse.
 
-      {/* ---- Blend + legibility -------------------------------------- */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        {/* Left-weighted wash: dense under the copy, clear over the subject */}
-        <div className="pf-hero-scrim absolute inset-0" />
-        {/* A little brand warmth, so the photograph sits inside the palette */}
-        {/* A little brand warmth, so the photograph sits inside the palette.
-            Desktop only: soft-light over a phone's already-dimmed picture
-            flattens it towards grey, which is most of what made the section
-            read as overcast. */}
-        <div className="absolute inset-0 hidden bg-[radial-gradient(120%_90%_at_8%_50%,rgba(216,3,125,0.30)_0%,transparent_62%)] mix-blend-soft-light sm:block" />
-        {/* Top wash, keeping the floating navbar readable */}
-        <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(to_bottom,rgba(16,10,14,0.6),transparent)] sm:h-40 sm:bg-[linear-gradient(to_bottom,rgba(16,10,14,0.72),transparent)]" />
-      </div>
+          Beside the words, neither problem exists. The copy sits on the
+          page's own surface at full contrast in both themes, and the
+          photograph is shown whole, undimmed, at its own proportions. */}
+      <Container
+        className={cn(
+          "mb-7",
+          // A banner carries its own words, so it has no copy to sit beside:
+          // it takes the whole width and the slide is the picture.
+          !bannerSlide &&
+            "lg:absolute lg:inset-y-0 lg:right-0 lg:mb-0 lg:w-1/2 lg:max-w-none lg:px-0"
+        )}
+      >
+        <div
+          className={cn(
+            "relative overflow-hidden rounded-[var(--pf-radius-2xl)] bg-[var(--pf-surface-muted)]",
+            bannerSlide
+              ? "aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]"
+              : "aspect-[4/3] sm:aspect-[16/10] lg:h-full lg:rounded-none lg:rounded-l-[var(--pf-radius-2xl)]"
+          )}
+        >
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={index}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              // Linear rather than the house easing: an eased cross-fade dips
+              // in the middle, because both layers are part-transparent at
+              // once and the background shows between them. Held linear, one
+              // photograph simply becomes the other.
+              transition={{ duration: 1.1, ease: "linear" }}
+              className="absolute inset-0"
+            >
+              <SlideMedia slide={active} priority={index === 0} still={!!still} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </Container>
 
       {/* ---- Copy ----------------------------------------------------- */}
       {/* One grid cell, shared. With `mode="wait"` the outgoing slide had to
@@ -159,7 +168,12 @@ export function HeroCarousel({
           fixed" — worst on a phone, where the copy is tallest and each slide
           is a different height. Stacked, the section is always as tall as
           its tallest live slide and never moves. */}
-      <Container className="relative grid w-full grid-cols-1 grid-rows-1">
+      <Container
+        className={cn(
+          "relative grid w-full grid-cols-1 grid-rows-1",
+          !bannerSlide && "lg:min-h-[32rem] lg:w-1/2 lg:items-center lg:pr-12"
+        )}
+      >
         <AnimatePresence initial={false}>
           <motion.div
             key={index}
@@ -191,42 +205,55 @@ export function HeroCarousel({
             style={{ gridArea: "1 / 1" }}
             className="pointer-events-auto flex max-w-xl flex-col items-start gap-4 self-center sm:gap-5"
           >
-            <Line>
-              <span className="pf-eyebrow pf-eyebrow--pill pf-eyebrow--on-dark drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
-                {active.eyebrow}
-              </span>
-            </Line>
+            {/* A banner already says all of this inside the picture. The
+                headline still exists for the page — a document needs one, and
+                a search engine reads it — but it is not drawn twice. */}
+            {bannerSlide ? (
+              <h1 className="sr-only">{active.headline}</h1>
+            ) : (
+              <>
+                <Line>
+                  <span className="pf-eyebrow pf-eyebrow--pill">
+                    {active.eyebrow}
+                  </span>
+                </Line>
 
-            <Line>
-              <h1 className="pf-display pf-display--hero text-balance text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]">
-                {active.headline}
-              </h1>
-            </Line>
+                <Line>
+                  <h1 className="pf-display pf-display--hero text-balance text-[var(--pf-heading)]">
+                    {active.headline}
+                  </h1>
+                </Line>
+              </>
+            )}
 
-            <Line>
-              <p className="max-w-[32ch] text-pretty text-base leading-relaxed text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.55)] sm:max-w-md sm:text-lg">
-                {active.subhead}
-              </p>
-            </Line>
+            {!bannerSlide && (
+              <Line>
+                <p className="max-w-[34ch] text-pretty text-base leading-relaxed text-[var(--pf-text)] sm:max-w-md sm:text-lg">
+                  {active.subhead}
+                </p>
+              </Line>
+            )}
 
-            <Line>
+            {!bannerSlide && (
+              <Line>
               <ul className="flex flex-col gap-2 sm:gap-3">
                 {active.points.map(({ icon, label }) => {
                   const Icon = iconFor(icon);
                   return (
                     <li
                       key={label}
-                      className="flex items-center gap-3 text-white"
+                      className="flex items-center gap-3 text-[var(--pf-text)]"
                     >
-                      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur-sm sm:h-9 sm:w-9">
+                      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)] sm:h-9 sm:w-9">
                         <Icon size={17} strokeWidth={1.9} aria-hidden />
                       </span>
-                      <span className="text-sm leading-snug text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)] sm:text-base">{label}</span>
+                      <span className="text-sm leading-snug sm:text-base">{label}</span>
                     </li>
                   );
                 })}
               </ul>
-            </Line>
+              </Line>
+            )}
 
             <Line>
               {/* The label is long enough to overrun a 320px screen, and the
@@ -262,7 +289,7 @@ export function HeroCarousel({
             --------------------------------------------------------------- */}
         {slides.length > 1 && (
           <div className="mt-5 flex sm:mt-9">
-            <div className="inline-flex items-center rounded-full border border-white/15 bg-black/40 p-1 shadow-[0_8px_24px_rgba(0,0,0,0.28)] backdrop-blur-md">
+            <div className="inline-flex items-center rounded-full border border-[var(--pf-border)] bg-[var(--pf-surface)] p-1 shadow-[var(--pf-shadow-sm)]">
               <div className="flex px-1" role="tablist" aria-label="Slides">
                 {slides.map((slide, i) => (
                   <button
@@ -280,15 +307,15 @@ export function HeroCarousel({
                       className={cn(
                         "block h-1.5 rounded-full transition-all duration-300 ease-[var(--pf-ease)]",
                         i === index
-                          ? "w-6 bg-white"
-                          : "w-2 bg-white/40 group-hover/dot:bg-white/70"
+                          ? "w-6 bg-[var(--pf-accent)]"
+                          : "w-2 bg-[var(--pf-border-strong)] group-hover/dot:bg-[var(--pf-accent)]/60"
                       )}
                     />
                   </button>
                 ))}
               </div>
 
-              <span aria-hidden className="mx-0.5 h-4 w-px shrink-0 bg-white/15 sm:mx-1 sm:h-5" />
+              <span aria-hidden className="mx-0.5 h-4 w-px shrink-0 bg-[var(--pf-border)] sm:mx-1 sm:h-5" />
 
               <div className="flex gap-0.5">
                 {/* Explicit pause, so autoplay is stoppable without hovering. */}
@@ -348,7 +375,7 @@ function RoundButton({
       title={label}
       // No surface of its own: the bar around it already provides one, and
       // a circle inside a pill inside a photograph is two borders too many.
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-white/85 transition-colors duration-200 ease-[var(--pf-ease)] hover:bg-white/12 hover:text-white sm:h-11 sm:w-11"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--pf-text)] transition-colors duration-200 ease-[var(--pf-ease)] hover:bg-[var(--pf-surface-muted)] hover:text-[var(--pf-accent)] sm:h-11 sm:w-11"
     >
       {children}
     </button>
