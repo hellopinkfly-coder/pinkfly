@@ -862,3 +862,93 @@ button:active,
 .pf-logo--on-dark .pf-logo__on-dark {
   display: block;
 }
+
+/* Hero photograph, desktop only.
+ *
+ * The copy sits in the page container; the photograph should not. Boxed in
+ * the same 72rem column it reads as a thumbnail with a corridor of page
+ * colour beside it, so from `lg` up it is allowed out of the container and
+ * runs to the edge of the window. The arithmetic undoes the container's own
+ * centring (half the leftover width) and its gutter, and `min()` keeps it at
+ * the gutter on windows narrower than the container, where there is no
+ * leftover width to give back. Nothing here applies below `lg`, so the phone
+ * layout is untouched.
+ */
+@media (min-width: 1024px) {
+  .pf-bleed-r {
+    margin-right: min(-2.5rem, calc((72rem - 100vw) / 2 - 2.5rem));
+  }
+  .pf-bleed-x {
+    margin-left: min(-2.5rem, calc((72rem - 100vw) / 2 - 2.5rem));
+    margin-right: min(-2.5rem, calc((72rem - 100vw) / 2 - 2.5rem));
+    border-radius: 0;
+  }
+}
+
+/* The loading screen's two movements.
+ *
+ * `pf-breathe` is a slow, shallow scale and fade on the brand mark: a
+ * spinner reads as "busy", a breath reads as "nearly there", and at this
+ * amplitude it never looks like a glitch. `pf-loadbar` is a hairline that
+ * sweeps left to right under it, so something is always moving even where
+ * the mark itself is held still.
+ *
+ * Both stop under `prefers-reduced-motion`, which leaves the mark and a
+ * static rule — still a deliberate screen, with nothing that moves.
+ */
+@keyframes pf-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    scale: 0.97;
+  }
+  50% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes pf-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+.pf-breathe {
+  animation: pf-breathe 1.9s ease-in-out infinite;
+}
+
+.pf-loadbar {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: 7rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--pf-border);
+}
+
+.pf-loadbar::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 33%;
+  border-radius: inherit;
+  background: var(--pf-accent);
+  animation: pf-sweep 1.4s var(--pf-ease, ease-in-out) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-breathe,
+  .pf-loadbar::after {
+    animation: none;
+  }
+  .pf-loadbar::after {
+    width: 100%;
+    opacity: 0.4;
+  }
+}
