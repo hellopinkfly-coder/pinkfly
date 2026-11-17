@@ -78,12 +78,9 @@ export function SiteChrome({
         site={site}
         showBack={showBack}
       />
-      {/* The back row adds a line to the fixed header on a phone and tablet,
-          so a page of ordinary sections starts that much lower. Held here
-          rather than in each page's own top padding, which is how the pages
-          drifted apart in the first place. A hero page is the exception
-          above: it reserves its own room and the row floats over it. */}
-      <main id="main" className={showBack && !overHero ? "pt-14 lg:pt-0" : undefined}>
+      {/* No top padding to compensate for the header any more: it is sticky,
+          so it takes its own room and the page simply follows it. */}
+      <main id="main">
         {children}
       </main>
       <Footer region={region} site={site} />

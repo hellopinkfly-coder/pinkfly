@@ -52,7 +52,7 @@ export function PageHeader({
         "relative overflow-hidden",
         // The top padding clears the floating header either way; the compact
         // band just stops giving it a screenful to itself.
-        compact ? "pt-28 sm:pt-32" : "pt-32 sm:pt-40",
+        compact ? "pt-10 sm:pt-14" : "pt-12 sm:pt-20",
         banner ? "pb-0" : compact ? "pb-8 sm:pb-10" : "pb-12 sm:pb-16",
         className
       )}

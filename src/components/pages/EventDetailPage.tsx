@@ -67,7 +67,7 @@ export async function EventDetailPage({
       />
 
       {/* Time left + hero image */}
-      <section className="relative overflow-hidden pt-32 pb-4 sm:pt-40">
+      <section className="relative overflow-hidden pt-12 pb-4 sm:pt-20">
         <Container>
           <div className="grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
             <Reveal className="flex flex-col items-start gap-6">

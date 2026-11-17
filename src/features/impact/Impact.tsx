@@ -24,14 +24,14 @@ export function Impact({ content }: { content: HomeContent["impact"] }) {
       <Reveal
         as="ul"
         variants={stagger}
-        className="pf-section-body grid gap-px overflow-hidden rounded-[var(--pf-radius-2xl)] border border-[var(--pf-border)] bg-[var(--pf-border)] sm:grid-cols-2 lg:grid-cols-4"
+        className="pf-section-body grid grid-cols-2 gap-px overflow-hidden rounded-[var(--pf-radius-2xl)] border border-[var(--pf-border)] bg-[var(--pf-border)] lg:grid-cols-4"
       >
         {content.stats.map(({ icon: Icon, value, suffix, label }) => (
           <Reveal
             as="li"
             key={label}
             variants={lift}
-            className="group flex flex-col items-center gap-3 bg-[var(--pf-surface)] p-8 text-center transition-colors duration-300 ease-[var(--pf-ease)] hover:bg-[var(--pf-surface-muted)]"
+            className="group flex flex-col items-center gap-2.5 bg-[var(--pf-surface)] p-5 text-center sm:gap-3 sm:p-8 transition-colors duration-300 ease-[var(--pf-ease)] hover:bg-[var(--pf-surface-muted)]"
           >
             <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--pf-accent-soft)] text-[var(--pf-accent)] transition-transform duration-300 ease-[var(--pf-ease)] group-hover:-translate-y-1">
               <Icon size={20} strokeWidth={1.9} aria-hidden />
@@ -39,7 +39,7 @@ export function Impact({ content }: { content: HomeContent["impact"] }) {
             <AnimatedCounter
               value={value}
               suffix={suffix}
-              className="font-[family-name:var(--font-display)] text-4xl font-bold tracking-tight text-[var(--pf-accent)] sm:text-5xl"
+              className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-[var(--pf-accent)] sm:text-4xl lg:text-5xl"
             />
             <span className="text-sm leading-relaxed text-[var(--pf-text)]">
               {label}
