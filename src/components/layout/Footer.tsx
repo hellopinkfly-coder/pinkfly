@@ -90,10 +90,16 @@ export function Footer({
                   Address coming soon
                 </span>
               )}
+              {/* Each on its own line.
+                  Both were `inline-flex`, which is still an inline box: with
+                  a real number finally set, the two ran together into
+                  "+91 99995 08524hello.pinkfly@gmail.com". `flex w-fit` keeps
+                  the tap target hugging the text — the reason for the flex in
+                  the first place — while giving each its own line. */}
               {phone ? (
                 <a
                   href={`tel:${phone.replace(/[^\d+]/g, "")}`}
-                  className="mt-2 inline-flex min-h-11 items-center transition-colors hover:text-[var(--pf-accent)] sm:min-h-0"
+                  className="mt-2 flex w-fit min-h-11 items-center transition-colors hover:text-[var(--pf-accent)] sm:min-h-0"
                 >
                   {phone}
                 </a>
@@ -104,7 +110,7 @@ export function Footer({
               )}
               <a
                 href={`mailto:${email}`}
-                className="mt-1 inline-flex min-h-11 items-center break-all transition-colors hover:text-[var(--pf-accent)] sm:min-h-0 sm:break-normal"
+                className="mt-1 flex w-fit min-h-11 items-center break-all transition-colors hover:text-[var(--pf-accent)] sm:min-h-0 sm:break-normal"
               >
                 {email}
               </a>
