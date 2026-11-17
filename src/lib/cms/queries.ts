@@ -13,7 +13,7 @@ const SEO = groq`{ title, description, ogImage ${FIGURE} }`;
 const HEADING = groq`{ eyebrow, headline, intro }`;
 
 export const homePageQuery = groq`*[_type == "homePage"][0]{
-  heroSlides[]{ eyebrow, headline, subhead, points[]{ icon, label }, cta, image ${FIGURE} },
+  heroSlides[]{ eyebrow, headline, subhead, points[]{ icon, label }, cta, imageHasText, image ${FIGURE} },
   impactHeading ${HEADING},
   impactStats[]{ icon, value, suffix, label },
   impactVisible,

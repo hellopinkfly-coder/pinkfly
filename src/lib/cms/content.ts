@@ -86,6 +86,11 @@ export type HeroSlideContent = {
   points: { icon: string; label: string }[];
   cta: Cta;
   image: { src?: string; alt: string; focal?: string };
+  /**
+   * The picture already carries its own words — a banner designed elsewhere.
+   * The slide then shows it across the full width and writes nothing over it.
+   */
+  imageHasText: boolean;
 };
 
 /**
@@ -183,6 +188,7 @@ type CmsHome = {
     points?: { icon?: string; label?: string }[];
     cta?: CmsCta;
     image?: CmsFigure;
+    imageHasText?: boolean;
   }[];
   impactHeading?: CmsHeading;
   impactStats?: { icon?: string; value?: number; suffix?: string; label?: string }[];
@@ -265,6 +271,8 @@ function seedHeroSlides(): HeroSlideContent[] {
       icon: iconKey(point.icon),
       label: point.label,
     })),
+    // The shipped photographs are photographs: their words are the site's.
+    imageHasText: false,
   }));
 }
 
@@ -289,6 +297,7 @@ export async function getHomeContent(): Promise<HomeContent> {
             label: point.label ?? "",
           })),
           cta: cta(slide.cta, fallback?.cta ?? { label: "Join", href: "/join" }),
+          imageHasText: slide.imageHasText === true,
           image: {
             src: image.src || undefined,
             alt: image.alt,
