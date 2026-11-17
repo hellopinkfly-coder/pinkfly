@@ -953,43 +953,4 @@ button:active,
   }
 }
 
-/* The loading screen's entrance.
- *
- * Each part arrives a beat after the one before, which is what makes a wait
- * read as something coming rather than something stuck. The delays are
- * fixed classes rather than inline styles so the screen stays a server
- * component with no JavaScript of its own.
- */
-@keyframes pf-fade-up {
-  from {
-    opacity: 0;
-    translate: 0 8px;
-  }
-  to {
-    opacity: 1;
-    translate: 0 0;
-  }
-}
 
-.pf-fade-up {
-  animation: pf-fade-up 0.5s var(--pf-ease, ease-out) both;
-}
-
-.pf-delay-1 {
-  animation-delay: 0.08s;
-}
-.pf-delay-2 {
-  animation-delay: 0.16s;
-}
-.pf-delay-3 {
-  animation-delay: 0.24s;
-}
-.pf-delay-4 {
-  animation-delay: 0.32s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pf-fade-up {
-    animation: none;
-  }
-}

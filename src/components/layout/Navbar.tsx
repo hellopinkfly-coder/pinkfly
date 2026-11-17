@@ -8,6 +8,7 @@ import { Menu, X } from "lucide-react";
 import { useHideOnScrollDown, useScrolled } from "@/hooks/useScrollDirection";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/Logo";
+import { MenuRow } from "./MenuRow";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { RegionSelector } from "@/components/region/RegionSelector";
 import { MobileBackRow } from "./MobileBackRow";
@@ -224,9 +225,9 @@ export function Navbar({
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="pf-pressable-row flex min-h-12 items-center rounded-xl px-4 py-3 text-[var(--pf-heading)] hover:bg-[var(--pf-surface-muted)]"
+                      className="pf-pressable-row relative flex min-h-12 items-center gap-3 rounded-xl px-4 py-3 text-[var(--pf-heading)] hover:bg-[var(--pf-surface-muted)]"
                     >
-                      {item.label}
+                      <MenuRow label={item.label} />
                     </Link>
                   )
                 )}
