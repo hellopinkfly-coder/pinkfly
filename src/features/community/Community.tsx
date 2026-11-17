@@ -53,7 +53,7 @@ export function Community({
           >
             <Link
               href={href}
-              className="flex flex-col rounded-[var(--pf-radius-xl)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pf-accent)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--pf-surface)]"
+              className="pf-pressable flex flex-col rounded-[var(--pf-radius-xl)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pf-accent)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--pf-surface)]"
             >
               <ImageFrame
                 src={card.image.src}

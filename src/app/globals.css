@@ -322,6 +322,84 @@
   font-size: clamp(1.6rem, 5vw, 2.9rem);
 }
 
+/* --------------------------------------------------------------------------
+   Touch feedback
+   -------------------------------------------------------------------------- */
+
+/*
+ * What a tap gets back.
+ *
+ * Every interactive thing here was styled for a cursor: a hover colour, a
+ * hover lift, a hover shadow. A phone has none of those. Pressing a card or a
+ * menu row lit nothing up, so between the tap and the next page painting the
+ * site looked like it had missed the tap — and the honest reading of that is
+ * "slow", which is what it was reported as.
+ *
+ * Three things together fix it. `touch-action: manipulation` drops the
+ * browser's wait for a possible double-tap-to-zoom, which is up to 300ms of
+ * nothing on its own. The tap highlight goes, because its grey rectangle is
+ * the wrong shape on a pill and lands late. And in its place every control
+ * gets a real pressed state, fast enough to feel like a consequence of the
+ * finger rather than a later event.
+ */
+a,
+button,
+[role="button"],
+summary,
+label,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Anything that leads somewhere or does something dips under the finger. */
+a:active,
+button:active,
+[role="button"]:active {
+  transition-duration: 0.07s;
+}
+
+/* A card is a big target, so it takes a small scale rather than a colour. */
+.pf-pressable {
+  transition: transform 0.2s var(--pf-ease), opacity 0.2s var(--pf-ease);
+}
+.pf-pressable:active {
+  transform: scale(0.985);
+  transition-duration: 0.07s;
+}
+
+/* A row in a list — menu item, region, filter — takes a wash instead. */
+.pf-pressable-row {
+  transition: background-color 0.2s var(--pf-ease), color 0.2s var(--pf-ease);
+}
+.pf-pressable-row:active {
+  background-color: var(--pf-surface-muted);
+  transition-duration: 0.07s;
+}
+
+/* The spinner a pressed link grows while the next page is still coming. */
+.pf-link-spinner {
+  animation: pf-spin 0.6s linear infinite;
+}
+
+@keyframes pf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-pressable:active {
+    transform: none;
+    opacity: 0.75;
+  }
+  .pf-link-spinner {
+    animation-duration: 1.6s;
+  }
+}
+
 .pf-link {
   color: var(--pf-accent);
   text-decoration: none;
@@ -329,6 +407,10 @@
 }
 .pf-link:hover {
   color: var(--pf-accent-hover);
+}
+.pf-link:active {
+  color: var(--pf-accent-hover);
+  transition-duration: 0.07s;
 }
 
 /* Soft floating gradient blobs — themed via tokens */

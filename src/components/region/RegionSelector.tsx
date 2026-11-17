@@ -94,7 +94,7 @@ export function RegionSelector({
         aria-expanded={open}
         aria-label={`Region: ${current.name}. Change region`}
         className={cn(
-          "inline-flex h-10 items-center gap-1.5 rounded-full border px-3.5 text-sm transition-all duration-200",
+          "pf-pressable inline-flex h-10 items-center gap-1.5 rounded-full border px-3.5 text-sm transition-all duration-200",
           onDark
             ? "border-white/35 text-white hover:border-white/70"
             : "border-[var(--pf-border-strong)] text-[var(--pf-heading)] hover:border-[var(--pf-accent)] hover:text-[var(--pf-accent)]"
@@ -131,7 +131,7 @@ export function RegionSelector({
                     aria-selected={active}
                     onClick={() => select(region)}
                     className={cn(
-                      "flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition-colors",
+                      "pf-pressable-row flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm",
                       active
                         ? "bg-[var(--pf-accent-soft)] text-[var(--pf-accent)]"
                         : "text-[var(--pf-heading)] hover:bg-[var(--pf-surface-muted)]"

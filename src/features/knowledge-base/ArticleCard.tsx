@@ -40,7 +40,7 @@ export function ArticleCard({
     >
       <Link
         href={href}
-        className="flex h-full flex-col rounded-[var(--pf-radius-xl)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pf-accent)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--pf-bg)]"
+        className="pf-pressable flex h-full flex-col rounded-[var(--pf-radius-xl)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pf-accent)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--pf-bg)]"
       >
         <ImageFrame
           src={entry.image.src}
