@@ -41,7 +41,7 @@ export function CommunityGuidelines({
               <span className="font-[family-name:var(--font-display)] text-sm font-bold text-[var(--pf-accent)]">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <h3 className="text-base">{item.title}</h3>
+              <h3 className="text-lg">{item.title}</h3>
               <p className="text-sm leading-relaxed text-[var(--pf-text)]">
                 {item.description}
               </p>

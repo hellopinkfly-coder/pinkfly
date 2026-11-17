@@ -96,8 +96,8 @@
   --text-xs--line-height: 1.5;
   --text-sm: 0.78rem;
   --text-sm--line-height: 1.55;
-  --text-base: 0.885rem;
-  --text-base--line-height: 1.6;
+  --text-base: 0.925rem;
+  --text-base--line-height: 1.62;
   --text-lg: 1rem;
   --text-lg--line-height: 1.6;
   --text-xl: 1.12rem;
@@ -165,6 +165,13 @@
     transition: background-color 0.4s var(--pf-ease), color 0.4s var(--pf-ease);
   }
 
+  /* Selected text in the brand's colour: the browser's blue is the one
+     piece of another company's design that shows up on every page. */
+  ::selection {
+    background: var(--pf-accent);
+    color: #fff;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     color: var(--pf-heading);
@@ -199,11 +206,20 @@
  * competing with the headings they introduce. So the pill is a modifier,
  * not the default.
  */
+/*
+ * The label above a heading.
+ *
+ * It was a fixed 0.68rem — 10.9px on a phone and the same 10.9px under a
+ * 55px headline on a desktop, where it reads as timid rather than quiet. It
+ * grows a little with the screen now, and the tracking comes in from 0.22em
+ * to 0.18em: at this size the wider letter-spacing was pulling the word
+ * apart rather than setting it off.
+ */
 .pf-eyebrow {
   font-family: var(--font-display);
-  font-size: 0.68rem;
+  font-size: clamp(0.72rem, 0.68rem + 0.2vw, 0.82rem);
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--pf-accent);
 }
